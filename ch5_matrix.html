@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Geospatial Technology and Spatial Analysis in R - 8&nbsp; Introduction to Matrices</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch5_raster.html" rel="next">
+<link href="./ch41.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><link rel="stylesheet" href="style.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch5_matrix.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#matrices" id="toc-matrices" class="nav-link active" data-scroll-target="#matrices"><span class="header-section-number">8.1</span> Matrices</a></li>
+  <li><a href="#what-is-a-matrix" id="toc-what-is-a-matrix" class="nav-link" data-scroll-target="#what-is-a-matrix"><span class="header-section-number">8.2</span> What is a <code>matrix</code>?</a></li>
+  <li><a href="#creating-a-matrix" id="toc-creating-a-matrix" class="nav-link" data-scroll-target="#creating-a-matrix"><span class="header-section-number">8.3</span> Creating a <code>matrix</code></a></li>
+  <li>
+<a href="#matrix-properties" id="toc-matrix-properties" class="nav-link" data-scroll-target="#matrix-properties"><span class="header-section-number">8.4</span> <code>matrix</code> properties</a>
+  <ul class="collapse">
+<li><a href="#dimensions" id="toc-dimensions" class="nav-link" data-scroll-target="#dimensions"><span class="header-section-number">8.4.1</span> Dimensions</a></li>
+  <li><a href="#row-and-column-names" id="toc-row-and-column-names" class="nav-link" data-scroll-target="#row-and-column-names"><span class="header-section-number">8.4.2</span> Row and column names</a></li>
+  <li><a href="#matrix-conversions" id="toc-matrix-conversions" class="nav-link" data-scroll-target="#matrix-conversions"><span class="header-section-number">8.4.3</span> <code>matrix</code> conversions</a></li>
+  <li><a href="#matrix-vector" id="toc-matrix-vector" class="nav-link" data-scroll-target="#matrix-vector"><span class="header-section-number">8.4.4</span> <code>matrix</code> → vector</a></li>
+  <li><a href="#matrix-data.frame" id="toc-matrix-data.frame" class="nav-link" data-scroll-target="#matrix-data.frame"><span class="header-section-number">8.4.5</span> <code>matrix</code> → <code>data.frame</code></a></li>
+  <li><a href="#transposing-a-matrix" id="toc-transposing-a-matrix" class="nav-link" data-scroll-target="#transposing-a-matrix"><span class="header-section-number">8.4.6</span> Transposing a matrix</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span id="sec-matrix" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>In this chapter, our main objectives are to delve into the realm of spatial data analysis by working with raster data. We will introduce you to various packages beyond “base R” that are specifically designed for handling spatial data. We will also explore the fundamental data structures for spatial data analysis, including <code>matrix</code> and <code>array</code>, as well as their spatial counterparts, namely the <code>stars</code> class for single-band rasters and multi-band rasters.</p>
+<p>Throughout this chapter, we will learn how to access and manipulate cell values and other properties of rasters. Additionally, we will gain insights into reading and writing raster data, which are essential skills for working with spatial data.</p>
+<p>To achieve these aims, we will be utilizing the following R packages:</p>
+<ul>
+<li><p><code>terra</code>: This package provides a versatile and efficient framework for working with spatial data, including raster data. It offers a wide range of functionalities for data manipulation, analysis, and visualization.</p></li>
+<li><p><code>tidyterra</code>: An extension of the <code>tidyverse</code> ecosystem, <code>tidyterra</code> complements the <code>terra</code> package by providing a set of tidyverse-style functions and workflows for working with spatial data in a tidy and consistent manner.</p></li>
+<li><p><code>raster</code>: The <code>raster</code> package is a well-established package for handling raster data in R. It offers a comprehensive set of functions for reading, writing, processing, and analyzing raster datasets.</p></li>
+<li><p><code>sf</code>: The <code>sf</code> package is focused on handling vector data, providing classes and functions for working with spatial geometries. However, it also includes support for working with raster data, making it a valuable package for spatial data analysis.</p></li>
+</ul>
+<p>By mastering these packages and their functionalities, you will gain the skills and tools necessary to explore, analyze, and visualize spatial data effectively.</p>
+<section id="matrices" class="level2" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="matrices">
+<span class="header-section-number">8.1</span> Matrices</h2>
+<p>Matrices are a fundamental data structure in R that allows you to store and manipulate data in a two-dimensional format. They consist of rows and columns, where each element is identified by its row and column index. Matrices are useful for organizing and working with structured data, such as numerical or categorical values.</p>
+<p>Matrices are useful for performing various mathematical operations, such as matrix multiplication, addition, and transposition. They are also commonly used in statistical analysis and data manipulation tasks. R provides many built-in functions and operators for working with matrices, allowing you to perform calculations, subsetting, and other operations efficiently.</p>
+</section><section id="what-is-a-matrix" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="what-is-a-matrix">
+<span class="header-section-number">8.2</span> What is a <code>matrix</code>?</h2>
+<p>A matrix is a two-dimensional data structure in R that consists of rows and columns. It is similar to a table or a spreadsheet where each element in the matrix is identified by its row and column index. Matrices in R can contain elements of the same data type, such as numeric values, character strings, or logical values.</p>
+<p>Unlike a <code>data.frame</code>, the number of values in all columns of a matrix is equal, and the same can be said about the rows. It is important to know how to work with matrices because it is a commonly used data structure, with many uses in data processing and analysis, including spatial data. For example, many R function accept a <code>matrix</code> as an argument, or return a <code>matrix</code> as a returned object. Moreover, a <code>matrix</code> is used to store raster object.</p>
+</section><section id="creating-a-matrix" class="level2" data-number="8.3"><h2 data-number="8.3" class="anchored" data-anchor-id="creating-a-matrix">
+<span class="header-section-number">8.3</span> Creating a <code>matrix</code>
+</h2>
+<p>In R, you can create a matrix using the <code><a href="https://rdrr.io/r/base/matrix.html">matrix()</a></code> function. The function takes in a vector of values and parameters specifying the number of rows and columns. A <code>matrix</code> function accepts the following arguments:</p>
+<ul>
+<li>
+<code>data</code>—A vector of the <em>values</em> to fill into the matrix</li>
+<li>
+<code>nrow</code>—The number of <em>rows</em>
+</li>
+<li>
+<code>ncol</code>—The number of <em>columns</em>
+</li>
+<li>
+<code>byrow</code>—Whether the matrix is filled <em>by column</em> (<code>FALSE</code>, the default) or <em>by row</em> (<code>TRUE</code>)</li>
+</ul>
+<p>For example, to create a 3x3 matrix with numeric values, you can use the following code:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>my_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>), </span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="at">nrow =</span> <span class="dv">3</span>, </span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">ncol =</span> <span class="dv">3</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>This will create a matrix <code>my_matrix</code> with 3 rows and 3 columns, where the elements are filled in column-wise order.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    4    7
+[2,]    2    5    8
+[3,]    3    6    9</code></pre>
+</div>
+</div>
+<p>Note that the class of <code>matrix</code> objects is a vector of length two, with the values <code>"matrix"</code> and <code>"array"</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>my_matrix <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">class</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "matrix" "array" </code></pre>
+</div>
+</div>
+<p>This implies the fact that the <code>matrix</code> class <em>inherits</em> from the more general <code>array</code> class. The <code>nrow</code> and <code>ncol</code> parameters determine the number of rows and number of columns, respectively. When only one of them is specified, the other is automatically determined based on the length of the <code>data</code> vector:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>my_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>), </span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">ncol =</span> <span class="dv">3</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>  )</span>
+<span id="cb5-5"><a href="#cb5-5"></a></span>
+<span id="cb5-6"><a href="#cb5-6"></a>my_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    4    7
+[2,]    2    5    8
+[3,]    3    6    9</code></pre>
+</div>
+</div>
+<div id="exm-rep" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.1 </strong></span>What do you think will happen when we try to create a matrix with less, or more, <code>data</code> values than matrix size <code>nrow*ncol</code>? Run the following expressions to find out.</p>
+</div>
+<div class="solution proof">
+<p><span class="proof-title"><em>Solution</em>. </span></p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">matrix</span>(<span class="dv">12</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">ncol =</span> <span class="dv">4</span>, <span class="at">nrow =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3] [,4]
+[1,]   12    8    4   12
+[2,]   11    7    3   11
+[3,]   10    6    2   10
+[4,]    9    5    1    9</code></pre>
+</div>
+</div>
+</div>
+<div id="exm-rep" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.2 </strong></span>Create a 3×33×3 matrix where all values are 1/91/9.</p>
+</div>
+<p>Finally, the <code>byrow</code> parameter determines the direction of filling the matrix with <code>data</code> values. In both cases the filling starts from the top-left corner (i.e., row 1, column 1), however with <code>byrow=FALSE</code> the matrix is filled one <em>column</em> at a time (the default), while with <code>byrow=TRUE</code> the matrix is filled one row at a time. For example:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">nrow =</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3] [,4]
+[1,]    1    4    7   10
+[2,]    2    5    8   11
+[3,]    3    6    9   12</code></pre>
+</div>
+</div>
+</section><section id="matrix-properties" class="level2" data-number="8.4"><h2 data-number="8.4" class="anchored" data-anchor-id="matrix-properties">
+<span class="header-section-number">8.4</span> <code>matrix</code> properties</h2>
+<p>In R, a matrix is a two-dimensional data structure that contains elements of the same data type organized in rows and columns. Matrices are useful for various mathematical and statistical operations.</p>
+<section id="dimensions" class="level3" data-number="8.4.1"><h3 data-number="8.4.1" class="anchored" data-anchor-id="dimensions">
+<span class="header-section-number">8.4.1</span> Dimensions</h3>
+<p>A matrix has a defined number of rows and columns, which determine its dimensions. The dimensions of a matrix can be obtained using the dim() function.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>x <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">nrow =</span> <span class="dv">2</span>) </span>
+<span id="cb11-2"><a href="#cb11-2"></a>x </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6</code></pre>
+</div>
+</div>
+<p>For example, if mat is a matrix, dim(mat) will return a vector containing the number of rows and columns.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>x <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="fu">dim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 2 3</code></pre>
+</div>
+</div>
+<p>The <code>length</code> function returns the number of values in a <code>matrix</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>x <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">length</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+</div>
+<p>Just like with a <code>data.frame</code>, the <code>nrow</code> and <code>ncol</code> functions return the number of rows and columns in a <code>matrix</code>, respectively:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>x <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>x <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>  <span class="fu">ncol</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>Also like with a <code>data.frame</code>, the <code>dim</code> function gives both <em>dimensions</em> of the <code>matrix</code> as a vector of length 2, i.e., number of rows and columns, respectively:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>x <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>  <span class="fu">dim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 2 3</code></pre>
+</div>
+</div>
+<p>For example, R has a built-in dataset named <code>volcano</code>, which is a <code>matrix</code> of surface elevation. The sample script <code>volcano.R</code>, used in Section <a href="https://geobgu.xyz/r-2021/vectors.html#using-code-files">2.1.1</a> to demontrate working with R code files, creates a 3D image of elevation based on that matrix (Figure <a href="https://geobgu.xyz/r-2021/vectors.html#fig:image-volcano-3d">2.2</a>).</p>
+<div id="exm-rep" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.3 </strong></span>Find out what are the number of elements, rows and columns in the built-in <code>matrix</code> named <code>volcano</code>.</p>
+</div>
+</section><section id="row-and-column-names" class="level3" data-number="8.4.2"><h3 data-number="8.4.2" class="anchored" data-anchor-id="row-and-column-names">
+<span class="header-section-number">8.4.2</span> Row and column names</h3>
+<p>Like a <code>data.frame</code>, <code>matrix</code> objects also have row and column names which can be accessed or modified using the <code>rownames</code> and <code>colnames</code> functions, respectively. Unlike <code>data.frame</code> row and column names, which are mandatory, <code>matrix</code> row and column names are optional. For example, matrices created with <code>matrix</code> initially do not have row and column names:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">rownames</span>(x) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="fu">colnames</span>(x) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<p>The <code>matrix</code> row and column names can be initialized, or modified, by assignment to the <code>rownames</code> and <code>colnames</code> properties:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">rownames</span>(x) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>) </span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="fu">colnames</span>(x) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"var1"</span>, <span class="st">"var2"</span>, <span class="st">"var3"</span>) </span>
+<span id="cb27-3"><a href="#cb27-3"></a>x </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>  var1 var2 var3
+a    1    3    5
+b    2    4    6</code></pre>
+</div>
+</div>
+</section><section id="matrix-conversions" class="level3" data-number="8.4.3"><h3 data-number="8.4.3" class="anchored" data-anchor-id="matrix-conversions">
+<span class="header-section-number">8.4.3</span> <code>matrix</code> conversions</h3>
+<p>In R, you can convert between different data structures, such as vectors, data frames, and matrices, using various functions and operations. Here are some common ways to convert data into matrices:</p>
+</section><section id="matrix-vector" class="level3" data-number="8.4.4"><h3 data-number="8.4.4" class="anchored" data-anchor-id="matrix-vector">
+<span class="header-section-number">8.4.4</span> <code>matrix</code> → vector</h3>
+<p>In R, you can convert a matrix into a vector using the as.vector() or c() function. Here’s how you can perform the conversion:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>x <span class="ot">=</span> <span class="fu">matrix</span>(</span>
+<span id="cb29-2"><a href="#cb29-2"></a>  <span class="at">data =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, </span>
+<span id="cb29-3"><a href="#cb29-3"></a>  <span class="at">ncol =</span> <span class="dv">3</span>, </span>
+<span id="cb29-4"><a href="#cb29-4"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-5"><a href="#cb29-5"></a>x </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    2    3
+[2,]    4    5    6</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>x <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href="#cb31-2"></a>  <span class="fu">as.vector</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 4 2 5 3 6</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that the <code>matrix</code> values are always arranged <em>by column</em> in the resulting vector!</p>
+</div>
+</div>
+<div id="exm-rep" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.4 </strong></span>Does the <code>volcano</code> matrix contain any <code>NA</code> values? How can we check?</p>
+</div>
+</section><section id="matrix-data.frame" class="level3" data-number="8.4.5"><h3 data-number="8.4.5" class="anchored" data-anchor-id="matrix-data.frame">
+<span class="header-section-number">8.4.5</span> <code>matrix</code> → <code>data.frame</code>
+</h3>
+<p>To convert a matrix into a data frame in R, you can use the as.data.frame() function. Here’s how you can perform the conversion:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>x <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a>  <span class="fu">as.data.frame</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>  V1 V2 V3
+1  1  2  3
+2  4  5  6</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that row and column names are automatically generated (if they do not exist) as part of the conversion, since they are mandatory in a <code>data.frame</code></p>
+</div>
+</div>
+</section><section id="transposing-a-matrix" class="level3" data-number="8.4.6"><h3 data-number="8.4.6" class="anchored" data-anchor-id="transposing-a-matrix">
+<span class="header-section-number">8.4.6</span> Transposing a matrix</h3>
+<p>In R, you can transpose a matrix by interchanging its rows and columns. The transpose operation flips the matrix along its diagonal. R provides the <code><a href="https://rdrr.io/r/base/t.html">t()</a></code> function specifically designed for transposing matrices. The <code>t</code> function <strong>transposes</strong> a <code>matrix</code>. In other words, the matrix rows and columns are "switched"—rows become columns and columns become rows. Here’s how you can transpose a matrix in R:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>x <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">ncol =</span> <span class="dv">3</span>) </span>
+<span id="cb35-2"><a href="#cb35-2"></a>x </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="fu">t</span>(x) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>     [,1] [,2]
+[1,]    1    2
+[2,]    3    4
+[3,]    5    6</code></pre>
+</div>
+</div>
+<div id="exm-rep" class="theorem example">
+<p><span class="theorem-title"><strong>Example 8.5 </strong></span>What will be the result of <code>t(t(x))</code>?</p>
+</div>
+
+
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./ch41.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch5_raster.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

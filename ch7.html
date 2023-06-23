@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Geospatial Technology and Spatial Analysis in R - 12&nbsp; Vector layers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch8.html" rel="next">
+<link href="./ch6_processing.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch7.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#aims" id="toc-aims" class="nav-link active" data-scroll-target="#aims"><span class="header-section-number">12.1</span> Aims</a></li>
+  <li><a href="#vector-layers" id="toc-vector-layers" class="nav-link" data-scroll-target="#vector-layers"><span class="header-section-number">12.2</span> Vector layers</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-vector-layer" id="toc-what-is-a-vector-layer" class="nav-link" data-scroll-target="#what-is-a-vector-layer"><span class="header-section-number">12.2.1</span> What is a vector layer?</a></li>
+  <li><a href="#vector-file-formats" id="toc-vector-file-formats" class="nav-link" data-scroll-target="#vector-file-formats"><span class="header-section-number">12.2.2</span> Vector file formats</a></li>
+  <li><a href="#the-sp-package" id="toc-the-sp-package" class="nav-link" data-scroll-target="#the-sp-package"><span class="header-section-number">12.2.3</span> The <code>sp</code> package</a></li>
+  <li><a href="#the-sf-package" id="toc-the-sf-package" class="nav-link" data-scroll-target="#the-sf-package"><span class="header-section-number">12.2.4</span> The <code>sf</code> package</a></li>
+  </ul></li>
+  <li><a href="#vector-layers-from-scratch" id="toc-vector-layers-from-scratch" class="nav-link" data-scroll-target="#vector-layers-from-scratch"><span class="header-section-number">12.3</span> Vector layers from scratch</a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview"><span class="header-section-number">12.3.1</span> Overview</a></li>
+  <li><a href="#geometry-sfg" id="toc-geometry-sfg" class="nav-link" data-scroll-target="#geometry-sfg"><span class="header-section-number">12.3.2</span> Geometry (<code>sfg</code>)</a></li>
+  <li><a href="#geometry-column-sfc" id="toc-geometry-column-sfc" class="nav-link" data-scroll-target="#geometry-column-sfc"><span class="header-section-number">12.3.3</span> Geometry column (<code>sfc</code>)</a></li>
+  <li><a href="#layer-sf" id="toc-layer-sf" class="nav-link" data-scroll-target="#layer-sf"><span class="header-section-number">12.3.4</span> Layer (<code>sf</code>)</a></li>
+  <li><a href="#interactive-mapping-with-mapview" id="toc-interactive-mapping-with-mapview" class="nav-link" data-scroll-target="#interactive-mapping-with-mapview"><span class="header-section-number">12.3.5</span> Interactive mapping with <code>mapview</code></a></li>
+  </ul></li>
+  <li><a href="#extracting-layer-components" id="toc-extracting-layer-components" class="nav-link" data-scroll-target="#extracting-layer-components"><span class="header-section-number">12.4</span> Extracting layer components</a></li>
+  <li><a href="#creating-point-layer-from-table" id="toc-creating-point-layer-from-table" class="nav-link" data-scroll-target="#creating-point-layer-from-table"><span class="header-section-number">12.5</span> Creating point layer from table</a></li>
+  <li><a href="#sf-layer-properties" id="toc-sf-layer-properties" class="nav-link" data-scroll-target="#sf-layer-properties"><span class="header-section-number">12.6</span> <code>sf</code> layer properties</a>
+  <ul class="collapse">
+  <li><a href="#dimensions" id="toc-dimensions" class="nav-link" data-scroll-target="#dimensions"><span class="header-section-number">12.6.1</span> Dimensions</a></li>
+  <li><a href="#spatial-properties" id="toc-spatial-properties" class="nav-link" data-scroll-target="#spatial-properties"><span class="header-section-number">12.6.2</span> Spatial properties</a></li>
+  </ul></li>
+  <li><a href="#subsetting-based-on-attributes" id="toc-subsetting-based-on-attributes" class="nav-link" data-scroll-target="#subsetting-based-on-attributes"><span class="header-section-number">12.7</span> Subsetting based on attributes</a></li>
+  <li><a href="#reading-vector-layers" id="toc-reading-vector-layers" class="nav-link" data-scroll-target="#reading-vector-layers"><span class="header-section-number">12.8</span> Reading vector layers</a></li>
+  <li><a href="#basic-plotting" id="toc-basic-plotting" class="nav-link" data-scroll-target="#basic-plotting"><span class="header-section-number">12.9</span> Basic plotting</a></li>
+  <li><a href="#coordinate-reference-systems-crs" id="toc-coordinate-reference-systems-crs" class="nav-link" data-scroll-target="#coordinate-reference-systems-crs"><span class="header-section-number">12.10</span> Coordinate Reference Systems (CRS)</a>
+  <ul class="collapse">
+  <li><a href="#what-are-crs" id="toc-what-are-crs" class="nav-link" data-scroll-target="#what-are-crs"><span class="header-section-number">12.10.1</span> What are CRS?</a></li>
+  <li><a href="#vector-layer-reprojection" id="toc-vector-layer-reprojection" class="nav-link" data-scroll-target="#vector-layer-reprojection"><span class="header-section-number">12.10.2</span> Vector layer reprojection</a></li>
+  </ul></li>
+  <li><a href="#writing-vector-layers" id="toc-writing-vector-layers" class="nav-link" data-scroll-target="#writing-vector-layers"><span class="header-section-number">12.11</span> Writing vector layers</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="aims" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="aims"><span class="header-section-number">12.1</span> Aims</h2>
+<p>Our aims in this chapter are:</p>
+<ul>
+<li><p>Become familiar with data structures for vector layers: points, lines and polygons</p></li>
+<li><p>Examine spatial and non-spatial properties of vector layers</p></li>
+<li><p>Create subsets of vector layers based on their attributes</p></li>
+<li><p>Learn to transform a layer from one Coordinate Reference System (CRS) to another</p></li>
+</ul>
+<p>We will use the following R packages:</p>
+<ul>
+<li><p><code>sf</code></p></li>
+<li><p><code>mapview</code></p></li>
+<li><p><code>stars</code></p></li>
+</ul>
+</section>
+<section id="vector-layers" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="vector-layers"><span class="header-section-number">12.2</span> Vector layers</h2>
+<section id="what-is-a-vector-layer" class="level3" data-number="12.2.1">
+<h3 data-number="12.2.1" class="anchored" data-anchor-id="what-is-a-vector-layer"><span class="header-section-number">12.2.1</span> What is a vector layer?</h3>
+<p>Vector layers are essentially sets of geometries associated with non-spatial attributes (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:vector-layers">7.1</a>). The geometries are sequences of one or more point coordinates, possibly connected to form lines or polygons. The non-spatial attributes come in the form of a table.</p>
+<p>Figure 7.1: Geometry (left) and non-spatial attributes (right) of vector layers (<a href="https://www.neonscience.org/dc-shapefile-attributes-r" class="uri">https://www.neonscience.org/dc-shapefile-attributes-r</a>)</p>
+</section>
+<section id="vector-file-formats" class="level3" data-number="12.2.2">
+<h3 data-number="12.2.2" class="anchored" data-anchor-id="vector-file-formats"><span class="header-section-number">12.2.2</span> Vector file formats</h3>
+<p>Commonly used vector layer file formats (Table <a href="https://geobgu.xyz/r-2021/vector-layers.html#tab:vector-formats">7.1</a>) include binary formats (such as the <strong>Shapefile</strong>) and plain text formats (such as <strong>GeoJSON</strong>). Vector layers are also frequently kept in a spatial database, such as <strong>PostgreSQL/PostGIS</strong>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 32%">
+<col style="width: 47%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Table 7.1: Common vector layer file formats</td>
+</tr>
+<tr class="even">
+<td><strong>Type</strong></td>
+<td><strong>Format</strong></td>
+<td><strong>File extension</strong></td>
+</tr>
+<tr class="odd">
+<td>Binary</td>
+<td>ESRI Shapefile</td>
+<td><code>.shp</code>, <code>.shx</code>, <code>.dbf</code>, <code>.prj</code>, …</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>GeoPackage (GPKG)</td>
+<td><code>.gpkg</code></td>
+</tr>
+<tr class="odd">
+<td>Plain Text</td>
+<td>GeoJSON</td>
+<td><code>.json</code> or <code>.geojson</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>GPS Exchange Format (GPX)</td>
+<td><code>.gpx</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Keyhole Markup Language (KML)</td>
+<td><code>.kml</code></td>
+</tr>
+<tr class="even">
+<td>Spatial Databases</td>
+<td>PostGIS / PostgreSQL</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-sp-package" class="level3" data-number="12.2.3">
+<h3 data-number="12.2.3" class="anchored" data-anchor-id="the-sp-package"><span class="header-section-number">12.2.3</span> The <code>sp</code> package</h3>
+<p>The first R package to establish a uniform vector layer class system was <code>sp</code>, released in 2005. Together with <code>rgdal</code> (2003) and <code>rgeos</code> (2011), the <code>sp</code> package dominated the landscape of spatial analysis in R for many years.</p>
+<p>The <code>sp</code> package defines 6 main classes for vector layers (Table <a href="https://geobgu.xyz/r-2021/vector-layers.html#tab:structures-package-sp">7.2</a>):</p>
+<ul>
+<li><p>One for each <strong>geometry type</strong> (points, lines, polygons)</p></li>
+<li><p>One for geometry only and one for geometry with <strong>attributes</strong></p></li>
+</ul>
+<table class="table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 19%">
+<col style="width: 52%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Table 7.2: Spatial data structures in package <code>sp</code></td>
+</tr>
+<tr class="even">
+<td><strong>Class</strong></td>
+<td><strong>Geometry type</strong></td>
+<td><strong>Attributes</strong></td>
+</tr>
+<tr class="odd">
+<td><code>SpatialPoints</code></td>
+<td>Points</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td><code>SpatialPointsDataFrame</code></td>
+<td>Points</td>
+<td><code>data.frame</code></td>
+</tr>
+<tr class="odd">
+<td><code>SpatialLines</code></td>
+<td>Lines</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td><code>SpatialLinesDataFrame</code></td>
+<td>Lines</td>
+<td><code>data.frame</code></td>
+</tr>
+<tr class="odd">
+<td><code>SpatialPolygons</code></td>
+<td>Polygons</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td><code>SpatialPolygonsDataFrame</code></td>
+<td>Polygons</td>
+<td><code>data.frame</code></td>
+</tr>
+</tbody>
+</table>
+<p>We are not going to use <code>sp</code> in this book, but the newer <code>sf</code> package (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#the-sf-package">7.1.4</a>). However, if you are going to work with spatial data in R it is very likely you will encounter <code>sp</code> in forums, books, or other packages, so it is important to be aware of it.</p>
+</section>
+<section id="the-sf-package" class="level3" data-number="12.2.4">
+<h3 data-number="12.2.4" class="anchored" data-anchor-id="the-sf-package"><span class="header-section-number">12.2.4</span> The <code>sf</code> package</h3>
+<p>The <code>sf</code> package (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sf-r-journal">7.2</a>), released in 2016, is a newer package for working with vector layers in R, which we are going to use in this book. In recent years, <code>sf</code> has become the standard package for working with vector data in R, practically replacing <code>sp</code>, <code>rgdal</code>, and <code>rgeos</code>.</p>
+<p>Figure 7.2: Pebesma, 2018, The R Journal (<a href="https://journal.r-project.org/archive/2018-1/" class="uri">https://journal.r-project.org/archive/2018-1/</a>)</p>
+<p>One of the important innovations in <code>sf</code> is a complete implementation of the <a href="https://cran.r-project.org/web/packages/sf/vignettes/sf1.html"><strong>Simple Features</strong></a> standard. Since 2003, Simple Features been widely implemented in <strong>spatial databases</strong> (such as <strong>PostGIS</strong>), commercial GIS (e.g., <strong>ESRI ArcGIS</strong>) and forms the vector data basis for libraries such as <strong>GDAL</strong>. The Simple Features standard defines several types of geometries, of which seven are most commonly used in the world of GIS and spatial data analysis (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:geometry-types">7.6</a>). When working with spatial databases, Simple Features are commonly specified as <a href="https://en.wikipedia.org/wiki/Well-known_text"><strong>Well Known Text (WKT)</strong></a>. A subset of simple features forms the <a href="https://en.wikipedia.org/wiki/GeoJSON"><strong>GeoJSON</strong></a> standard.</p>
+<p>The <code>sf</code> package depends on several external software components (installed along with the R package<sup><a href="https://geobgu.xyz/r-2021/vector-layers.html#fn27">27</a></sup>), most importantly <strong>GDAL</strong>, <strong>GEOS</strong> and <strong>PROJ</strong> (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sf-dependencies">7.3</a>). These well-tested and popular open-source components are common to numerous open-source and commercial software for spatial analysis, such as <strong>QGIS</strong> and <strong>PostGIS</strong>.</p>
+<p>Figure 7.3: <code>sf</code> package dependencies (<a href="https://github.com/edzer/rstudio_conf" class="uri">https://github.com/edzer/rstudio_conf</a>)</p>
+<p>Package <code>sf</code> defines a <em>hierarchical</em> class system with three classes (Table <a href="https://geobgu.xyz/r-2021/vector-layers.html#tab:structures-package-sf">7.3</a>):</p>
+<ul>
+<li><p>Class <code>sfg</code>—a <em>single</em> geometry</p></li>
+<li><p>Class <code>sfc</code>—a geometry column, which is a <em>set</em> of <code>sfg</code> geometries + CRS information</p></li>
+<li><p>Class <code>sf</code>—a layer, which is an <code>sfc</code> geometry column inside a <code>data.frame</code> with non-spatial <em>attributes</em></p></li>
+</ul>
+<table class="table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 21%">
+<col style="width: 65%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Table 7.3: Spatial data structures in package <code>sf</code></td>
+</tr>
+<tr class="even">
+<td><strong>Class</strong></td>
+<td><strong>Hierarchy</strong></td>
+<td><strong>Information</strong></td>
+</tr>
+<tr class="odd">
+<td><code>sfg</code></td>
+<td>Geometry</td>
+<td>type, coordinates</td>
+</tr>
+<tr class="even">
+<td><code>sfc</code></td>
+<td>Geometry column</td>
+<td>set of <code>sfg</code> + CRS</td>
+</tr>
+<tr class="odd">
+<td><code>sf</code></td>
+<td>Layer</td>
+<td><code>sfc</code> + attributes</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>sf</code> class represents a vector layer by extending the <code>data.frame</code> class, supplementing it with a <strong>geometry column</strong>. This is similar to the way that spatial databases are structured. For example, the sample dataset shown in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:nc-geometry-column">7.4</a> represents a polygonal layer with three features and six non-spatial attributes. The attributes refer to demographic and epidemiological attributes of US counties, such as the number of births in 1974 (<code>BIR74</code>), the number of sudden infant death cases in 1974 (<code>SID74</code>), and so on. The seventh column is the <em>geometry column</em>, containing the polygon geometries.</p>
+<p>Figure 7.4: Structure of an <code>sf</code> object (<a href="https://cran.r-project.org/web/packages/sf/vignettes/sf1.html" class="uri">https://cran.r-project.org/web/packages/sf/vignettes/sf1.html</a>)</p>
+<p>Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:nc-plot">7.5</a> shows what the layer in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:nc-geometry-column">7.4</a> would look like when <em>mapped</em>. We can see the outline of the three polygons, as well as the values of all six non-spatial attributes (in separate panels).</p>
+<p>Figure 7.5: Visualization of the <code>sf</code> object shown in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:nc-geometry-column">7.4</a></p>
+</section>
+</section>
+<section id="vector-layers-from-scratch" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="vector-layers-from-scratch"><span class="header-section-number">12.3</span> Vector layers from scratch</h2>
+<section id="overview" class="level3" data-number="12.3.1">
+<h3 data-number="12.3.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">12.3.1</span> Overview</h3>
+<p>As mentioned above (Table <a href="https://geobgu.xyz/r-2021/vector-layers.html#tab:structures-package-sf">7.3</a>), the <code>sf</code> package defines a hierarchical system of data structures, composed of three classes, from simple to complex: <code>sfg</code>, <code>sfc</code> and <code>sf</code>. In this section, we are going to create an object of each of those thress classes, to learn more about them.</p>
+</section>
+<section id="geometry-sfg" class="level3" data-number="12.3.2">
+<h3 data-number="12.3.2" class="anchored" data-anchor-id="geometry-sfg"><span class="header-section-number">12.3.2</span> Geometry (<code>sfg</code>)</h3>
+<p>Objects of class <code>sfg</code>, i.e., a <em>single geometry</em>, can be created using the appropriate function for each geometry type:</p>
+<ul>
+<li><p><code>st_point</code></p></li>
+<li><p><code>st_multipoint</code></p></li>
+<li><p><code>st_linestring</code></p></li>
+<li><p><code>st_multilinestring</code></p></li>
+<li><p><code>st_polygon</code></p></li>
+<li><p><code>st_multipolygon</code></p></li>
+<li><p><code>st_geometrycollection</code></p></li>
+</ul>
+<p>from <em>coordinates</em> passed as:</p>
+<ul>
+<li><p><code>numeric</code> vectors—<code>POINT</code></p></li>
+<li><p><code>matrix</code> objects—<code>MULTIPOINT</code> or <code>LINESTRING</code></p></li>
+<li><p><code>list</code> objects—All other geometries</p></li>
+</ul>
+<p>The seven most commonly used Simple Feature geometry types are displayed in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:geometry-types">7.6</a>.</p>
+<p>Figure 7.6: Simple feature geometry (<code>sfg</code>) types in package <code>sf</code></p>
+<p>Of those seven types, the <code>GEOMETRYCOLLECTION</code> is more rarely used and more difficult to work with. For example, the Shapefile format does not support geometries of type <code>GEOMETRYCOLLECTION</code>. You may wonder why does it even exist. One of the reasons is that some spatial operations may produce a mixture of geometry types. For example, the <em>intersection</em> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-generation-from-pairs">8.3.4.6</a>) between two polygons may be composed of points, lines, and polygons (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:intersection-geometrycollection">7.7</a>).</p>
+<p>Figure 7.7: Intersection between two polygons may yield a <code>GEOMETRYCOLLECTION</code></p>
+<p>Let's create some <code>sfg</code> geometries to see the principles in action. For example, we can create a point geometry object named <code>pnt1</code>, representing a <code>POINT</code> geometry, using the <code>st_point</code> function as follows:</p>
+<pre><code>library(sf) pnt1 = st_point(c(34.798443, 31.243288))</code></pre>
+<p>Printing an <code>sfg</code> object in the console gives its WKT representation:</p>
+<pre><code>pnt1 ## POINT (34.79844 31.24329)</code></pre>
+<p>Note that the <em>class</em> definition of an <code>sfg</code> (geometry) object:</p>
+<pre><code>class(pnt1) ## [1] "XY"    "POINT" "sfg"</code></pre>
+<p>is actually composed of three parts:</p>
+<ul>
+<li><p><code>"XY"</code>—The <em>dimensions</em> type (one of: <code>"XY"</code>, <code>"XYZ"</code>, <code>"XYM"</code> or <code>"XYZM"</code>). In this book, as in most cases of spatial analysis in general, we will be working only with two-dimensional <code>"XY"</code> geometries.</p></li>
+<li><p><code>"POINT"</code>—The <em>geometry</em> type (one of the geometry types: <code>"POINT"</code>, <code>"MULTIPOINT"</code>, etc.)</p></li>
+<li><p><code>"sfg"</code>—The general <em>class</em> (<code>sfg</code> = Simple Feature Geometry)</p></li>
+</ul>
+<p>Here is another example of creating an <code>sfg</code> object. This time, we are creating a <code>POLYGON</code> geometry named <code>a</code>, using function <code>st_polygon</code>. (Don't worry if the expression is unclear: we learn about using <code>list</code> in Chapter <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#processing-spatio-temporal-data">11</a>).</p>
+<pre><code>a = st_polygon(list(cbind(c(0,0,7.5,7.5,0),c(0,-1,-1,0,0))))</code></pre>
+<p>Again, printing the object shows its WKT representation:</p>
+<pre><code>a ## POLYGON ((0 0, 0 -1, 7.5 -1, 7.5 0, 0 0))</code></pre>
+<p>while <code>class</code> reports the dimensionality, geometry type, and general class, in that order:</p>
+<pre><code>class(a) ## [1] "XY"      "POLYGON" "sfg"</code></pre>
+<p>The polygon is displayed in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sfg-polygon">7.8</a>:</p>
+<pre><code>plot(a, border = "blue", col = "#0000FF33", lwd = 2)</code></pre>
+<p>Figure 7.8: An <code>sfg</code> object of type <code>POLYGON</code></p>
+<p>Let's create another <code>POLYGON</code>, named <code>b</code>:</p>
+<pre><code>b = st_polygon(list(cbind(c(0,1,2,3,4,5,6,7,7,0),c(1,0,0.5,0,0,0.5,-0.5,-0.5,1,1))))</code></pre>
+<pre><code>b ## POLYGON ((0 1, 1 0, 2 0.5, 3 0, 4 0, 5 0.5, 6 -0.5, 7 -0.5, 7 1, 0 1))</code></pre>
+<pre><code>class(b) ## [1] "XY"      "POLYGON" "sfg"</code></pre>
+<p>The second polygon is shown in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sfg-polygon2">7.9</a>.</p>
+<pre><code>plot(b, border = "red", col = "#FF000033", lwd = 2)</code></pre>
+<p>Figure 7.9: Another <code>sfg</code> object of type <code>POLYGON</code></p>
+<p>The <code>c</code> function, when given <code>sfg</code> geometries, combines those geometries into one. For example, combining two <code>POLYGON</code> geometries results in a <em>single</em> <code>MULTIPOLYGON</code> geometry:</p>
+<pre><code>ab = c(a, b)</code></pre>
+<pre><code>ab ## MULTIPOLYGON (((0 0, 0 -1, 7.5 -1, 7.5 0, 0 0)), ((0 1, 1 0, 2 0.5, 3 0, 4 0, 5 0.5, 6 -0.5, 7 -0.5, 7 1, 0 1)))</code></pre>
+<pre><code>class(ab) ## [1] "XY"           "MULTIPOLYGON" "sfg"</code></pre>
+<blockquote class="blockquote">
+<p>What type of geometry do you think <code>c(a, b, pnt1)</code> is?</p>
+</blockquote>
+<p>Keep in mind that <code>c</code> always returns a single geometry, composed of all the shapes in its input. This is different from collecting the geometries into a geometry column, where the geometries are kept separate, which is done using function <code>st_sfc</code> as shown below (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-column-sfc">7.2.3</a>).</p>
+<p>The multipolygon we created is shown in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sfc-multipolygon">7.10</a>:</p>
+<pre><code>plot(ab, border = "darkgreen", col = "#00FF0033", lwd = 2)</code></pre>
+<p>Figure 7.10: An <code>sfg</code> object of type <code>MULTIPOLYGON</code></p>
+<p>A new geometry can be calculated applying various functions on an existing one(s). For example, the following example calculates the <strong>intersection</strong> of <code>a</code> and <code>b</code>, which is a new geometry hereby named <code>i</code>. We are going to learn about <code>st_intersection</code>, and other geometry-generating functions, in Chapter <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometric-operations-with-vector-layers">8</a>.</p>
+<pre><code>i = st_intersection(a, b)</code></pre>
+<p>The result happens to be a <code>GEOMETRYCOLLECTION</code>, as demonstrated in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:intersection-geometrycollection">7.7</a>:</p>
+<pre><code>i ## GEOMETRYCOLLECTION (POINT (1 0), LINESTRING (4 0, 3 0), POLYGON ((5.5 0, 7 0, 7 -0.5, 6 -0.5, 5.5 0)))</code></pre>
+<pre><code>class(i) ## [1] "XY"                 "GEOMETRYCOLLECTION" "sfg"</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sfg-geometrycollection">7.11</a> displays the <code>GEOMETRYCOLLECTION</code> named <code>i</code>:</p>
+<pre><code>plot(i, border = "black", col = "darkgrey", lwd = 2)</code></pre>
+<p>Figure 7.11: An <code>sfg</code> object of type <code>GEOMETRYCOLLECTION</code></p>
+</section>
+<section id="geometry-column-sfc" class="level3" data-number="12.3.3">
+<h3 data-number="12.3.3" class="anchored" data-anchor-id="geometry-column-sfc"><span class="header-section-number">12.3.3</span> Geometry column (<code>sfc</code>)</h3>
+<p>Let's create two more point geometries (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-sfg">7.2.2</a>) named <code>pnt2</code> and <code>pnt3</code>, representing two more points:</p>
+<pre><code>pnt2 = st_point(c(34.812831, 31.260284)) pnt3 = st_point(c(35.011635, 31.068616))</code></pre>
+<p>Geometry objects (<code>sfg</code>) can be collected into a <strong>geometry column</strong> (<code>sfc</code>) object. This is done with function <code>st_sfc</code>.</p>
+<p>In addition to the geometries, a geometry column object also contains a <strong>Coordinate Reference System</strong> (CRS) (more information on CRS is given below, in Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#coordinate-reference-systems-crs">7.9</a>) definition, specified with the <code>crs</code> parameter of function <code>st_sfc</code>. Four types of CRS definitions are accepted:</p>
+<ul>
+<li><p>An <strong>EPSG</strong> code (e.g., <code>4326</code>)</p></li>
+<li><p>A <strong>PROJ4</strong> string (e.g., <code>"+proj=longlat +datum=WGS84 +no_defs"</code>)</p></li>
+<li><p>A <strong>WKT</strong> string</p></li>
+<li><p>A <code>crs</code> <em>object</em> of another layer, as returned by <code>st_crs</code></p></li>
+</ul>
+<p>Let's combine the three <code>POINT</code> geometries—<code>pnt1</code>, <code>pnt2</code> and <code>pnt3</code>—into a geometry column (<code>sfc</code>) object named <code>geom</code>. We will specify that the coordinates are lon/lat (WGS84), using the simplest of the three methods—an EPSG code (<code>4326</code>). More information on types of CRS, as well as where we can find the EPSG code of a particular CRS, is given in Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#vector-layer-reprojection">7.9.2</a>.</p>
+<pre><code>geom = st_sfc(pnt1, pnt2, pnt3, crs = 4326)</code></pre>
+<p>Here is a summary of the resulting geometry column:</p>
+<pre><code>geom ## Geometry set for 3 features  ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 34.79844 ymin: 31.06862 xmax: 35.01164 ymax: 31.26028 ## Geodetic CRS:  WGS 84 ## POINT (34.79844 31.24329) ## POINT (34.81283 31.26028) ## POINT (35.01163 31.06862)</code></pre>
+<p>The printout demostrates that other than the geometries themselves, and the derived properties of type, dimensionality, and bounding box, the geometry column contains the additional piece of information on the CRS.</p>
+</section>
+<section id="layer-sf" class="level3" data-number="12.3.4">
+<h3 data-number="12.3.4" class="anchored" data-anchor-id="layer-sf"><span class="header-section-number">12.3.4</span> Layer (<code>sf</code>)</h3>
+<p>A geometry column (<code>sfc</code>) can be combined with non-spatial columns, also known as <em>attributes</em>, resulting in a <strong>layer</strong> (<code>sf</code>) object. In our case, the three points in the <code>sfc</code> geometry column <code>geom</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-column-sfc">7.2.3</a>) represent the location of the three railway stations in Beer-Sheva and Dimona. Let's create a <code>data.frame</code> with several non-spatial properties of the stations, which we already worked with in Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#creating-a-data-frame">4.1.2</a>, using function <code>data.frame</code> (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#creating-a-data-frame">4.1.2</a>):</p>
+<pre><code>name = c("Beer-Sheva Center", "Beer-Sheva University", "Dimona") city = c("Beer-Sheva", "Beer-Sheva", "Dimona") lines = c(4, 5, 1) piano = c(FALSE, TRUE, FALSE) dat = data.frame(name, city, lines, piano) dat ##                    name       city lines piano ## 1     Beer-Sheva Center Beer-Sheva     4 FALSE ## 2 Beer-Sheva University Beer-Sheva     5  TRUE ## 3                Dimona     Dimona     1 FALSE</code></pre>
+<p>Note that the <em>order</em> of rows in the attribute table must match the order of the geometries!</p>
+<pre><code>dat ##                    name       city lines piano ## 1     Beer-Sheva Center Beer-Sheva     4 FALSE ## 2 Beer-Sheva University Beer-Sheva     5  TRUE ## 3                Dimona     Dimona     1 FALSE</code></pre>
+<p>Now, we can combine the attribute table <code>dat</code> (<code>data.frame</code>) and the geometry column <code>geom</code> (<code>sfc</code>). This is done using function <code>st_sf</code>, resulting in a layer (<code>sf</code>):</p>
+<pre><code>layer = st_sf(dat, geom)</code></pre>
+<pre><code>layer ## Simple feature collection with 3 features and 4 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 34.79844 ymin: 31.06862 xmax: 35.01164 ymax: 31.26028 ## Geodetic CRS:  WGS 84 ##                    name       city lines piano                      geom ## 1     Beer-Sheva Center Beer-Sheva     4 FALSE POINT (34.79844 31.24329) ## 2 Beer-Sheva University Beer-Sheva     5  TRUE POINT (34.81283 31.26028) ## 3                Dimona     Dimona     1 FALSE POINT (35.01163 31.06862)</code></pre>
+</section>
+<section id="interactive-mapping-with-mapview" class="level3" data-number="12.3.5">
+<h3 data-number="12.3.5" class="anchored" data-anchor-id="interactive-mapping-with-mapview"><span class="header-section-number">12.3.5</span> Interactive mapping with <code>mapview</code></h3>
+<p>Function <code>mapview</code>—which we are familiar with from Section <a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#interactive-maps-with-mapview">5.3.7.2</a>—is useful for inspecting vector layers too. For example:</p>
+<pre><code>library(mapview) mapview(layer)</code></pre>
+<p><a href="https://geobgu.xyz/r-2021/vector-layers.html#" title="Zoom in">+</a><a href="https://geobgu.xyz/r-2021/vector-layers.html#" title="Zoom out">−</a></p>
+<p>layer</p>
+<p>5 km</p>
+<p>3 mi</p>
+<p><strong>layer</strong></p>
+<p><a href="http://leafletjs.com/" title="A JS library for interactive maps">Leaflet</a> | © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a></p>
+</section>
+</section>
+<section id="extracting-layer-components" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="extracting-layer-components"><span class="header-section-number">12.4</span> Extracting layer components</h2>
+<p>In Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#vector-layers-from-scratch">7.2</a> we:</p>
+<ul>
+<li><p>Started from raw <em>coordinates</em></p></li>
+<li><p>Convered them to <em>geometry</em> objects (<code>sfg</code>) using a function such as <code>st_point</code>, <code>st_polygon</code>, etc. (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-sfg">7.2.2</a>)</p></li>
+<li><p>Combined the geometries to a <em>geometry column</em> (<code>sfc</code>) using function <code>st_sfc</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-column-sfc">7.2.3</a>)</p></li>
+<li><p>Added attributes to the geometry column to get a <em>layer</em> (<code>sf</code>) using function <code>st_sf</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#layer-sf">7.2.4</a>)</p></li>
+</ul>
+<p>which can be summarized as: coordinates → <code>sfg</code> → <code>sfc</code> → <code>sf</code>.</p>
+<p>Sometimes we are interested in the opposite "direction." In other words, we sometimes need to extract the simpler components (geometry, attributes, coordinates) from an existing layer:</p>
+<ul>
+<li><p><code>sf</code> → geometry column (<code>sfc</code>)</p></li>
+<li><p><code>sf</code> → attribute table (<code>data.frame</code>)</p></li>
+<li><p><code>sf</code> → coordinates (<code>matrix</code>)</p></li>
+</ul>
+<p>The geometry column (<code>sfc</code>) component can be extracted from an <code>sf</code> layer object using function <code>st_geometry</code>:</p>
+<pre><code>st_geometry(layer) ## Geometry set for 3 features  ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 34.79844 ymin: 31.06862 xmax: 35.01164 ymax: 31.26028 ## Geodetic CRS:  WGS 84 ## POINT (34.79844 31.24329) ## POINT (34.81283 31.26028) ## POINT (35.01163 31.06862)</code></pre>
+<p>The non-spatial columns of an <code>sf</code> layer, i.e., the attribute table, can be extracted from an <code>sf</code> object using function <code>st_drop_geometry</code>:</p>
+<pre><code>st_drop_geometry(layer) ##                    name       city lines piano ## 1     Beer-Sheva Center Beer-Sheva     4 FALSE ## 2 Beer-Sheva University Beer-Sheva     5  TRUE ## 3                Dimona     Dimona     1 FALSE</code></pre>
+<p>The latter is analogous to opening an attribute table of a vector layer in GIS software, such as ArcGIS (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:arcgis-attribute-table">7.12</a>).</p>
+<p>Figure 7.12: Attribute table in ArcGIS</p>
+<p>The coordinates of <code>sf</code>, <code>sfc</code> or <code>sfg</code> objects can be obtained with function <code>st_coordinates</code>. The coordinates are returned as a <code>matrix</code>:</p>
+<pre><code>st_coordinates(layer) ##          X        Y ## 1 34.79844 31.24329 ## 2 34.81283 31.26028 ## 3 35.01163 31.06862</code></pre>
+<p>In the case of a two-dimensional <code>POINT</code> layer, which is the most common use case of <code>st_coordinates</code>, the returned matrix has two columns <code>X</code> and <code>Y</code> as shown above. (With other types of geometries, the matrix has additional columns containing the information on grouping of point coordinates into shapes.)</p>
+</section>
+<section id="creating-point-layer-from-table" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="creating-point-layer-from-table"><span class="header-section-number">12.5</span> Creating point layer from table</h2>
+<p>A common way of creating a point layer is to transform a table which has X and Y coordinate columns. Function <code>st_as_sf</code> can transform a table (<code>data.frame</code>) into a point layer (<code>sf</code>). In <code>st_as_sf</code> we specify:</p>
+<ul>
+<li><p><code>x</code>—The <code>data.frame</code> to be converted</p></li>
+<li><p><code>coords</code>—Columns names with the coordinates (X, Y)</p></li>
+<li><p><code>crs</code>—The CRS (<code>NA</code> if left unspecified)</p></li>
+</ul>
+<p>Let's take the <code>rainfall.csv</code> table as an example. This table contains UTM 36N (EPSG: <code>32636</code>) coordinates in the columns named <code>x_utm</code> and <code>y_utm</code>:</p>
+<pre><code>rainfall = read.csv("rainfall.csv")</code></pre>
+<pre><code>head(rainfall) ##      num altitude sep oct nov dec jan feb mar apr may              name ## 1 110050       30 1.2  33  90 117 135 102  61  20 6.7 Kfar Rosh Hanikra ## 2 110351       35 2.3  34  86 121 144 106  62  23 4.5              Saar ## 3 110502       20 2.7  29  89 131 158 109  62  24 3.8             Evron ## 4 111001       10 2.9  32  91 137 152 113  61  21 4.8       Kfar Masrik ## 5 111650       25 1.0  27  78 128 136 108  59  21 4.7     Kfar Hamakabi ## 6 120202        5 1.5  27  80 127 136  95  49  19 2.7        Haifa Port ##      x_utm   y_utm ## 1 696533.1 3660837 ## 2 697119.1 3656748 ## 3 696509.3 3652434 ## 4 696541.7 3641332 ## 5 697875.3 3630156 ## 6 687006.2 3633330</code></pre>
+<p>The table can be converted to an <code>sf</code> layer using <code>st_as_sf</code> as follows:</p>
+<pre><code>rainfall = st_as_sf(rainfall, coords = c("x_utm", "y_utm"), crs = 32636)</code></pre>
+<p>Note:</p>
+<ul>
+<li><p>The order of <code>coords</code> column names corresponds to X-Y!</p></li>
+<li><p><code>32636</code> is the EPSG code of the UTM 36N projection (Table <a href="https://geobgu.xyz/r-2021/vector-layers.html#tab:projections-in-book">7.4</a>)</p></li>
+</ul>
+<p>The analogous operation in ArcGIS is the <strong>Display XY Data</strong> menu (Figures <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:display-xy-data-1">7.13</a>–<a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:display-xy-data-3">7.15</a>).</p>
+<p>Figure 7.13: Displaying XY data from CSV in ArcGIS (Step 1)</p>
+<p>Figure 7.14: Displaying XY data from CSV in ArcGIS (Step 2)</p>
+<p>Figure 7.15: Displaying XY data from CSV in ArcGIS (Step 3)</p>
+<p>Here is the resulting <code>sf</code> layer:</p>
+<pre><code>rainfall ## Simple feature collection with 169 features and 12 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 629301.4 ymin: 3270290 xmax: 761589.2 ymax: 3681163 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##       num altitude sep oct nov dec jan feb mar apr may              name ## 1  110050       30 1.2  33  90 117 135 102  61  20 6.7 Kfar Rosh Hanikra ## 2  110351       35 2.3  34  86 121 144 106  62  23 4.5              Saar ## 3  110502       20 2.7  29  89 131 158 109  62  24 3.8             Evron ## 4  111001       10 2.9  32  91 137 152 113  61  21 4.8       Kfar Masrik ## 5  111650       25 1.0  27  78 128 136 108  59  21 4.7     Kfar Hamakabi ## 6  120202        5 1.5  27  80 127 136  95  49  19 2.7        Haifa Port ## 7  120630      450 1.9  36  93 161 166 128  71  21 4.9  Haifa University ## 8  120750       30 1.6  31  91 163 170 146  76  22 4.9             Yagur ## 9  120870      210 1.1  32  93 147 147 109  61  16 4.3        Nir Etzyon ## 10 121051       20 1.8  32  85 147 142 102  56  13 4.5         En Carmel ##                    geometry ## 1  POINT (696533.1 3660837) ## 2  POINT (697119.1 3656748) ## 3  POINT (696509.3 3652434) ## 4  POINT (696541.7 3641332) ## 5  POINT (697875.3 3630156) ## 6  POINT (687006.2 3633330) ## 7  POINT (689553.7 3626282) ## 8  POINT (694694.5 3624388) ## 9  POINT (686489.5 3619716) ## 10 POINT (683148.4 3616846)</code></pre>
+<p>An interactive map, showing the spatial locations of the <code>rainfall</code> stations, can be created using <code>mapview</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#interactive-mapping-with-mapview">7.2.5</a>). Here, we are using the additional <code>zcol</code> parameter to choose which attribute will be used for the color scale:</p>
+<pre><code>mapview(rainfall, zcol = "jan")</code></pre>
+<p><a href="https://geobgu.xyz/r-2021/vector-layers.html#" title="Zoom in">+</a><a href="https://geobgu.xyz/r-2021/vector-layers.html#" title="Zoom out">−</a></p>
+<p><strong>rainfall - jan</strong></p>
+<p>50100150200</p>
+<p>100 km</p>
+<p>50 mi</p>
+<p><strong>rainfall - jan</strong></p>
+<p><a href="http://leafletjs.com/" title="A JS library for interactive maps">Leaflet</a> | © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a></p>
+</section>
+<section id="sf-layer-properties" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="sf-layer-properties"><span class="header-section-number">12.6</span> <code>sf</code> layer properties</h2>
+<section id="dimensions" class="level3" data-number="12.6.1">
+<h3 data-number="12.6.1" class="anchored" data-anchor-id="dimensions"><span class="header-section-number">12.6.1</span> Dimensions</h3>
+<p>An <code>sf</code> layer is basically a special type of <code>data.frame</code>, where one of the columns is a geometry column. Therefore, many of the functions we learned when working with <code>data.frame</code> tables (Chapter <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#tables-conditionals-and-loops">4</a>) also work on <code>sf</code> layers.</p>
+<p>For example, we can get the number of rows, or <em>features</em>, with <code>nrow</code>:</p>
+<pre><code>nrow(rainfall) ## [1] 169</code></pre>
+<p>and the number of <em>columns</em> (including the geometry column) with <code>ncol</code>:</p>
+<pre><code>ncol(rainfall) ## [1] 13</code></pre>
+<p>or both with <code>dim</code>:</p>
+<pre><code>dim(rainfall) ## [1] 169  13</code></pre>
+<blockquote class="blockquote">
+<p>What is the result of <code>st_geometry(rainfall)</code>? <code>st_drop_geometry(rainfall)</code>?</p>
+</blockquote>
+</section>
+<section id="spatial-properties" class="level3" data-number="12.6.2">
+<h3 data-number="12.6.2" class="anchored" data-anchor-id="spatial-properties"><span class="header-section-number">12.6.2</span> Spatial properties</h3>
+<p>The <code>st_bbox</code> function returns the bounding box coordinates, just like for <code>stars</code> objects (Section <a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#dimensions-and-spatial-properties">5.3.8.3</a>):</p>
+<pre><code>st_bbox(rainfall) ##      xmin      ymin      xmax      ymax  ##  629301.4 3270290.2  761589.2 3681162.7</code></pre>
+<p>The <code>st_crs</code> function returns the Coordinate Reference System (CRS), also the same way as for <code>stars</code> objects (Section <a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#dimensions-and-spatial-properties">5.3.8.3</a>):</p>
+<pre><code>st_crs(rainfall) ## Coordinate Reference System: ##   User input: EPSG:32636  ##   wkt: ## PROJCRS["WGS 84 / UTM zone 36N", ##     BASEGEOGCRS["WGS 84", ##         DATUM["World Geodetic System 1984", ##             ELLIPSOID["WGS 84",6378137,298.257223563, ##                 LENGTHUNIT["metre",1]]], ##         PRIMEM["Greenwich",0, ##             ANGLEUNIT["degree",0.0174532925199433]], ##         ID["EPSG",4326]], ##     CONVERSION["UTM zone 36N", ##         METHOD["Transverse Mercator", ##             ID["EPSG",9807]], ##         PARAMETER["Latitude of natural origin",0, ##             ANGLEUNIT["degree",0.0174532925199433], ##             ID["EPSG",8801]], ##         PARAMETER["Longitude of natural origin",33, ##             ANGLEUNIT["degree",0.0174532925199433], ##             ID["EPSG",8802]], ##         PARAMETER["Scale factor at natural origin",0.9996, ##             SCALEUNIT["unity",1], ##             ID["EPSG",8805]], ##         PARAMETER["False easting",500000, ##             LENGTHUNIT["metre",1], ##             ID["EPSG",8806]], ##         PARAMETER["False northing",0, ##             LENGTHUNIT["metre",1], ##             ID["EPSG",8807]]], ##     CS[Cartesian,2], ##         AXIS["(E)",east, ##             ORDER[1], ##             LENGTHUNIT["metre",1]], ##         AXIS["(N)",north, ##             ORDER[2], ##             LENGTHUNIT["metre",1]], ##     USAGE[ ##         SCOPE["unknown"], ##         AREA["World - N hemisphere - 30°E to 36°E - by country"], ##         BBOX[0,30,84,36]], ##     ID["EPSG",32636]]</code></pre>
+<blockquote class="blockquote">
+<p>Question: what is the difference between the two plots in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:two-plots">7.16</a>, created using the following expressions?</p>
+</blockquote>
+<pre><code>plot(st_geometry(rainfall)) plot(st_coordinates(rainfall)[, 1], st_coordinates(rainfall)[, 2])</code></pre>
+<p>Figure 7.16: Two plots</p>
+</section>
+</section>
+<section id="subsetting-based-on-attributes" class="level2" data-number="12.7">
+<h2 data-number="12.7" class="anchored" data-anchor-id="subsetting-based-on-attributes"><span class="header-section-number">12.7</span> Subsetting based on attributes</h2>
+<p>Subsetting of features in an <code>sf</code> vector layer is exactly the same as filtering rows in a <code>data.frame</code> (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#data-frame-subsetting">4.1.5</a>). Remember: an <code>sf</code> layer <em>is</em> a <code>data.frame</code>. For example, the following expressions subset the <code>rainfall</code> layer:</p>
+<pre><code>rainfall[1:10, ] rainfall[rainfall$jan &gt; 100, ]</code></pre>
+<blockquote class="blockquote">
+<p>Which meteorological stations are being selected in each of these two expressions?</p>
+</blockquote>
+<p>Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:rainfall-subsets">7.17</a> shows the resulting subsets:</p>
+<pre><code>plot(st_geometry(rainfall[1:10, ]), main = "rainfall[1:10, ]") plot(st_geometry(rainfall[rainfall$jan &gt; 100, ]), main = "rainfall[rainfall$jan &gt; 100, ]")</code></pre>
+<p>Figure 7.17: Subsets of the <code>rainfall</code> layer</p>
+<p>Subsetting columns in <code>sf</code> is also similar to subsetting columns in a <code>data.frame</code>, with one exception: the geometry column. The geometry column "sticks" to the subset, by default, even if we do not explicitly select it, so that the resulting subset remains an <code>sf</code> object:</p>
+<pre><code>rainfall[1:5, c("jan", "feb")] ## Simple feature collection with 5 features and 2 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 696509.3 ymin: 3630156 xmax: 697875.3 ymax: 3660837 ## Projected CRS: WGS 84 / UTM zone 36N ##   jan feb                 geometry ## 1 135 102 POINT (696533.1 3660837) ## 2 144 106 POINT (697119.1 3656748) ## 3 158 109 POINT (696509.3 3652434) ## 4 152 113 POINT (696541.7 3641332) ## 5 136 108 POINT (697875.3 3630156)</code></pre>
+<p>In case we do need to omit the geometry column and get a <code>data.frame</code>, we can apply <code>st_drop_geometry</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#extracting-layer-components">7.3</a>) on the subset:</p>
+<pre><code>st_drop_geometry(rainfall[1:5, c("jan", "feb")]) ##   jan feb ## 1 135 102 ## 2 144 106 ## 3 158 109 ## 4 152 113 ## 5 136 108</code></pre>
+</section>
+<section id="reading-vector-layers" class="level2" data-number="12.8">
+<h2 data-number="12.8" class="anchored" data-anchor-id="reading-vector-layers"><span class="header-section-number">12.8</span> Reading vector layers</h2>
+<p>In addition to creating from raw coordinates (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#vector-layers-from-scratch">7.2</a>) and transforming a <code>data.frame</code> to point layer (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#creating-point-layer-from-table">7.4</a>), we often create vector layers by reading from a file or from a spatial database (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#vector-file-formats">7.1.2</a>)<sup><a href="https://geobgu.xyz/r-2021/vector-layers.html#fn28">28</a></sup>. Reading a vector layer from a file or a database is done using the <code>st_read</code> function.</p>
+<p>For example, the following expression reads the <strong>Shapefile</strong> of US county boundaries, named <code>USA_2_GADM_fips.shp</code>, from the course materials. In case the Shapefile is located in the working directory, we need to specify the name of just the <code>.shp</code> file, even though the Shapefile contains several other files (Table <a href="https://geobgu.xyz/r-2021/vector-layers.html#tab:vector-formats">7.1</a>):</p>
+<pre><code>county = st_read("USA_2_GADM_fips.shp")</code></pre>
+<pre><code>county ## Simple feature collection with 3103 features and 4 fields ## Geometry type: MULTIPOLYGON ## Dimension:     XY ## Bounding box:  xmin: -124.7628 ymin: 24.52042 xmax: -66.94889 ymax: 49.3833 ## Geodetic CRS:  WGS 84 ## First 10 features: ##         NAME_1     NAME_2 TYPE_2  FIPS                       geometry ## 1  Connecticut Litchfield County 09005 MULTIPOLYGON (((-73.05166 4... ## 2  Connecticut   Hartford County 09003 MULTIPOLYGON (((-72.50941 4... ## 3  Connecticut    Tolland County 09013 MULTIPOLYGON (((-72.13582 4... ## 4  Connecticut    Windham County 09015 MULTIPOLYGON (((-71.79794 4... ## 5   California   Siskiyou County 06093 MULTIPOLYGON (((-122.2873 4... ## 6   California  Del Norte County 06015 MULTIPOLYGON (((-124.2492 4... ## 7   California      Modoc County 06049 MULTIPOLYGON (((-120.0003 4... ## 8  Connecticut New London County 09011 MULTIPOLYGON (((-72.225 41.... ## 9  Connecticut  Fairfield County 09001 MULTIPOLYGON (((-73.65778 4... ## 10 Connecticut  Middlesex County 09007 MULTIPOLYGON (((-72.47361 4...</code></pre>
+<p>Let's also read a <strong>GeoJSON</strong> file with the location of three particular airports in New Mexico:</p>
+<pre><code>airports = st_read("airports.geojson")</code></pre>
+<pre><code>airports ## Simple feature collection with 3 features and 1 field ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: -106.7947 ymin: 35.04807 xmax: -106.0892 ymax: 35.61621 ## Geodetic CRS:  WGS 84 ##                        name                   geometry ## 1 Albuquerque International POINT (-106.6169 35.04807) ## 2           Double Eagle II POINT (-106.7947 35.15559) ## 3        Santa Fe Municipal POINT (-106.0892 35.61621)</code></pre>
+</section>
+<section id="basic-plotting" class="level2" data-number="12.9">
+<h2 data-number="12.9" class="anchored" data-anchor-id="basic-plotting"><span class="header-section-number">12.9</span> Basic plotting</h2>
+<p>When plotting an <code>sf</code> object with <code>plot</code>, we get multiple small maps—one map for each attribute. This can be useful to quickly examine the types of spatial variation in our data. For example (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sf-plot">7.18</a>):</p>
+<pre><code>plot(county)</code></pre>
+<p>Figure 7.18: Plot of <code>sf</code> object</p>
+<p>Plotting a single attribute adds a legend (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sf-plot-legend">7.19</a>). The <code>key.width</code> and <code>key.pos</code> let us control the amount of space the legend takes and its placement, respectively:</p>
+<pre><code>plot(county[, "TYPE_2"], key.width = lcm(5), key.pos = 4)</code></pre>
+<p>Figure 7.19: Plot of <code>sf</code> object, single attribute with legend</p>
+<p>Plotting an <code>sfc</code> or an <code>sfg</code> object shows just the geometry (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sfg-plot">7.20</a>):</p>
+<pre><code>plot(st_geometry(county))</code></pre>
+<p>Figure 7.20: Plot of <code>sfc</code> object</p>
+<p>We can use graphical parameters to control the appearance of plotted geometries, such as:</p>
+<ul>
+<li><p><code>col</code>—Fill color</p></li>
+<li><p><code>border</code>—Outline color</p></li>
+<li><p><code>pch</code>—Point shape</p></li>
+<li><p><code>cex</code>—Point size</p></li>
+</ul>
+<p>For example, the following expression draws county borders in grey (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:basic-sfc-plot">7.21</a>):</p>
+<pre><code>plot(st_geometry(county), border = "grey")</code></pre>
+<p>Figure 7.21: Basic plot of <code>sfc</code> object</p>
+<p>Additional vector layers can be drawn in an existing graphical window using <code>add=TRUE</code>, similarly to the concept of layers in GIS software. For example, the following expressions draw <em>both</em> <code>county</code> and <code>airports</code> geometries (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sfg-plot-add">7.22</a>). Note how the second expression uses <code>add=TRUE</code>:</p>
+<pre><code>plot(st_geometry(county), border = "grey") plot(st_geometry(airports), col = "red", add = TRUE)</code></pre>
+<p>Figure 7.22: Using <code>add=TRUE</code> in <code>plot</code></p>
+<p>We can also use <code>add=TRUE</code> to combine <code>sfg</code> or <code>sfc</code> geometries with <em>rasters</em> in the same plot. For example, let's plot the <code>rainfall</code> layer on top of the <code>rainfall.tif</code> raster, which is an interpolated rainfall surface we met in Chapter <a href="https://geobgu.xyz/r-2021/the-r-environment.html#the-r-environment">1</a>. First we will read the raster file:</p>
+<pre><code>library(stars) r = read_stars("rainfall.tif") names(r) = "rainfall (mm)"</code></pre>
+<p>and then plot both layers (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:plot-vector-raster">7.23</a>):</p>
+<pre><code>plot(r, breaks = "equal", col = hcl.colors(11, "Spectral"), reset = FALSE) plot(st_geometry(rainfall), add = TRUE)</code></pre>
+<p>Figure 7.23: <code>sfc</code> layer on top of a raster</p>
+<p>Note that we need to use the additional argument <code>reset=FALSE</code> whenever we are adding more layers to a <code>stars</code> raster plot.</p>
+</section>
+<section id="coordinate-reference-systems-crs" class="level2" data-number="12.10">
+<h2 data-number="12.10" class="anchored" data-anchor-id="coordinate-reference-systems-crs"><span class="header-section-number">12.10</span> Coordinate Reference Systems (CRS)</h2>
+<section id="what-are-crs" class="level3" data-number="12.10.1">
+<h3 data-number="12.10.1" class="anchored" data-anchor-id="what-are-crs"><span class="header-section-number">12.10.1</span> What are CRS?</h3>
+<p>A <strong>Coordinate Reference System (CRS)</strong> defines how the coordinates in our geometries relate to the surface of the Earth. There are two main types of CRS:</p>
+<ul>
+<li><p><strong>Geographic</strong>—longitude and latitude, in degrees</p></li>
+<li><p><strong>Projected</strong>—implying flat surface, usually in units of true distance (e.g., meters)</p></li>
+</ul>
+<p>For example, Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:geographic-vs-projected">7.24</a> shows the same polygonal layer (U.S. counties) in two different projection. On the left, the county layer is in the WGS84 geographic projection. Indeed, we can see that the axes are given in degrees of longitude and latitude. For example, we can see how the nothern border of U.S. follows the 49° latitude line. On the right, the same layer is displayed in the US National Atlas projection, where units are arbitrary but reflect true distance (meters). For example, the distance between every two consecutive grid lines is 1,000,000 meters or 1,000 kilometers.</p>
+<p>Figure 7.24: US counties in WGS84 and US Atlas projections</p>
+</section>
+<section id="vector-layer-reprojection" class="level3" data-number="12.10.2">
+<h3 data-number="12.10.2" class="anchored" data-anchor-id="vector-layer-reprojection"><span class="header-section-number">12.10.2</span> Vector layer reprojection</h3>
+<p><strong>Reprojection</strong> is the transformation of geometry coordinates, from one CRS to another. It is an important part of spatial analysis workflow, since we often need to:</p>
+<ul>
+<li><p>Transform several layers into the same projection, so that they can be displayed one on top of the other (e.g., Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:sfg-plot-add">7.22</a>) or so that they can be subject to a spatial operator (e.g., Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:intersection-geometrycollection">7.7</a>)</p></li>
+<li><p>Switch between geographic and projected CRS</p></li>
+</ul>
+<p>A vector layer can be reprojected with <code>st_transform</code>. The <code>st_transform</code> function has two important parameters:</p>
+<ul>
+<li><p><code>x</code>—The layer to be reprojected</p></li>
+<li><p><code>crs</code>—The <em>target</em> CRS</p></li>
+</ul>
+<blockquote class="blockquote">
+<p>Why don't we need to specify the <em>origin</em> CRS in <code>st_transform</code>?</p>
+</blockquote>
+<p>As mentioned above, the CRS can be specified in one of four ways, using an EPSG code, a PROJ4 string, a WKT string, or a <code>crs</code> object (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-column-sfc">7.2.3</a>). Where can we find EPSG codes or WKT definitions of different projections?</p>
+<ul>
+<li><p>We can use CRS databases on the internet, such as <a href="http://spatialreference.org/">http://spatialreference.org</a> or <a href="http://epsg.io/" class="uri">http://epsg.io/</a>, to look up CRS definitions for a given country, of CRS name, using the search box.</p></li>
+<li><p>We can use the <code>make_EPSG</code> function from the <code>rgdal</code> package in R, which returns a <code>data.frame</code> of CRS definitions. The <code>data.frame</code> can be filtered to locate the CRS of interest. For example, the following expressions return the information on CRS where the description contains the word "Israel."</p></li>
+</ul>
+<pre><code>library(rgdal) dat = make_EPSG() dat[grepl("Israel", dat$note), ] ##       code                             note ## 86    4141                      Israel 1993 ## 1158  2039    Israel 1993 / Israeli TM Grid ## 2527 28193 Palestine 1923 / Israeli CS Grid ## 5458  6984                  Israeli Grid 05 ## 5459  6991               Israeli Grid 05/12 ##                                                                                                                                                       prj4 ## 86                                                                                                           +proj=longlat +ellps=GRS80 +no_defs +type=crs ## 1158      +proj=tmerc +lat_0=31.7343936111111 +lon_0=35.2045169444444 +k=1.0000067 +x_0=219529.584 +y_0=626907.39 +ellps=GRS80 +units=m +no_defs +type=crs ## 2527 +proj=cass +lat_0=31.7340969444444 +lon_0=35.2120805555556 +x_0=170251.555 +y_0=1126867.909 +a=6378300.789 +b=6356566.435 +units=m +no_defs +type=crs ## 5458      +proj=tmerc +lat_0=31.7343936111111 +lon_0=35.2045169444444 +k=1.0000067 +x_0=219529.584 +y_0=626907.39 +ellps=GRS80 +units=m +no_defs +type=crs ## 5459      +proj=tmerc +lat_0=31.7343936111111 +lon_0=35.2045169444444 +k=1.0000067 +x_0=219529.584 +y_0=626907.39 +ellps=GRS80 +units=m +no_defs +type=crs ##               prj_method ## 86                (null) ## 1158 Transverse Mercator ## 2527     Cassini-Soldner ## 5458 Transverse Mercator ## 5459 Transverse Mercator</code></pre>
+<p>In this book, we are going to encounter five different projections: WGS84, Sinusoidal, UTM 36N, ITM and US National Atlas (Table <a href="https://geobgu.xyz/r-2021/vector-layers.html#tab:projections-in-book">7.4</a>). We are going to specify them (e.g., in <code>st_transform</code>) using their EPSG codes, which is the easiest method.</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 11%">
+<col style="width: 44%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Table 7.4: Projections used in this book</td>
+</tr>
+<tr class="even">
+<td><strong>Name</strong></td>
+<td><strong>Type</strong></td>
+<td><strong>Area</strong></td>
+<td><strong>Units</strong></td>
+<td><strong>EPSG code</strong></td>
+</tr>
+<tr class="odd">
+<td>WGS84</td>
+<td>Geographic</td>
+<td>World</td>
+<td>degrees</td>
+<td><code>4326</code></td>
+</tr>
+<tr class="even">
+<td>Sinusoidal</td>
+<td>Projected</td>
+<td>World</td>
+<td>meters</td>
+<td>-</td>
+</tr>
+<tr class="odd">
+<td>UTM 36N</td>
+<td>Projected</td>
+<td>Israel</td>
+<td>meters</td>
+<td><code>32636</code></td>
+</tr>
+<tr class="even">
+<td>ITM</td>
+<td>Projected</td>
+<td>Israel</td>
+<td>meters</td>
+<td><code>2039</code></td>
+</tr>
+<tr class="odd">
+<td>US National Atlas</td>
+<td>Projected</td>
+<td>USA</td>
+<td>meters</td>
+<td><code>2163</code></td>
+</tr>
+</tbody>
+</table>
+<p>Now, let's see how we can use the <code>st_transform</code> function to repriject layers, in practice. The <code>county</code> and <code>airports</code> are currently in WGS84 (EPSG:<code>4326</code>) (How can we check?). Suppose that we would like to reproject those layers to the the US National Atlas Equal Area projection (EPSG:<code>2163</code>). The following expressions implement the reprojection:</p>
+<pre><code>county = st_transform(county, 2163) airports = st_transform(airports, 2163)</code></pre>
+<p>The modified layers are shown in Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:county-airports-projected">7.25</a>. We can clearly see that the layer orientation has changes (also see Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:geographic-vs-projected">7.24</a>).</p>
+<pre><code>plot(st_geometry(county), border = "grey") plot(st_geometry(airports), col = "red", add = TRUE)</code></pre>
+<p>Figure 7.25: The <code>county</code> and <code>airports</code> layers in the US National Atlas Projection (EPSG=<code>2163</code>)</p>
+<p>Examining the layer coordinates also shows that, indeed, the coordinates have changed with reprojecton:</p>
+<pre><code>st_coordinates(st_transform(airports, 4326))  # WGS84 coordinates ##           X        Y ## 1 -106.6169 35.04807 ## 2 -106.7947 35.15559 ## 3 -106.0892 35.61621</code></pre>
+<pre><code>st_coordinates(st_transform(airports, 2163))  # US National Atlas coordinates ##           X        Y ## 1 -603868.2 -1081605 ## 2 -619184.5 -1068431 ## 3 -551689.8 -1022366</code></pre>
+<blockquote class="blockquote">
+<p>Create a subset of <code>county</code> with the counties of New-Mexico, Arizona and Texas only, and plot the result (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:subset-three-states">7.26</a>).</p>
+</blockquote>
+<p>Figure 7.26: Subset of three states from the <code>county</code> layer</p>
+</section>
+</section>
+<section id="writing-vector-layers" class="level2" data-number="12.11">
+<h2 data-number="12.11" class="anchored" data-anchor-id="writing-vector-layers"><span class="header-section-number">12.11</span> Writing vector layers</h2>
+<p>Writing an <code>sf</code> object to a file can be done with <code>st_write</code>. Before writing the <code>rainfall</code> layer to disk, let's calculate a new column called <code>annual</code> with the annual rainfall (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#the-apply-function">4.5</a>):</p>
+<pre><code>m = c("sep", "oct", "nov", "dec", "jan", "feb", "mar", "apr", "may") rainfall$annual = apply(st_drop_geometry(rainfall[, m]), 1, sum)</code></pre>
+<blockquote class="blockquote">
+<p>In the last expression, why did we use <code>st_drop_geometry(rainfall[, m])</code> as the first argument in <code>apply</code>, instead of <code>rainfall[, m]</code>?</p>
+</blockquote>
+<p>The <code>sf</code> object can be written to a Shapefile with <code>st_write</code>, as follows:</p>
+<pre><code>st_write(rainfall, "rainfall_pnt.shp")</code></pre>
+<p>The format is automatically determined based on the <code>.shp</code> file extension. To overwrite an existing file, use <code>delete_dsn=TRUE</code>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ch6_processing.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch8.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

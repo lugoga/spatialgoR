@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Geospatial Technology and Spatial Analysis in R - 16&nbsp; Processing spatio-temporal data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch12.html" rel="next">
+<link href="./ch10.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch11.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#aims" id="toc-aims" class="nav-link active" data-scroll-target="#aims"><span class="header-section-number">16.1</span> Aims</a></li>
+  <li><a href="#lists" id="toc-lists" class="nav-link" data-scroll-target="#lists"><span class="header-section-number">16.2</span> Lists</a>
+  <ul class="collapse">
+  <li><a href="#the-list-class" id="toc-the-list-class" class="nav-link" data-scroll-target="#the-list-class"><span class="header-section-number">16.2.1</span> The <code>list</code> class</a></li>
+  <li><a href="#list-subsetting" id="toc-list-subsetting" class="nav-link" data-scroll-target="#list-subsetting"><span class="header-section-number">16.2.2</span> List subsetting</a></li>
+  <li><a href="#the-lapply-function" id="toc-the-lapply-function" class="nav-link" data-scroll-target="#the-lapply-function"><span class="header-section-number">16.2.3</span> The <code>lapply</code> function</a></li>
+  <li><a href="#the-split-function" id="toc-the-split-function" class="nav-link" data-scroll-target="#the-split-function"><span class="header-section-number">16.2.4</span> The <code>split</code> function</a></li>
+  <li><a href="#the-do.call-function" id="toc-the-do.call-function" class="nav-link" data-scroll-target="#the-do.call-function"><span class="header-section-number">16.2.5</span> The <code>do.call</code> function</a></li>
+  </ul></li>
+  <li><a href="#spatio-temporal-data" id="toc-spatio-temporal-data" class="nav-link" data-scroll-target="#spatio-temporal-data"><span class="header-section-number">16.3</span> Spatio-temporal data</a></li>
+  <li><a href="#aggregation-of-spatio-temporal-rasters" id="toc-aggregation-of-spatio-temporal-rasters" class="nav-link" data-scroll-target="#aggregation-of-spatio-temporal-rasters"><span class="header-section-number">16.4</span> Aggregation of spatio-temporal rasters</a>
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">16.4.1</span> 11.3.1 Introduction</a></li>
+  <li><a href="#aggregating-time-periods" id="toc-aggregating-time-periods" class="nav-link" data-scroll-target="#aggregating-time-periods"><span class="header-section-number">16.4.2</span> Aggregating time periods</a></li>
+  <li><a href="#aggregating-the-x-dimension" id="toc-aggregating-the-x-dimension" class="nav-link" data-scroll-target="#aggregating-the-x-dimension"><span class="header-section-number">16.4.3</span> Aggregating the <code>"x"</code> dimension</a></li>
+  </ul></li>
+  <li><a href="#processing-trajectory-data" id="toc-processing-trajectory-data" class="nav-link" data-scroll-target="#processing-trajectory-data"><span class="header-section-number">16.5</span> Processing trajectory data</a>
+  <ul class="collapse">
+  <li><a href="#the-storms-dataset" id="toc-the-storms-dataset" class="nav-link" data-scroll-target="#the-storms-dataset"><span class="header-section-number">16.5.1</span> The <code>storms</code> dataset</a></li>
+  <li><a href="#setting-storm-ids" id="toc-setting-storm-ids" class="nav-link" data-scroll-target="#setting-storm-ids"><span class="header-section-number">16.5.2</span> Setting storm IDs</a></li>
+  <li><a href="#to-points" id="toc-to-points" class="nav-link" data-scroll-target="#to-points"><span class="header-section-number">16.5.3</span> To points</a></li>
+  <li><a href="#points-to-lines" id="toc-points-to-lines" class="nav-link" data-scroll-target="#points-to-lines"><span class="header-section-number">16.5.4</span> Points to lines</a></li>
+  <li><a href="#trajectory-data" id="toc-trajectory-data" class="nav-link" data-scroll-target="#trajectory-data"><span class="header-section-number">16.5.5</span> Trajectory data</a></li>
+  <li><a href="#line-length" id="toc-line-length" class="nav-link" data-scroll-target="#line-length"><span class="header-section-number">16.5.6</span> Line length</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="aims" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="aims"><span class="header-section-number">16.1</span> Aims</h2>
+<p>Our aims in this chapter are:</p>
+<ul>
+<li><p>Learn to work with <code>list</code> objects</p></li>
+<li><p>Present several characteristics of spatio-temporal data</p></li>
+<li><p>Demonstrate spatio-temporal data processing:</p>
+<ul>
+<li><p>Aggregation of raster spatio-temporal data</p></li>
+<li><p>Reshaping of vector trajectory data</p></li>
+</ul></li>
+</ul>
+<p>We will use the following R packages:</p>
+<ul>
+<li><p><code>stars</code></p></li>
+<li><p><code>dplyr</code></p></li>
+<li><p><code>data.table</code></p></li>
+<li><p><code>sf</code></p></li>
+<li><p><code>units</code></p></li>
+</ul>
+</section>
+<section id="lists" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="lists"><span class="header-section-number">16.2</span> Lists</h2>
+<section id="the-list-class" class="level3" data-number="16.2.1">
+<h3 data-number="16.2.1" class="anchored" data-anchor-id="the-list-class"><span class="header-section-number">16.2.1</span> The <code>list</code> class</h3>
+<p>A <code>list</code> is a collection of objects of <em>any</em> class. There are no restrictions as for the class and dimensions of each list element. Lists are therefore the most <em>flexible</em> of the base R data structures.</p>
+<p>A <code>list</code> can be <em>created</em> by passing individual objects to the <code>list</code> function. For example, the following expression creates a <code>list</code> object named <code>x</code>, which contains the three vectors <code>c(1,3)</code>, <code>c(4,5,6)</code> and <code>8</code>:</p>
+<pre><code>x = list(c(1, 3), c(4, 5, 6), 8)</code></pre>
+<p>Using the <code>class</code> function we can make sure that <code>x</code> is indeed a <code>list</code>:</p>
+<pre><code>class(x) ## [1] "list"</code></pre>
+<p>Printing a list shows the internal objects it contains. In an unnamed list, the elements are marked with indices inside double square brackets (<code>[[</code>):</p>
+<pre><code>x ## [[1]] ## [1] 1 3 ##  ## [[2]] ## [1] 4 5 6 ##  ## [[3]] ## [1] 8</code></pre>
+<p>List element <em>names</em> can be accessed with <code>names</code>:</p>
+<pre><code>names(x) ## NULL</code></pre>
+<p>and modified by assignment to <code>names</code>:</p>
+<pre><code>names(x) = c("a", "b", "c")</code></pre>
+<p>As a result of the above expression, <code>x</code> is now a named <code>list</code>. When printing a named <code>list</code>, elements are marked with <code>$</code> symbols followed by element names:</p>
+<pre><code>x ## $a ## [1] 1 3 ##  ## $b ## [1] 4 5 6 ##  ## $c ## [1] 8</code></pre>
+</section>
+<section id="list-subsetting" class="level3" data-number="16.2.2">
+<h3 data-number="16.2.2" class="anchored" data-anchor-id="list-subsetting"><span class="header-section-number">16.2.2</span> List subsetting</h3>
+<p>The <code>[</code> operator gives a <code>list</code> subset, as a <em>new list</em>. Numeric indices or element names (in case the <code>list</code> is named) can be used. For example, either of the following expression returns a <code>list</code> with just the first two elements of <code>x</code>:</p>
+<pre><code>x[1:2] ## $a ## [1] 1 3 ##  ## $b ## [1] 4 5 6</code></pre>
+<pre><code>x[c("a", "b")] ## $a ## [1] 1 3 ##  ## $b ## [1] 4 5 6</code></pre>
+<p>Either of the following expressions returns a <code>list</code> with just the third element of <code>x</code>:</p>
+<pre><code>x[3] ## $c ## [1] 8</code></pre>
+<pre><code>x["c"] ## $c ## [1] 8</code></pre>
+<p>The <code>[[</code> or <code>$</code> operators return the <em>contents</em> of an <em>individual</em> <code>list</code> element (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:list-subset-methods">11.1</a>). For example, either of the following expressions returns the second element of <code>x</code>, which is a <code>numeric</code> vector:</p>
+<pre><code>x[[2]] ## [1] 4 5 6</code></pre>
+<pre><code>x[["b"]] ## [1] 4 5 6</code></pre>
+<pre><code>x$b ## [1] 4 5 6</code></pre>
+<p>Note that the <code>[[</code> operator can be used with either <code>numeric</code> or <code>character</code> indices (in quotes), while the <code>$</code> operator only works with character indices (without quotes).</p>
+<p>Figure 11.1: The difference between the <code>[</code> and <code>[[</code> operators when subsetting a <code>list</code> (<a href="http://r4ds.had.co.nz/vectors.html" class="uri">http://r4ds.had.co.nz/vectors.html</a>)</p>
+<p>List element names can be removed by assigning <code>NULL</code> to the <code>names</code> property:</p>
+<pre><code>names(x) = NULL</code></pre>
+</section>
+<section id="the-lapply-function" class="level3" data-number="16.2.3">
+<h3 data-number="16.2.3" class="anchored" data-anchor-id="the-lapply-function"><span class="header-section-number">16.2.3</span> The <code>lapply</code> function</h3>
+<p>One of the most useful functions when working with <code>list</code> objects is <code>lapply</code>. The <code>lapply</code> function is used to "do something" with each <code>list</code> element, getting back a matching <code>list</code> of results. The <code>lapply</code> function:</p>
+<ul>
+<li><p>"Splits" a <code>list</code> to individual elements</p></li>
+<li><p>Calls a function on each element</p></li>
+<li><p>Combines the results back to a new <code>list</code></p></li>
+</ul>
+<p>The <code>lapply</code> function is therefore conceptually similar to <code>apply</code> (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#the-apply-function">4.5</a>), only operating on <code>list</code> elements, rather than the rows or the columns of a <code>matrix</code> or a <code>data.frame</code> (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:apply-lapply">11.2</a>).</p>
+<p>Figure 11.2: <code>apply</code> and <code>lapply</code></p>
+<p>For example, the following expressions apply the <code>mean</code> (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:apply-lapply">11.2</a>), <code>range</code> and <code>is.na</code> functions on each element in the list <code>x</code>. In each case, the returned object from <code>lapply</code> a new <code>list</code> with the results:</p>
+<pre><code>lapply(x, mean) ## [[1]] ## [1] 2 ##  ## [[2]] ## [1] 5 ##  ## [[3]] ## [1] 8</code></pre>
+<pre><code>lapply(x, range) ## [[1]] ## [1] 1 3 ##  ## [[2]] ## [1] 4 6 ##  ## [[3]] ## [1] 8 8</code></pre>
+<pre><code>lapply(x, is.na) ## [[1]] ## [1] FALSE FALSE ##  ## [[2]] ## [1] FALSE FALSE FALSE ##  ## [[3]] ## [1] FALSE</code></pre>
+</section>
+<section id="the-split-function" class="level3" data-number="16.2.4">
+<h3 data-number="16.2.4" class="anchored" data-anchor-id="the-split-function"><span class="header-section-number">16.2.4</span> The <code>split</code> function</h3>
+<p>The <code>split</code> function can be used to <em>split</em> a <code>data.frame</code> to a <code>list</code> of <code>data.frame</code> subsets, according to unique values of the given vector (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:split">11.3</a>).</p>
+<p>Figure 11.3: The <code>split</code> function</p>
+<p>For the next example, let's ctreate a small <code>data.frame</code> named <code>dat</code>:</p>
+<pre><code>dat = data.frame(   y = c(3, 5, 1, 4, 5),   g = c("f", "m", "f", "f", "m") ) dat ##   y g ## 1 3 f ## 2 5 m ## 3 1 f ## 4 4 f ## 5 5 m</code></pre>
+<p>and a vector named <code>a</code> which matches the number of rows in <code>dat</code>:</p>
+<pre><code>a = c("a", "a", "b", "a", "b") a ## [1] "a" "a" "b" "a" "b"</code></pre>
+<p>Using <code>split</code>, we can "split" <code>dat</code> to a <code>list</code> of subsets, with the corresponding rows to all levels in the vector <code>a</code> (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:split">11.3</a>):</p>
+<pre><code>split(dat, a) ## $a ##   y g ## 1 3 f ## 2 5 m ## 4 4 f ##  ## $b ##   y g ## 3 1 f ## 5 5 m</code></pre>
+<blockquote class="blockquote">
+<p>What type of object will be the result of <code>split(dat, dat$y)</code>? How many elements will it have?</p>
+</blockquote>
+</section>
+<section id="the-do.call-function" class="level3" data-number="16.2.5">
+<h3 data-number="16.2.5" class="anchored" data-anchor-id="the-do.call-function"><span class="header-section-number">16.2.5</span> The <code>do.call</code> function</h3>
+<p>The <code>do.call</code> function can be used to pass a <code>list</code> of function arguments to another function. For example, instead of the following hypothetical function call of <code>f</code> with arguments <code>a</code>, <code>b</code>, <code>c</code> and <code>d</code>:</p>
+<pre><code>f(a, b, c, d)</code></pre>
+<p>we can use the following equivalent expression with <code>do.call</code>:</p>
+<pre><code>do.call(f, list(a, b, c, d))</code></pre>
+<p>The <code>do.call</code> function is useful when we want to call a function with a <em>large</em> or <em>variable</em> number of arguments—passed as <code>list</code> elements—without having to specify them by name.</p>
+<p>For example, suppose we want to combine all internal vectors in the list <code>x</code> to a single vector, using the <code>c</code> function. Instead of specifying each and every element:</p>
+<pre><code>c(x[[1]], x[[2]], x[[3]]) ## [1] 1 3 4 5 6 8</code></pre>
+<p>we can use <code>do.call</code>:</p>
+<pre><code>do.call(c, x) ## [1] 1 3 4 5 6 8</code></pre>
+<p>Now that we know how to work with <code>list</code> objects, we move on to defining spatio-temporal data (Section <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#spatio-temporal-data">11.2</a>) and using the <code>list</code> class for spatio-temporal data processing (Sections <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#aggregation-of-spatio-temporal-rasters">11.3</a>–<a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#processing-trajectory-data">11.4</a>).</p>
+</section>
+</section>
+<section id="spatio-temporal-data" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="spatio-temporal-data"><span class="header-section-number">16.3</span> Spatio-temporal data</h2>
+<p>It can be argued that all data are <strong>spatio-temporal</strong>, since they were measured in certain <em>location(s)</em> and <em>time(s)</em>, even if the locations and times were not recorded and/or are irrelevant for analysis. However, we usually refer to data as <em>spatio-temporal</em> when the locations and times of observation were recorded and are relevant for analysis. Here are some examples of spatio-temporal data:</p>
+<ul>
+<li><p>Time-series of satellite images</p></li>
+<li><p>Temperature measurements in meteorological stations over time</p></li>
+<li><p>Voting results in administrative units during several election campaigns</p></li>
+<li><p>Movement tracks of people or animals, with or without associated measurements (heart rate, activity type, etc.)</p></li>
+<li><p>Spatial pattern of epidemic disease outbreak</p></li>
+<li><p>Volcanic eruption event locations over time</p></li>
+</ul>
+<p>Methods and tools for processing and analyzing spatio-temporal data are generally less developed than methods for working with spatial or temporal data. R has numeroud specialized packages for analyzing spatio-temporal data. The important ones are listed in the <em>Handling and Analyzing Spatio-Temporal Data</em> <a href="https://cran.r-project.org/web/views/SpatioTemporal.html">task view</a>.</p>
+<p>Conceptually, we can classify types of spatio-temporal data according to the arrangement of observations in space-time (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:space-time-types">11.4</a>). For example, spatio-temporal data may form a regular or irregular "grid," depending on whether the observations were repeatedly measured at the same locations and times or whether each observations has a unique space-time "stamp." Trajectories are distinguised by the fact that observations usually refer to an individual object (or few objects) observed in consecutive times.</p>
+<p>Figure 11.4: Space-time dataset types (<a href="https://www.jstatsoft.org/article/view/v051i07" class="uri">https://www.jstatsoft.org/article/view/v051i07</a>)</p>
+<p>For example, meteorological data (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:pm-data">11.5</a>) and satellite data (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:satellite-data">11.6</a>) form regular grids of points or pixels collectively measured at the same time.</p>
+<p>Figure 11.5: Grid layout: PM point measurements (<a href="https://edzer.github.io/UseR2016/" class="uri">https://edzer.github.io/UseR2016/</a>)</p>
+<p>Figure 11.6: Grid layout: Satellite image time series (Appel, Marius, and Edzer Pebesma. "On-Demand Processing of Data Cubes from Satellite Image Collections with the gdalcubes Library." Data 4, no. 3 (2019): 92.)</p>
+<p>Tweet (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:twitter-data">11.7</a>) and disease case (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:disease-data">11.8</a>) locations comprise irregular grids, since each observation is associated with a unique location and timestamp.</p>
+<p>Figure 11.7: Irregular layout: Tweets (<a href="http://onlinelibrary.wiley.com/doi/10.1111/j.1467-9671.2012.01359.x/abstract" class="uri">http://onlinelibrary.wiley.com/doi/10.1111/j.1467-9671.2012.01359.x/abstract</a>)</p>
+<p>Figure 11.8: Irregular layout: Coral disease cases (<a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0004993" class="uri">http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0004993</a>)</p>
+<p>Flickr image records per user over time (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:flickr-data">11.9</a>) and storm tracks (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:storm-data">11.10</a>) are examples of trajectory data.</p>
+<p>Figure 11.9: Trajectory: Flickr user paths</p>
+<p>Figure 11.10: Trajectory: Storm paths (<a href="https://www.r-spatial.org/r/2017/08/28/nest.html" class="uri">https://www.r-spatial.org/r/2017/08/28/nest.html</a>)</p>
+</section>
+<section id="aggregation-of-spatio-temporal-rasters" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="aggregation-of-spatio-temporal-rasters"><span class="header-section-number">16.4</span> Aggregation of spatio-temporal rasters</h2>
+<section id="introduction" class="level3" data-number="16.4.1">
+<h3 data-number="16.4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">16.4.1</span> 11.3.1 Introduction</h3>
+<p>Processing and visualization of spatio-temporal data are challenging, because of their three-dimensional nature. One of the basic approaches for working with spatio-temporal data is to <em>simplify</em> them using aggregation, in the spatial and/or temporal dimension, to help with visualization and exploratory analysis.</p>
+<p>To demonstrate spatio-temporal aggregation, let's go back to the <code>MOD13A3_2000_2019.tif</code> raster, which is an example of spatio-temporal data forming a regular grid (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:space-time-types">11.4</a>):</p>
+<pre><code>library(stars) r = read_stars("MOD13A3_2000_2019.tif") dates = read.csv("MOD13A3_2000_2019_dates2.csv") borders = st_read("israel_borders.shp") names(r) = "NDVI" dates$date = as.Date(dates$date) r = st_set_dimensions(r, "band", values = dates$date, names = "time") r = st_warp(r, crs = 32636) r = r[borders]</code></pre>
+</section>
+<section id="aggregating-time-periods" class="level3" data-number="16.4.2">
+<h3 data-number="16.4.2" class="anchored" data-anchor-id="aggregating-time-periods"><span class="header-section-number">16.4.2</span> Aggregating time periods</h3>
+<p>To aggregate a raster on the temporal dimension (the raster layer), we need to:</p>
+<ul>
+<li><p>Split the raster to <strong>subsets</strong> of raster layers (e.g., images captured in the different seasons)</p></li>
+<li><p>Use <strong>raster algebra</strong> to summarize each subset into a single layer (e.g., mean per pixel)</p></li>
+<li><p>Combine the results into a new multi-band raster (e.g., seasonal mean images)</p></li>
+</ul>
+<p>We already learned how to subset raster layers using a <code>numeric</code> vector of indices (Section <a href="https://geobgu.xyz/r-2021/raster-processing.html#raster-subsetting">6.2</a>). Combined with <code>which</code> (Section <a href="https://geobgu.xyz/r-2021/vectors.html#which">2.4.2</a>), we can use this method to subset raster layers using a <code>logical</code> vector specifying which layers to keep. For example, here how we can get a subset of just the NDVI images taken in January:</p>
+<pre><code>r[,,,which(dates$month == 1)] ## stars object with 3 dimensions and 1 attribute ## attribute(s), summary of first 1e+05 cells: ##      NDVI        ##  Min.   :-0.18   ##  1st Qu.: 0.12   ##  Median : 0.35   ##  Mean   : 0.33   ##  3rd Qu.: 0.50   ##  Max.   : 0.89   ##  NA's   :60579   ## dimension(s): ##      from  to  offset    delta                refsys point ## x      80 246  542754  926.305 WGS 84 / UTM zone 36N    NA ## y      14 478 3704603 -926.305 WGS 84 / UTM zone 36N    NA ## time    1  19      NA       NA                  Date    NA ##                                                   values x/y ## x                                                   NULL [x] ## y                                                   NULL [y] ## time [2001-01-01,2001-02-01),...,[2019-01-01,2019-02-01)</code></pre>
+<blockquote class="blockquote">
+<p>How can we create a subset of <code>MOD13A3_2000_2019.tif</code> with just the images taken during spring? How can we then calculate the "average" spring NDVI image?</p>
+</blockquote>
+<p>Now, let's use the same method to create a seasonal summary of average NDVI images, including each of the four seasons. We would like to create a raster named <code>season_means</code>, having 4 layers, where each layer is the average NDVI, excluding <code>NA</code>, per season:</p>
+<ul>
+<li><p><code>"winter"</code></p></li>
+<li><p><code>"spring"</code></p></li>
+<li><p><code>"summer"</code></p></li>
+<li><p><code>"fall"</code></p></li>
+</ul>
+<p>First, we create a vector of season names:</p>
+<pre><code>seasons = c("winter", "spring", "summer", "fall")</code></pre>
+<p>Then, iterating on the season names with a <code>for</code> loop, for each season we:</p>
+<ul>
+<li><p><strong>Subset</strong> the layers captured in that season only</p></li>
+<li><p><strong>Calculate</strong> the mean NDVI per pixel</p></li>
+<li><p><strong>Collect</strong> the result into a <code>list</code></p></li>
+</ul>
+<p>The following code section initializes an empty <code>list</code> named <code>season_means</code>, then runs a <code>for</code> loop that goes over the seasons and calculates seasons means:</p>
+<pre><code>season_means = list() for(i in seasons) {   sel = which(dates$season == i)   s = r[,,,sel]   season_means[[i]] = st_apply(s, 1:2, mean, na.rm = TRUE) }</code></pre>
+<p>When the <code>for</code> loop ends, we get a <code>list</code> of seasonal mean rasters, named <code>season_means</code>.</p>
+<p>(Note that passing a vector of indices does not work inside a <code>for</code> loop, which is why we are creating a vector named <code>sel</code> as an intermediate step. This is a bug in the current version of <code>stars</code> which is resolved in the development version.)</p>
+<p>Next, we combine the <code>list</code> elements to a multi-band raster with <code>do.call</code> and <code>c</code>. The additional <code>along=3</code> parameter makes sure the layers are "stacked" to form a <em>third</em> dimension:</p>
+<pre><code>season_means$along = 3 season_means = do.call(c, season_means)</code></pre>
+<p>This is basically a shortcut to the following alternative code, without using <code>do.call</code>, in which case we need to specify each and every one of the list items:</p>
+<pre><code>season_means = c(   season_means[[1]],   season_means[[2]],   season_means[[3]],   season_means[[4]],   along = 3 )</code></pre>
+<p>Either way, we now have a four-band raster named <code>season_mean</code> with the seasonal means in <code>r</code>:</p>
+<pre><code>season_means ## stars object with 3 dimensions and 1 attribute ## attribute(s): ##      mean         ##  Min.   :-0.20    ##  1st Qu.: 0.11    ##  Median : 0.18    ##  Mean   : 0.23    ##  3rd Qu.: 0.33    ##  Max.   : 0.82    ##  NA's   :179251   ## dimension(s): ##         from  to  offset    delta                refsys point          values ## x         80 246  542754  926.305 WGS 84 / UTM zone 36N    NA            NULL ## y         14 478 3704603 -926.305 WGS 84 / UTM zone 36N    NA            NULL ## new_dim    1   4      NA       NA                    NA    NA winter,...,fall ##         x/y ## x       [x] ## y       [y] ## new_dim</code></pre>
+<p>All we have left to do is set the attribute name (<code>"NDVI"</code>) and dimension names:</p>
+<pre><code>names(season_means) = "NDVI" season_means = st_set_dimensions(season_means, names = c("x", "y", "season"))</code></pre>
+<p>Here is the modified <code>season_means</code> raster:</p>
+<pre><code>season_means ## stars object with 3 dimensions and 1 attribute ## attribute(s): ##      NDVI         ##  Min.   :-0.20    ##  1st Qu.: 0.11    ##  Median : 0.18    ##  Mean   : 0.23    ##  3rd Qu.: 0.33    ##  Max.   : 0.82    ##  NA's   :179251   ## dimension(s): ##        from  to  offset    delta                refsys point          values ## x        80 246  542754  926.305 WGS 84 / UTM zone 36N    NA            NULL ## y        14 478 3704603 -926.305 WGS 84 / UTM zone 36N    NA            NULL ## season    1   4      NA       NA                    NA    NA winter,...,fall ##        x/y ## x      [x] ## y      [y] ## season</code></pre>
+<p>Note that we do not need to set the layer dimention <em>values</em>, (i.e., the season names), since they are automatically populated with the names of the <code>list</code> elements in <code>do.call</code>.</p>
+<p>The resulting season means raster is shown in Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:season-means">11.11</a>:</p>
+<pre><code>plot(season_means, breaks = "equal", col = hcl.colors(11, "Spectral"))</code></pre>
+<p>Figure 11.11: Average NDVI per season</p>
+<p>In case we need to summarize the seasonal NDVI in a different way, all we have to do is replace the aggregation function. For example, we can decide to have <code>NA</code> instead of less reliable pixels where &gt;10% of values are missing. In such case, instead of the previous function <code>mean</code>, we use a custom function named <code>f_NA</code>:</p>
+<pre><code>f_NA = function(x) {if(mean(is.na(x)) &gt; 0.1) NA else mean(x, na.rm = TRUE)}</code></pre>
+<p>The aggregation code are exactly the same as in the last example, except for using <code>f_NA</code>—instead of <code>mean</code>—inside <code>st_apply</code>:</p>
+<pre><code>season_means = list() for(i in seasons) {   sel = which(dates$season == i)   s = r[,,,sel]   season_means[[i]] = st_apply(s, 1:2, f_NA) } season_means$along = 3 season_means = do.call(c, season_means) names(season_means) = "NDVI" season_means = st_set_dimensions(season_means, names = c("x", "y", "season"))</code></pre>
+<p>The result is similar, only with some pixels replaced with <code>NA</code>:</p>
+<pre><code>plot(season_means, breaks = "equal", col = hcl.colors(11, "Spectral"))</code></pre>
+<p>Figure 11.12: Average NDVI per season, pixels with &gt;25% <code>NA</code> excluded</p>
+<p>The pattern of <code>NA</code> values can ne visualized by applying <code>is.na</code> on the result (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:season-means-na-pattern">11.13</a>):</p>
+<pre><code>plot(is.na(season_means)[borders], col = c("grey90", "red"))</code></pre>
+<p>Figure 11.13: Location of pixels with &gt;10% <code>NA</code> per season</p>
+<blockquote class="blockquote">
+<p>What is the purpose of the <code>[borders]</code> part in the above expression? What happens without it?</p>
+</blockquote>
+</section>
+<section id="aggregating-the-x-dimension" class="level3" data-number="16.4.3">
+<h3 data-number="16.4.3" class="anchored" data-anchor-id="aggregating-the-x-dimension"><span class="header-section-number">16.4.3</span> Aggregating the <code>"x"</code> dimension</h3>
+<p>Our second example demonstrates aggregation in one of the spatial dimensions, rather than in the layers dimension (Section <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#aggregating-time-periods">11.3.2</a>). In this example, we will summarize the <em>west-east</em> gradient, i.e., the <code>"x"</code> dimension or raster columns, into a single value. That way, we will be able to visualize how NDVI changes acrosss the remaining spatial dimension <code>"y"</code>, i.e., the <em>north-south</em> gradient, and over <em>time</em>.</p>
+<p>First, let's aggregate the <code>"x"</code> dimension for specific points in time, to visualize the north-south NDVI gradient during two time points only. This can be done by applying the <code>mean</code> function on all rows for particular layers, such as layers <code>1</code> and <code>7</code>:</p>
+<pre><code>x = st_apply(r[,,,1], "y", mean, na.rm = TRUE)[[1]]   # Winter y = st_apply(r[,,,7], "y", mean, na.rm = TRUE)[[1]]   # Summer</code></pre>
+<p>The resulting vectors can be plotted as follows (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:two-north-south-gradients">11.14</a>):</p>
+<pre><code>plot(x, type = "l", col = "blue", xlab = "Row", ylab = "NDVI") lines(y, col = "red")</code></pre>
+<p>Figure 11.14: North-south NDVI gradient in two different months: February 2000 (blue) and August 2000 (red)</p>
+<p>Now we are going to repeat the operation for <em>all</em> layers of <code>r</code>, rather than two specific layers <code>1</code> and <code>7</code>. In other words, we will calculate the north-south gradient for all time points (layers) in the raster <code>r</code>. We will create a raster <code>s</code>, where each <em>column</em> will contain the row means of one <em>layer</em> of <code>r</code> (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:aggregation-illustrated">11.15</a>).</p>
+<p>Figure 11.15: Raster row means</p>
+<p>Raster <code>s</code> is going to have:</p>
+<ul>
+<li><p>The same number of rows as <code>r</code>, i.e., 167 rows</p></li>
+<li><p>As many columns as <code>r</code> layers, i.e., 233 columns</p></li>
+</ul>
+<p>To create <code>s</code>, we aggregate on dimensions <code>"y"</code> and <code>"time"</code>, so that we calculate the mean of each <code>"y"</code> and <code>"time"</code> combination, i.e., each row. Consequently, all values along <code>"x"</code> are averaged:</p>
+<pre><code>s = st_apply(r, c("y", "time"), mean, na.rm = TRUE) names(s) = "NDVI"</code></pre>
+<p>The resulting <code>stars</code> object <code>s</code> has two dimensions, <code>"y"</code> and <code>"time"</code>, and its values are the average NDVI values for entire rows:</p>
+<pre><code>s ## stars object with 2 dimensions and 1 attribute ## attribute(s): ##      NDVI          ##  Min.   :-0.1011   ##  1st Qu.: 0.1096   ##  Median : 0.1948   ##  Mean   : 0.2299   ##  3rd Qu.: 0.3214   ##  Max.   : 0.7447   ##  NA's   :733       ## dimension(s): ##      from  to  offset    delta                refsys point ## y      14 478 3704603 -926.305 WGS 84 / UTM zone 36N    NA ## time    1 233      NA       NA                  Date    NA ##                         values ## y                         NULL ## time 2000-02-01,...,2019-06-01</code></pre>
+<p>The arrangement of <code>s</code> is very convenient in case we want to work with the data as a <code>matrix</code> or as a <code>data.frame</code>. For example, transforming <code>s</code> to a <code>data.frame</code> results in a table where the NDVI value in each <code>y</code> and <code>time</code> combination is in a separate row:</p>
+<pre><code>dat = as.data.frame(s) head(dat) ##         y       time      NDVI ## 1 3692561 2000-02-01       NaN ## 2 3691634 2000-02-01       NaN ## 3 3690708 2000-02-01       NaN ## 4 3689782 2000-02-01 0.1570333 ## 5 3688855 2000-02-01 0.2565000 ## 6 3687929 2000-02-01 0.3022000</code></pre>
+<p>However, the <code>s</code> object does not have "spatial" x-y dimensions, which means that—striktly speaking—<code>s</code> is not a spatial raster. Therefore, it can't be simply displayed with <code>plot</code>:</p>
+<pre><code>plot(s) ## Error in plot.stars(s): no raster, no features geometries: no default plot method set up yet!</code></pre>
+<p>In order to visualize <code>s</code>, we can modify its metadata so that:</p>
+<ul>
+<li><p>The <code>"time"</code> and <code>"y"</code> dimensions are specified in the same units, e.g., in an arbitrary system with a resolution of 3×13×1, using the <code>offset</code> and <code>delta</code> parameters</p></li>
+<li><p>The <code>"time"</code> and <code>"y"</code> dimensions are identified as "spatial" <code>[y]</code> and <code>[x]</code> dimensions, respectively, using the <code>xy</code> parameter</p></li>
+</ul>
+<p>In the following code section, the first two expressions set the arbitrary coordinate system while the third expression identifies the dimensions as "spatial":</p>
+<pre><code>s = st_set_dimensions(s, "time", offset = 0, delta = 3) s = st_set_dimensions(s, "y", offset = 0, delta = -1) s = st_set_dimensions(s, xy = c("time", "y"))</code></pre>
+<p>Now the <code>s</code> object can be plotted (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:aggregation-x-time">11.16</a>):</p>
+<pre><code>plot(s, breaks = "equal", col = hcl.colors(11, "Spectral"), axes = TRUE, reset = FALSE) contour(s, add = TRUE)</code></pre>
+<p>Figure 11.16: Row means of <code>r</code> over time</p>
+</section>
+</section>
+<section id="processing-trajectory-data" class="level2" data-number="16.5">
+<h2 data-number="16.5" class="anchored" data-anchor-id="processing-trajectory-data"><span class="header-section-number">16.5</span> Processing trajectory data</h2>
+<section id="the-storms-dataset" class="level3" data-number="16.5.1">
+<h3 data-number="16.5.1" class="anchored" data-anchor-id="the-storms-dataset"><span class="header-section-number">16.5.1</span> The <code>storms</code> dataset</h3>
+<p>As another example of how <code>list</code>, <code>split</code> and <code>do.call</code> can be useful when processing spatio-temporal data, we will transform a table of point locations over time to a line layer of <strong>trajectories</strong>. Our input data for this example is a <code>data.frame</code> object named <code>storms</code> (package <code>dplyr</code>):</p>
+<pre><code>library(dplyr) storms = as.data.frame(storms) vars = c("name", "year", "month", "day", "hour", "long", "lat") storms = storms[, vars]</code></pre>
+<p>The <code>storms</code> table contains recorded storm locations at consecutive points over time:</p>
+<pre><code>head(storms) ##   name year month day hour  long  lat ## 1  Amy 1975     6  27    0 -79.0 27.5 ## 2  Amy 1975     6  27    6 -79.0 28.5 ## 3  Amy 1975     6  27   12 -79.0 29.5 ## 4  Amy 1975     6  27   18 -79.0 30.5 ## 5  Amy 1975     6  28    0 -78.8 31.5 ## 6  Amy 1975     6  28    6 -78.7 32.4</code></pre>
+<p>For each storm record, we have the storm name (<code>name</code>), time (<code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>) and location (<code>long</code>, <code>lat</code>). The majority of storm records are given in consecutive 6-hour intervals (<code>0</code>, <code>6</code>, <code>12</code>, <code>18</code>).</p>
+</section>
+<section id="setting-storm-ids" class="level3" data-number="16.5.2">
+<h3 data-number="16.5.2" class="anchored" data-anchor-id="setting-storm-ids"><span class="header-section-number">16.5.2</span> Setting storm IDs</h3>
+<p>To distinguish between individual storm tracks we need to have a unique <strong>ID</strong> variable. Our first pick could be to use storm name (<code>name</code>). However, storm name is not a good fit for an ID, because it is not unique. Many of the storm names are repeated for different storms in different years. For example, a storm named <code>"Josephine"</code> appears in several different years between 1984 and 2008:</p>
+<pre><code>storms$year[storms$name == "Josephine"] ##   [1] 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 ##  [16] 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 ##  [31] 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1984 1990 1990 1990 1990 ##  [46] 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 ##  [61] 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 ##  [76] 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 ##  [91] 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 1996 1996 ## [106] 1996 1996 1996 1996 1996 1996 1996 1996 1996 1996 1996 1996 1996 2002 2002 ## [121] 2002 2002 2002 2002 2002 2002 2008 2008 2008 2008 2008 2008 2008 2008 2008 ## [136] 2008 2008 2008 2008 2008 2008 2008 2008</code></pre>
+<p>Consequently, we could choose to derive an ID that combines year (<code>year</code>) and storm name (<code>name</code>), so that each name/year combination is unique. However, a storm can be spread over two different years, e.g., if it starts in December and ends in January of the following year! For example, the storm named <code>"Zeta"</code> starts in December 30^th 2005 and ends in January 6^th 2006:</p>
+<pre><code>head(storms[storms$name == "Zeta", ]) ##      name year month day hour  long  lat ## 7372 Zeta 2005    12  30    0 -35.6 23.9 ## 7373 Zeta 2005    12  30    6 -36.1 24.2 ## 7374 Zeta 2005    12  30   12 -36.6 24.7 ## 7375 Zeta 2005    12  30   18 -37.0 25.2 ## 7376 Zeta 2005    12  31    0 -37.3 25.6 ## 7377 Zeta 2005    12  31    6 -37.6 25.7</code></pre>
+<pre><code>tail(storms[storms$name == "Zeta", ]) ##      name year month day hour  long  lat ## 7397 Zeta 2006     1   5    6 -46.6 21.9 ## 7398 Zeta 2006     1   5   12 -47.3 22.2 ## 7399 Zeta 2006     1   5   18 -47.9 22.7 ## 7400 Zeta 2006     1   6    0 -48.4 23.0 ## 7401 Zeta 2006     1   6    6 -49.0 23.1 ## 7402 Zeta 2006     1   6   12 -49.6 23.1</code></pre>
+<p>Using a name/year combination as an ID will wrongly split the storm in two parts: <code>"Zeta 2005"</code> and <code>"Zeta 2006"</code>.</p>
+<p>What we really need is a unique ID for each <strong>consecutive sequence</strong> of storm names, assuming that no two consecutive storms will be given the same name. This type of IDs can be automatically generated using function <code>rleid</code> (Run Length Encoding ID) from the <code>data.table</code> package:</p>
+<pre><code>library(data.table) storms$id = rleid(storms$name)</code></pre>
+<p>The <code>storms</code> table now has a new column named <code>id</code>, which contains a unique index for each storm:</p>
+<pre><code>head(storms) ##   name year month day hour  long  lat id ## 1  Amy 1975     6  27    0 -79.0 27.5  1 ## 2  Amy 1975     6  27    6 -79.0 28.5  1 ## 3  Amy 1975     6  27   12 -79.0 29.5  1 ## 4  Amy 1975     6  27   18 -79.0 30.5  1 ## 5  Amy 1975     6  28    0 -78.8 31.5  1 ## 6  Amy 1975     6  28    6 -78.7 32.4  1</code></pre>
+<p>For example, using the <code>id</code> we can determine how many individual storms are there in the <code>storms</code> table (knowing that <code>rleid</code> produces IDs of consecutive numbers):</p>
+<pre><code>max(storms$id) ## [1] 425</code></pre>
+</section>
+<section id="to-points" class="level3" data-number="16.5.3">
+<h3 data-number="16.5.3" class="anchored" data-anchor-id="to-points"><span class="header-section-number">16.5.3</span> To points</h3>
+<p>Our next step to to convert the <code>storms</code> table to a spatial point layer of the observed locations. The <code>storms</code> table can be converted to a point layer with <code>st_as_sf</code>, using the <code>long</code> and <code>lat</code> columns (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#creating-point-layer-from-table">7.4</a>):</p>
+<pre><code>library(sf) pnt = st_as_sf(storms, coords = c("long", "lat"), crs = 4326)</code></pre>
+<p>The resulting object <code>pnt</code> is an <code>sf</code> point layer with 10010 points:</p>
+<pre><code>pnt ## Simple feature collection with 10010 features and 6 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: -109.3 ymin: 7.2 xmax: -6 ymax: 51.9 ## Geodetic CRS:  WGS 84 ## First 10 features: ##    name year month day hour id           geometry ## 1   Amy 1975     6  27    0  1   POINT (-79 27.5) ## 2   Amy 1975     6  27    6  1   POINT (-79 28.5) ## 3   Amy 1975     6  27   12  1   POINT (-79 29.5) ## 4   Amy 1975     6  27   18  1   POINT (-79 30.5) ## 5   Amy 1975     6  28    0  1 POINT (-78.8 31.5) ## 6   Amy 1975     6  28    6  1 POINT (-78.7 32.4) ## 7   Amy 1975     6  28   12  1   POINT (-78 33.3) ## 8   Amy 1975     6  28   18  1     POINT (-77 34) ## 9   Amy 1975     6  29    0  1 POINT (-75.8 34.4) ## 10  Amy 1975     6  29    6  1   POINT (-74.8 34)</code></pre>
+<p>The point layer is shown in Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:storms-points">11.17</a>:</p>
+<pre><code>plot(pnt)</code></pre>
+<p>Figure 11.17: The <code>storms</code> points</p>
+</section>
+<section id="points-to-lines" class="level3" data-number="16.5.4">
+<h3 data-number="16.5.4" class="anchored" data-anchor-id="points-to-lines"><span class="header-section-number">16.5.4</span> Points to lines</h3>
+<p>To transform a <em>point</em> layer of object locations over time to a <em>line</em> layer of trajectories, we go through the following steps:</p>
+<ul>
+<li><p><strong>Split</strong> the point layer to subsets of points for each storm</p></li>
+<li><p><strong>Sort</strong> each group of points chronologically, earliest to latest</p></li>
+<li><p><strong>Transform</strong> each of the point sequences to a line</p></li>
+<li><p><strong>Combine</strong> the separate lines back to a single line layer</p></li>
+</ul>
+<p>First, we <em>split</em> the point layer by storm ID (<code>id</code>), using the <code>split</code> function (Section <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#the-split-function">11.1.4</a>). Remember that the <code>sf</code> class is a special case of a <code>data.frame</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#the-sf-package">7.1.4</a>), which is why <code>split</code> works with <code>sf</code> the same way as with a <code>data.frame</code>:</p>
+<pre><code>lines = split(pnt, pnt$id)</code></pre>
+<p>We now have a <code>list</code> of point sequences per storm. For example, the first <code>list</code> element contains 30 points for the first storm Amy in 1975:</p>
+<pre><code>lines[[1]] ## Simple feature collection with 30 features and 6 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: -79 ymin: 27.5 xmax: -51.6 ymax: 44.5 ## Geodetic CRS:  WGS 84 ## First 10 features: ##    name year month day hour id           geometry ## 1   Amy 1975     6  27    0  1   POINT (-79 27.5) ## 2   Amy 1975     6  27    6  1   POINT (-79 28.5) ## 3   Amy 1975     6  27   12  1   POINT (-79 29.5) ## 4   Amy 1975     6  27   18  1   POINT (-79 30.5) ## 5   Amy 1975     6  28    0  1 POINT (-78.8 31.5) ## 6   Amy 1975     6  28    6  1 POINT (-78.7 32.4) ## 7   Amy 1975     6  28   12  1   POINT (-78 33.3) ## 8   Amy 1975     6  28   18  1     POINT (-77 34) ## 9   Amy 1975     6  29    0  1 POINT (-75.8 34.4) ## 10  Amy 1975     6  29    6  1   POINT (-74.8 34)</code></pre>
+<p>Sorting the points, or making sure they are aready sorted, is essential to connect storm track points in <strong>chronological</strong> order. To sort the points we write a function that accepts a <code>data.frame</code> (or an <code>sf</code>) object and returns a sorted one based on the <code>year</code>, <code>month</code>, <code>day</code> and <code>hour</code> columns, in that order, using <code>order</code> (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#joining-tables">4.6.2</a>). The function is then applied on each storm, separately, using <code>lapply</code> (Section <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#the-lapply-function">11.1.3</a>):</p>
+<pre><code>f = function(x) x[order(x$year, x$month, x$day, x$hour), ] lines = lapply(lines, f)</code></pre>
+<p>Now each <code>list</code> element is a series of points <em>in chronological order</em>:</p>
+<pre><code>lines[[1]] ## Simple feature collection with 30 features and 6 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: -79 ymin: 27.5 xmax: -51.6 ymax: 44.5 ## Geodetic CRS:  WGS 84 ## First 10 features: ##    name year month day hour id           geometry ## 1   Amy 1975     6  27    0  1   POINT (-79 27.5) ## 2   Amy 1975     6  27    6  1   POINT (-79 28.5) ## 3   Amy 1975     6  27   12  1   POINT (-79 29.5) ## 4   Amy 1975     6  27   18  1   POINT (-79 30.5) ## 5   Amy 1975     6  28    0  1 POINT (-78.8 31.5) ## 6   Amy 1975     6  28    6  1 POINT (-78.7 32.4) ## 7   Amy 1975     6  28   12  1   POINT (-78 33.3) ## 8   Amy 1975     6  28   18  1     POINT (-77 34) ## 9   Amy 1975     6  29    0  1 POINT (-75.8 34.4) ## 10  Amy 1975     6  29    6  1   POINT (-74.8 34)</code></pre>
+<p>The first sequence is shown on Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:storm-points">11.18</a>. We can clearly see how the storm spans two different months and several different days (<code>month</code> and <code>day</code> panels).</p>
+<pre><code>plot(lines[[1]])</code></pre>
+<p>Figure 11.18: The <code>storms</code> points</p>
+</section>
+<section id="trajectory-data" class="level3" data-number="16.5.5">
+<h3 data-number="16.5.5" class="anchored" data-anchor-id="trajectory-data"><span class="header-section-number">16.5.5</span> Trajectory data</h3>
+<p>Our next step is to combine all <code>POINT</code> geometries to a single <code>MULTIPOINT</code> geometry. We use <code>st_combine</code> to do that (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#combining-and-dissolving">8.3.4.3</a>):</p>
+<pre><code>lines = lapply(lines, st_combine)</code></pre>
+<p>Each <code>lines</code> element is now a <code>MULTIPOINT</code> geometry (<code>sfc</code>):</p>
+<pre><code>lines[[1]] ## Geometry set for 1 feature  ## Geometry type: MULTIPOINT ## Dimension:     XY ## Bounding box:  xmin: -79 ymin: 27.5 xmax: -51.6 ymax: 44.5 ## Geodetic CRS:  WGS 84 ## MULTIPOINT ((-79 27.5), (-79 28.5), (-79 29.5),...</code></pre>
+<blockquote class="blockquote">
+<p>Why do you think all point attributes are lost as a result of applying <code>st_combine</code>?</p>
+</blockquote>
+<p>The way the first list item looks when plotted is shown in Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:storms-multipoint">11.19</a>:</p>
+<pre><code>plot(lines[[1]])</code></pre>
+<p>Figure 11.19: A point trajectory converted to <code>MULTIPOINT</code></p>
+<p>Next, each of the <code>MULTIPOINT</code> geometries can be <em>cast</em> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-casting">8.3.4.4</a>) to <code>LINESTRING</code>. Note that the additional fixed <code>to</code> parameter is passed from <code>lapply</code> to each of the <code>st_cast</code> function calls:</p>
+<pre><code>lines = lapply(lines, st_cast, to = "LINESTRING")</code></pre>
+<p>Printing the first <code>lines</code> element reveals that the geometry type was indeed changed from <code>MULTIPOINT</code> to <code>LINESTRING</code>:</p>
+<pre><code>lines[[1]] ## Geometry set for 1 feature  ## Geometry type: LINESTRING ## Dimension:     XY ## Bounding box:  xmin: -79 ymin: 27.5 xmax: -51.6 ymax: 44.5 ## Geodetic CRS:  WGS 84 ## LINESTRING (-79 27.5, -79 28.5, -79 29.5, -79 3...</code></pre>
+<p>Accordingly, plotting shows a line instead of points (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:storms-linestring">11.20</a>):</p>
+<pre><code>plot(lines[[1]])</code></pre>
+<p>Figure 11.20: The <code>LINESTRING</code> created from <code>MULTIPOINT</code></p>
+<p>At this stage, we have a <code>list</code> of 425 individual <code>LINESTRING</code> geometries, one for each storm. The list can be combined back to an <code>sfc</code> geometry column with <code>do.call</code> (Section <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#the-do-call-function">11.1.5</a>):</p>
+<pre><code>geometry = do.call(c, lines)</code></pre>
+<p>Unlike in the previous example (Section <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#aggregating-time-periods">11.3.2</a>) where we had a list of four elements (<code>season_means</code>), doing the above without <code>do.call</code> is not a viable option as we would have to type 425 arguments:</p>
+<pre><code>geometry = c(   lines[[1]],   lines[[2]],   ...,   lines[[425]] )</code></pre>
+<p>Here is the combined <code>sfc</code>:</p>
+<pre><code>geometry ## Geometry set for 425 features  ## Geometry type: LINESTRING ## Dimension:     XY ## Bounding box:  xmin: -109.3 ymin: 7.2 xmax: -6 ymax: 51.9 ## Geodetic CRS:  WGS 84 ## First 5 geometries: ## LINESTRING (-79 27.5, -79 28.5, -79 29.5, -79 3... ## LINESTRING (-69.8 22.4, -71.1 21.9, -72.5 21.6,... ## LINESTRING (-48.9 34.9, -49.1 35.2, -48.9 35.3,... ## LINESTRING (-72.8 26, -73 26.3, -73.4 26, -73.2... ## LINESTRING (-58 23, -58.1 23.7, -58.2 24.3, -58...</code></pre>
+<p>We now have a geometry column with one line per individual storm (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:stroms-combined-lines">11.21</a>):</p>
+<pre><code>plot(geometry)</code></pre>
+<p>Figure 11.21: The <code>LINESTRING</code> geometries for all storms combined</p>
+<p>What if we want to get back the other attributes of each storm, such as its name? To do that, we first need to attach storm IDs back to the geometries. We can rely on the fact that <code>list</code> names contain the original variable that was used for splitting the point layer, namely the storm IDs:</p>
+<pre><code>layer = st_sf(geometry, data.frame(id = names(lines)))</code></pre>
+<p>The line layer is now an <code>sf</code> object with one attribute <code>id</code>:</p>
+<pre><code>layer ## Simple feature collection with 425 features and 1 field ## Geometry type: LINESTRING ## Dimension:     XY ## Bounding box:  xmin: -109.3 ymin: 7.2 xmax: -6 ymax: 51.9 ## Geodetic CRS:  WGS 84 ## First 10 features: ##    id                       geometry ## 1   1 LINESTRING (-79 27.5, -79 2... ## 2   2 LINESTRING (-69.8 22.4, -71... ## 3   3 LINESTRING (-48.9 34.9, -49... ## 4   4 LINESTRING (-72.8 26, -73 2... ## 5   5 LINESTRING (-58 23, -58.1 2... ## 6   6 LINESTRING (-88.4 26.9, -88... ## 7   7 LINESTRING (-80 32.8, -79 3... ## 8   8 LINESTRING (-62.9 26.9, -64... ## 9   9 LINESTRING (-97 25.7, -97.4... ## 10 10 LINESTRING (-90.4 25.3, -91...</code></pre>
+<p>Plotting the layer shows the ID values per storm (Figure <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#fig:storms-sf">11.22</a>):</p>
+<pre><code>plot(layer)</code></pre>
+<p>Figure 11.22: The <code>storms</code> line layer with storm ID</p>
+<p>In case we need to, we can join other pieces of information from the original <code>storms</code> table back to <code>layer</code>, using aggregation (why?) followed by an ordinary join (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#table-joins">4.6</a>) using the common column <code>id</code>.</p>
+</section>
+<section id="line-length" class="level3" data-number="16.5.6">
+<h3 data-number="16.5.6" class="anchored" data-anchor-id="line-length"><span class="header-section-number">16.5.6</span> Line length</h3>
+<p>Now that each storm is represented by a line, we can calculate spatial properties of the trajectories. For example, line length reflects the overall distance that each storm has traveled. The line lengths can be calculated using the <code>st_length</code> function (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#numeric-geometric-calculations">8.3.2</a>):</p>
+<pre><code>layer$length = st_length(layer) layer ## Simple feature collection with 425 features and 2 fields ## Geometry type: LINESTRING ## Dimension:     XY ## Bounding box:  xmin: -109.3 ymin: 7.2 xmax: -6 ymax: 51.9 ## Geodetic CRS:  WGS 84 ## First 10 features: ##    id                       geometry        length ## 1   1 LINESTRING (-79 27.5, -79 2... 3510012.0 [m] ## 2   2 LINESTRING (-69.8 22.4, -71... 3177598.3 [m] ## 3   3 LINESTRING (-48.9 34.9, -49... 1469864.8 [m] ## 4   4 LINESTRING (-72.8 26, -73 2... 2148308.5 [m] ## 5   5 LINESTRING (-58 23, -58.1 2... 3226682.2 [m] ## 6   6 LINESTRING (-88.4 26.9, -88... 1600143.2 [m] ## 7   7 LINESTRING (-80 32.8, -79 3... 2145905.6 [m] ## 8   8 LINESTRING (-62.9 26.9, -64... 2392209.7 [m] ## 9   9 LINESTRING (-97 25.7, -97.4...  455724.8 [m] ## 10 10 LINESTRING (-90.4 25.3, -91...  953824.1 [m]</code></pre>
+<p>Lengths can be transformed to km�� units for convenience:</p>
+<pre><code>library(units) layer$length = set_units(layer$length, "km") layer ## Simple feature collection with 425 features and 2 fields ## Geometry type: LINESTRING ## Dimension:     XY ## Bounding box:  xmin: -109.3 ymin: 7.2 xmax: -6 ymax: 51.9 ## Geodetic CRS:  WGS 84 ## First 10 features: ##    id                       geometry         length ## 1   1 LINESTRING (-79 27.5, -79 2... 3510.0120 [km] ## 2   2 LINESTRING (-69.8 22.4, -71... 3177.5983 [km] ## 3   3 LINESTRING (-48.9 34.9, -49... 1469.8648 [km] ## 4   4 LINESTRING (-72.8 26, -73 2... 2148.3085 [km] ## 5   5 LINESTRING (-58 23, -58.1 2... 3226.6822 [km] ## 6   6 LINESTRING (-88.4 26.9, -88... 1600.1432 [km] ## 7   7 LINESTRING (-80 32.8, -79 3... 2145.9056 [km] ## 8   8 LINESTRING (-62.9 26.9, -64... 2392.2097 [km] ## 9   9 LINESTRING (-97 25.7, -97.4...  455.7248 [km] ## 10 10 LINESTRING (-90.4 25.3, -91...  953.8241 [km]</code></pre>
+<p>The result can be visualized using <code>mapview</code> as follows:</p>
+<pre><code>library(mapview) layer$length = drop_units(layer$length) mapview(layer, zcol = "length")</code></pre>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ch10.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch12.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

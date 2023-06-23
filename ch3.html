@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Geospatial Technology and Spatial Analysis in R - 4&nbsp; Time and Date</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch3Edition.html" rel="next">
+<link href="./ch2.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><link rel="stylesheet" href="style.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch3.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time  and Date</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li>
+<a href="#dates" id="toc-dates" class="nav-link active" data-scroll-target="#dates"><span class="header-section-number">4.1</span> Dates</a>
+  <ul class="collapse">
+<li><a href="#date-and-time-classes-in-r" id="toc-date-and-time-classes-in-r" class="nav-link" data-scroll-target="#date-and-time-classes-in-r"><span class="header-section-number">4.1.1</span> Date and time classes in R</a></li>
+  <li><a href="#working-with-date-objects" id="toc-working-with-date-objects" class="nav-link" data-scroll-target="#working-with-date-objects"><span class="header-section-number">4.1.2</span> Working with <code>Date</code> objects</a></li>
+  <li><a href="#time-series" id="toc-time-series" class="nav-link" data-scroll-target="#time-series"><span class="header-section-number">4.1.3</span> Time series</a></li>
+  <li><a href="#applying-smoothing-techniques" id="toc-applying-smoothing-techniques" class="nav-link" data-scroll-target="#applying-smoothing-techniques"><span class="header-section-number">4.1.4</span> Applying Smoothing Techniques</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>In this chapter, our primary focus is on working with data that represents time, specifically dates. We aim to equip you with the skills to visualize your data using graphical functions and to define custom functions. By the end of this chapter, you will have a better understanding of how to work with time-based data and how to present it in a meaningful way. Whether you are a data analyst or a researcher, these skills are essential for making informed decisions and communicating your findings effectively. So, let’s dive in and explore the exciting world of time-based data analysis!</p>
+<section id="dates" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="dates">
+<span class="header-section-number">4.1</span> Dates</h2>
+<p>Dates play a crucial role in data analysis and represent an essential component in many datasets. In R, working with dates is made easy through a range of functions and packages specifically designed for handling date-related operations. Dates in R are represented as objects, allowing for convenient manipulation and calculations.</p>
+<p>With R’s built-in date functions and packages like <code>lubridate</code>, users can create, format, and perform various operations on date objects. These operations include extracting components like year, month, and day, performing arithmetic operations to calculate time intervals, comparing dates, and visualizing temporal data. With the flexibility and functionality offered by R, users can effectively work with dates to gain valuable insights and make informed decisions based on temporal patterns in their data.</p>
+<section id="date-and-time-classes-in-r" class="level3" data-number="4.1.1"><h3 data-number="4.1.1" class="anchored" data-anchor-id="date-and-time-classes-in-r">
+<span class="header-section-number">4.1.1</span> Date and time classes in R</h3>
+<p>In R, there are specific classes designed for representing times and time-series data. These classes provide specialized functionalities for handling temporal information. Some of the commonly used classes include:</p>
+<ol type="1">
+<li><p><strong>POSIXct</strong>: This class represents time as the number of seconds since January 1, 1970 (known as the Unix epoch) in the UTC time zone. It offers precision up to the second and is suitable for handling timestamps.</p></li>
+<li><p><strong>POSIXlt</strong>: Similar to the POSIXct class, POSIXlt represents time as the number of seconds since the Unix epoch. However, it provides more detailed components like year, month, day, hour, minute, and second. POSIXlt objects are useful when you need to work with individual time components.</p></li>
+<li><p><strong>Date</strong>: The Date class is used to represent dates without time information. Dates are stored as the number of days since January 1, 1970. This class is useful when you want to work with dates and perform date-specific operations.</p></li>
+<li><p><strong>Time-Series</strong>: R provides the <code>ts</code> class to handle time-series data, which is a combination of time and corresponding data values. The <code>ts</code> class allows for efficient storage and manipulation of time-series data and supports various time-based operations.</p></li>
+<li><p><strong>xts</strong>: The <code>xts</code> (eXtensible Time Series) class is an extension of the <code>ts</code> class and provides enhanced functionality for working with time-series data. It includes features like subsetting, merging, and advanced time-based calculations.</p></li>
+</ol>
+<p>These specialized classes make it easier to work with time and time-series data in R. In this book, we will only be working with the <code>Date</code> class, which is used to represent times of type <em>date</em>.</p>
+</section><section id="working-with-date-objects" class="level3" data-number="4.1.2"><h3 data-number="4.1.2" class="anchored" data-anchor-id="working-with-date-objects">
+<span class="header-section-number">4.1.2</span> Working with <code>Date</code> objects</h3>
+<section id="todays-date" class="level4" data-number="4.1.2.1"><h4 data-number="4.1.2.1" class="anchored" data-anchor-id="todays-date">
+<span class="header-section-number">4.1.2.1</span> Today’s date</h4>
+<p>The Date data structure is the simplest and most basic way to represent dates in R. It is specifically designed to store dates without the inclusion of the time of day. One common use of Date is to represent calendar dates, such as birthdays, holidays, or any event that is not concerned with specific timestamps.</p>
+<p>To obtain the current date in R, you can use the <code><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date()</a></code> function. This function retrieves the current system date and returns it as a Date object. Here’s an example:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>current_date <span class="ot">&lt;-</span> <span class="fu">Sys.Date</span>()</span>
+<span id="cb1-2"><a href="#cb1-2"></a>current_date</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "2023-06-19"</code></pre>
+</div>
+</div>
+<p>The output will be the current date in the format <em>YYYY-MM-DD</em>, where <em>YYYY</em> represents the year, <em>MM</em> represents the month, and <em>DD</em> represents the day. By utilizing the <code><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date()</a></code> function, you can easily retrieve the current date for various purposes, such as tracking data entry, performing date-based calculations, or generating reports based on the current date.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>current_date <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">class</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "Date"</code></pre>
+</div>
+</div>
+</section><section id="converting-character-to-date" class="level4" data-number="4.1.2.2"><h4 data-number="4.1.2.2" class="anchored" data-anchor-id="converting-character-to-date">
+<span class="header-section-number">4.1.2.2</span> Converting <code>character</code> to <code>Date</code>
+</h4>
+<p>In addition to retrieving the current date using <code><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date()</a></code>, we can also convert character values to Date objects using the <code><a href="https://rdrr.io/r/base/as.Date.html">as.Date()</a></code> function. This allows us to create Date objects representing specific dates of our choice.</p>
+<p>The <code><a href="https://rdrr.io/r/base/as.Date.html">as.Date()</a></code> function takes a character value as input and converts it to a Date object based on the specified format. The format is specified using the format parameter, which follows the conventions of the strftime() function in C. Here’s an example:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>custom_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2023-05-24"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a>custom_date</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "2023-05-24"</code></pre>
+</div>
+</div>
+<p>In this example, the character value “2023-05-24” is converted to a Date object using the %Y-%m-%d format, where %Y represents the year with century, %m represents the month, and %d represents the day.</p>
+<p>When the <code>character</code> values are in the standard date format (<code>YYYY-MM-DD</code>), such as in the above example, the <code>as.Date</code> function works without any additional arguments. However, when the <code>character</code> values are in a <em>non-standard</em> format, we need to specify the format definition with <code>format</code>, using the various date component symbols. Table [3.1] lists the most commonly used symbols for specifying date formats in R. The full list of symbols can be found in <code><a href="https://rdrr.io/r/base/strptime.html">?strptime</a></code>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 18%">
+<col style="width: 63%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Table 3.1: Common <code>Date</code> format components</td>
+</tr>
+<tr class="even">
+<td><strong>Symbol</strong></td>
+<td><strong>Example</strong></td>
+<td><strong>Meaning</strong></td>
+</tr>
+<tr class="odd">
+<td><code>%d</code></td>
+<td><code>"15"</code></td>
+<td>Day</td>
+</tr>
+<tr class="even">
+<td><code>%m</code></td>
+<td><code>"08"</code></td>
+<td>Month, numeric</td>
+</tr>
+<tr class="odd">
+<td><code>%b</code></td>
+<td><code>"Aug"</code></td>
+<td>Month, 3-letter</td>
+</tr>
+<tr class="even">
+<td><code>%B</code></td>
+<td><code>"August"</code></td>
+<td>Month, full</td>
+</tr>
+<tr class="odd">
+<td><code>%y</code></td>
+<td><code>14</code></td>
+<td>Year, 2-digit</td>
+</tr>
+<tr class="even">
+<td><code>%Y</code></td>
+<td><code>2014</code></td>
+<td>Year, 4-digit</td>
+</tr>
+</tbody>
+</table>
+<p>Before going into examples of date formatting, it is useful to set the standard <code>"C"</code> locale in R. That way, we make sure that month or weekday names are interpreted in <em>English</em> as intended:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">Sys.setlocale</span>(<span class="st">"LC_TIME"</span>, <span class="st">"C"</span>) <span class="do">## [1] "C"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "C"</code></pre>
+</div>
+</div>
+<p>For example, converting the following <code>character</code> date—which is in a non-standard format—to <code>Date</code> fails when <code>format</code> is not specified:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">as.Date</span>(<span class="st">"07/Aug/12"</span>) </span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co"># Error in charToDate(x) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Specifying the right <code>format</code>, which is <code>"%d/%b/%y"</code> in this case, leads to a successful conversion:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">as.Date</span>(<span class="st">"07/Aug/12"</span>, <span class="at">format =</span> <span class="st">"%d/%b/%y"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "2012-08-07"</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>What will be the result if we used <code>format="%y/%b/%d"</code> (switching <code>%d</code> and <code>%y</code>) in the above expression?</p>
+</blockquote>
+<p>Here is another example with a different non-standart format (<code>"%Y-%B-%d"</code>):</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">as.Date</span>(<span class="st">"2012-August-07"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># Error in charToDate(x) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Using the <code><a href="https://rdrr.io/pkg/anytime/man/anytime.html">anytime::anytime()</a></code> function allows us to handle a broader range of date formats without explicitly specifying the format. It provides convenience and flexibility in parsing date strings and converting them to appropriate date objects.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>anytime<span class="sc">::</span><span class="fu">anytime</span>((<span class="st">"2012-August-07"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "2012-08-07 EAT"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">as.Date</span>(<span class="st">"2012-August-07"</span>, <span class="at">format =</span> <span class="st">"%Y-%B-%d"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "2012-08-07"</code></pre>
+</div>
+</div>
+</section><section id="converting-date-to-character" class="level4" data-number="4.1.2.3"><h4 data-number="4.1.2.3" class="anchored" data-anchor-id="converting-date-to-character">
+<span class="header-section-number">4.1.2.3</span> Converting <code>Date</code> to <code>character</code>
+</h4>
+<p>A <code>Date</code> can always be converted back to <code>character</code> using <code>as.character</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>d <span class="ot">=</span> <span class="fu">as.Date</span>(<span class="st">"1961-12-09"</span>) </span>
+<span id="cb17-2"><a href="#cb17-2"></a>d </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "1961-12-09"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="fu">class</span>(d) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "Date"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">as.character</span>(d) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "1961-12-09"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">class</span>(<span class="fu">as.character</span>(d)) <span class="do">## [1] "character"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+<p>Note that both the <code>Date</code> and the <code>character</code> objects are printed exactly the same way, so we have to use <code>class</code> to figure out which class we are dealing with.</p>
+<p>The <code>as.character</code> function, by default, returns a text string with all three date components in the standard <code>YYYY-MM-DD</code> (or <code>"%Y-%m-%d"</code>) format. Using the <code>format</code> argument, however, lets us compose different date formats, or <em>extract</em> individual date components out of a <code>Date</code> object:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>d </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "1961-12-09"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">as.character</span>(d, <span class="at">format =</span> <span class="st">"%m/%Y"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "1961-12-09"</code></pre>
+</div>
+</div>
+<p><code>{r            as.character(d, "%d")</code></p>
+<p><code>{r            as.character(d, "%B")</code></p>
+<p><code>{r            as.character(d, "%Y")</code></p>
+<p>Note that <code>as.character</code> consistently returns a <code>character</code>, even when the result contains nothing but numbers, as in <code>"%d"</code> or <code>"%Y"</code>. We can always convert from <code>character</code> to <code>numeric</code> with <code>as.numeric</code> if necessary:</p>
+<p><code>{r            as.numeric(as.character(d, "%Y"))</code></p>
+</section><section id="arithmetic-operations-with-dates" class="level4" data-number="4.1.2.4"><h4 data-number="4.1.2.4" class="anchored" data-anchor-id="arithmetic-operations-with-dates">
+<span class="header-section-number">4.1.2.4</span> Arithmetic operations with dates</h4>
+<p>Arithmetic operations can be performed on <code>Date</code> objects in R, allowing for calculations involving dates and time intervals. Here are some common arithmetic operations that can be applied to <code>Date</code> objects:</p>
+<ol type="1">
+<li>Addition and Subtraction:
+<ul>
+<li>Adding/Subtracting Days: You can add or subtract a certain number of days to/from a <code>Date</code> object using the <code>+</code> and <code>-</code> operators. For example:</li>
+</ul>
+</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>     date1 <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2023-05-24"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2"></a>     date2 <span class="ot">&lt;-</span> date1 <span class="sc">+</span> <span class="dv">7</span>   <span class="co"># Adds 7 days to date1</span></span>
+<span id="cb29-3"><a href="#cb29-3"></a>     date3 <span class="ot">&lt;-</span> date1 <span class="sc">-</span> <span class="dv">3</span>   <span class="co"># Subtracts 3 days from date1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ul>
+<li>Adding/Subtracting Weeks/Months/Years: Similarly, you can add or subtract weeks, months, or years using the same operators. R automatically adjusts the resulting date according to the specified time interval. For example:</li>
+</ul>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>     date4 <span class="ot">&lt;-</span> date1 <span class="sc">+</span> lubridate<span class="sc">::</span><span class="fu">weeks</span>(<span class="dv">2</span>)   <span class="co"># Adds 2 weeks to date1</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>     date5 <span class="ot">&lt;-</span> date1 <span class="sc">-</span> lubridate<span class="sc">::</span><span class="fu">month</span>(<span class="dv">6</span>)  <span class="co"># Subtracts 6 months from date1</span></span>
+<span id="cb30-3"><a href="#cb30-3"></a>     date6 <span class="ot">&lt;-</span> date1 <span class="sc">+</span> lubridate<span class="sc">::</span><span class="fu">years</span>(<span class="dv">1</span>)   <span class="co"># Adds 1 year to date1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li>Calculating Time Differences: You can calculate the time difference between two <code>Date</code> objects using the <code>-</code> operator. The result will be an object of class <code>difftime</code>, representing the difference in days. For example:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>   date1 <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2023-05-24"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2"></a>   date2 <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2023-06-01"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3"></a>   diff <span class="ot">&lt;-</span> date2 <span class="sc">-</span> date1   <span class="co"># Calculates the difference in days between date2 and date1</span></span>
+<span id="cb31-4"><a href="#cb31-4"></a>   diff</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 8 days</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Comparing Dates: Dates can be compared using comparison operators (<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>==</code>, <code>!=</code>) to check their relative order. This is useful for sorting or filtering data based on dates. For example:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>   date1 <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2023-05-24"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2"></a>   date2 <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2023-06-01"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3"></a>   date1 <span class="sc">&lt;</span> date2   <span class="co"># Returns TRUE as date1 is earlier than date2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section><section id="arithmetric-operation-with-lubridate-package" class="level4" data-number="4.1.2.5"><h4 data-number="4.1.2.5" class="anchored" data-anchor-id="arithmetric-operation-with-lubridate-package">
+<span class="header-section-number">4.1.2.5</span> Arithmetric operation with lubridate package</h4>
+<p>The <em>lubridate</em> package introduces intuitive functions like <code>ymd()</code> (year-month-day) for creating Date objects with a specified format. It also provides convenient helper functions such as<code>weeks()</code>, <code><a href="https://rdrr.io/r/base/weekday.POSIXt.html">months()</a></code>, and <code>years()</code> to perform arithmetic operations on dates. These functions enhance readability and simplify the code when working with dates and time intervals.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>   <span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>By utilizing the lubridate package, you can handle date arithmetic operations more intuitively and efficiently, making it easier to perform calculations and comparisons involving dates in your R code. Here are examples of arithmetic operations with dates using the <code>lubridate</code> package:</p>
+<ol type="1">
+<li>Addition and Subtraction:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>   date1 <span class="ot">&lt;-</span> <span class="fu">ymd</span>(<span class="st">"2023-05-24"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2"></a>   date2 <span class="ot">&lt;-</span> date1 <span class="sc">+</span> <span class="fu">weeks</span>(<span class="dv">2</span>)   <span class="co"># Adds 2 weeks to date1</span></span>
+<span id="cb36-3"><a href="#cb36-3"></a>   date1 <span class="sc">-</span> <span class="fu">months</span>(<span class="dv">6</span>)  <span class="co"># Subtracts 6 months from date1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "2022-11-24"</code></pre>
+</div>
+</div>
+<ol start="2" type="1">
+<li>Calculating Time Differences:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>   date1 <span class="ot">&lt;-</span> <span class="fu">ymd</span>(<span class="st">"2023-05-24"</span>)</span>
+<span id="cb38-2"><a href="#cb38-2"></a>   date2 <span class="ot">&lt;-</span> <span class="fu">ymd</span>(<span class="st">"2023-06-01"</span>)</span>
+<span id="cb38-3"><a href="#cb38-3"></a>date2 <span class="sc">-</span> date1   <span class="co"># Calculates the difference in days between date2 and date1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 8 days</code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Comparing Dates:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>   date1 <span class="ot">&lt;-</span> <span class="fu">ymd</span>(<span class="st">"2023-05-24"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2"></a>   date2 <span class="ot">&lt;-</span> <span class="fu">ymd</span>(<span class="st">"2023-06-01"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3"></a>   date1 <span class="sc">&lt;</span> date2   <span class="co"># Returns TRUE as date1 is earlier than date2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Finally, the <code>seq</code> function, which we are already familiar with, can be used to create a sequence of consecutive dates in R. By specifying the starting date, ending date, and the desired interval, we can generate a sequence of dates.</p>
+<p>For example, the following expression creates a sequence of dates from January 1, 2023, to January 10, 2023, with a daily interval:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="fu">seq</span>(<span class="fu">ymd</span>(<span class="st">"2023-01-01"</span>), <span class="fu">ymd</span>(<span class="st">"2023-01-10"</span>), <span class="at">by =</span> <span class="st">"day"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code> [1] "2023-01-01" "2023-01-02" "2023-01-03" "2023-01-04" "2023-01-05"
+ [6] "2023-01-06" "2023-01-07" "2023-01-08" "2023-01-09" "2023-01-10"</code></pre>
+</div>
+</div>
+<p>The output is a sequence of <code>Date</code> objects representing consecutive dates from January 1, 2023, to January 10, 2023.</p>
+<p>By adjusting the starting and ending dates and specifying a different interval (e.g., “week”, “month”, “year”), you can generate sequences of dates that suit your specific needs. This can be useful for generating date ranges, creating time-based indices, or iterating over a series of dates for analysis or visualization purposes.</p>
+</section></section><section id="time-series" class="level3" data-number="4.1.3"><h3 data-number="4.1.3" class="anchored" data-anchor-id="time-series">
+<span class="header-section-number">4.1.3</span> Time series</h3>
+<p>A time series is a sequence of data points collected and recorded over a period of time. In R, time series data can be represented and analyzed using specialized data structures and functions. The two main data structures for handling time series data in R are:</p>
+<ol type="1">
+<li>
+<strong>ts (Time Series)</strong>: The <code>ts</code> object is a basic data structure in R for representing univariate time series. It is created using the <code><a href="https://rdrr.io/r/stats/ts.html">ts()</a></code> function, which takes the data as input and optionally accepts arguments for specifying the frequency and start time of the time series. Here’s an example of creating a <code>ts</code> object:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">30</span>)</span>
+<span id="cb44-2"><a href="#cb44-2"></a>ts_data <span class="ot">&lt;-</span> <span class="fu">ts</span>(data, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">1</span>)</span>
+<span id="cb44-3"><a href="#cb44-3"></a>ts_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>Time Series:
+Start = 2020 
+End = 2024 
+Frequency = 1 
+[1] 10 15 20 25 30</code></pre>
+</div>
+</div>
+<p>In this example, the <code><a href="https://rdrr.io/r/stats/ts.html">ts()</a></code> function is used to create a time series object <code>ts_data</code> from the numeric vector <code>data</code>. The <code>start</code> argument specifies the start time of the series (January 2020 in this case), and the <code>frequency</code> argument indicates the number of observations per unit of time (1 observation per year).</p>
+<ol start="2" type="1">
+<li>
+<strong>xts (eXtensible Time Series)</strong>: The <code>xts</code> object is a more powerful and flexible data structure for handling time series data in R. It is part of the <code>xts</code> package, which extends the functionality of <code>ts</code> objects by providing additional features and methods for working with time series data. <code>xts</code> objects are created using the <code>xts()</code> function, and they can store both univariate and multivariate time series data. Here’s an example of creating an <code>xts</code> object:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="co"># Load the xts package</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a><span class="fu">library</span>(xts)</span>
+<span id="cb46-3"><a href="#cb46-3"></a></span>
+<span id="cb46-4"><a href="#cb46-4"></a><span class="co"># Create an xts object</span></span>
+<span id="cb46-5"><a href="#cb46-5"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>, <span class="dv">25</span>, <span class="dv">30</span>)</span>
+<span id="cb46-6"><a href="#cb46-6"></a>time <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2020-01-01"</span>, <span class="st">"2020-02-01"</span>, <span class="st">"2020-03-01"</span>, <span class="st">"2020-04-01"</span>, <span class="st">"2020-05-01"</span>))</span>
+<span id="cb46-7"><a href="#cb46-7"></a>xts_data <span class="ot">&lt;-</span> <span class="fu">xts</span>(data, <span class="at">order.by =</span> time)</span>
+<span id="cb46-8"><a href="#cb46-8"></a>xts_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>           [,1]
+2020-01-01   10
+2020-02-01   15
+2020-03-01   20
+2020-04-01   25
+2020-05-01   30</code></pre>
+</div>
+</div>
+<p>In this example, the <code>xts()</code> function is used to create an <code>xts</code> object <code>xts_data</code>. The <code>data</code> argument contains the time series data, and the <code>order.by</code> argument specifies the corresponding time stamps for each observation.</p>
+<p>Both <code>ts</code> and <code>xts</code> objects offer various methods and functions for analyzing and manipulating time series data in R. These include plotting, statistical analysis, time-based subsetting, aggregation, and more. Time series analysis techniques such as forecasting, seasonal decomposition, and autocorrelation analysis can also be applied to these data structures.</p>
+<p>Here are a few more examples of working with time series using the <code>ts</code> package in R:</p>
+<ol type="1">
+<li>Creating a Monthly Time Series:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="co"># Generate monthly time series data</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a>   </span>
+<span id="cb48-3"><a href="#cb48-3"></a>ts_data <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">233</span>, <span class="at">mean =</span> <span class="dv">25</span>, <span class="at">sd =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="#cb48-4"></a><span class="fu">ts</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2004</span>,<span class="dv">1</span>), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb48-5"><a href="#cb48-5"></a>ts_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>          Jan      Feb      Mar      Apr      May      Jun      Jul      Aug
+2004 27.34499 27.17237 24.62156 21.68477 20.19828 20.58288 29.62347 21.46734
+2005 25.64082 24.50923 32.19372 31.39395 23.30834 31.38716 24.23200 25.25643
+2006 26.73120 20.68608 22.78567 27.82451 25.88936 27.15770 31.47742 20.63695
+2007 18.30026 19.14970 31.61360 19.66005 22.62929 23.90140 23.94396 26.00029
+2008 32.27445 28.59940 24.63599 26.79094 24.47729 21.65715 25.65079 29.17468
+2009 25.07763 26.88618 26.16901 31.86157 21.30014 25.47337 26.19258 23.78133
+2010 22.66916 19.60314 25.49854 30.30652 35.29321 19.35570 24.40690 20.79529
+2011 33.61163 21.58291 31.81660 25.72493 24.47594 24.80412 26.76041 17.74855
+2012 27.09957 23.20298 27.96231 24.02154 21.98870 27.29386 16.72594 22.39374
+2013 21.28865 23.50462 25.39106 28.05074 25.20278 26.33608 26.52864 26.52343
+2014 30.54998 30.54852 27.67911 26.66169 23.94412 24.89157 24.39752 27.32481
+2015 20.05773 15.58428 23.33754 19.03844 24.92283 22.59505 27.21832 32.05114
+2016 26.49166 25.00079 22.65979 29.10551 30.00607 23.42811 30.26670 16.45889
+2017 29.35224 21.08609 29.37130 32.93503 21.61618 17.98721 23.96567 24.41360
+2018 22.19059 25.36744 13.37039 27.78744 27.72380 23.02264 19.81353 30.11909
+2019 21.38398 27.44787 20.29182 25.14146 20.68146 27.02965 24.53692 24.94370
+2020 17.02259 29.37203 25.61750 23.80800 34.74780 19.44434 21.03135 21.72338
+2021 21.92506 32.04422 31.67719 28.24664 31.03517 24.46138 19.79447 26.66287
+2022 22.21422 28.57109 22.22410 20.57094 20.37970 24.35361 26.91857 24.50356
+2023 22.08677 24.01050 25.19480 22.36049 21.97301                           
+          Sep      Oct      Nov      Dec
+2004 24.22153 21.62754 23.86859 21.87370
+2005 23.44570 21.92880 28.60020 23.15030
+2006 19.47601 21.27150 25.68546 23.80836
+2007 27.38850 21.55739 32.18209 21.78651
+2008 25.25811 22.70393 29.54767 20.79304
+2009 33.79045 26.74404 22.57881 24.22942
+2010 28.13136 19.83723 28.42925 24.71715
+2011 24.55229 27.59187 23.74834 25.09575
+2012 23.17996 19.67532 19.64619 24.40616
+2013 22.59562 21.38334 21.14929 20.95980
+2014 23.91062 29.93282 21.85606 27.57417
+2015 23.15978 30.68149 31.88257 27.69774
+2016 24.96479 29.96906 22.34244 20.73868
+2017 28.88316 21.37133 22.12182 21.71374
+2018 20.41044 27.48209 24.01053 18.54786
+2019 21.17700 21.39315 27.53830 15.95588
+2020 30.28193 23.46485 24.80147 24.69073
+2021 26.76542 23.82328 21.18727 21.62664
+2022 23.58284 24.91281 22.19251 22.21999
+2023                                    </code></pre>
+</div>
+</div>
+<p>2.<em>Subsetting Time Series Data</em></p>
+<p>Subsetting time series data involves extracting a portion of the data based on specific criteria, such as a range of dates or a subset of observations. In R, subsetting time series data can be done using various approaches.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>   <span class="co"># Subset time series data for a specific period</span></span>
+<span id="cb50-2"><a href="#cb50-2"></a>subset_data <span class="ot">&lt;-</span> ts_data <span class="sc">|&gt;</span></span>
+<span id="cb50-3"><a href="#cb50-3"></a>  <span class="fu">window</span>(<span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2020</span>, <span class="dv">1</span>), <span class="at">end =</span> <span class="fu">c</span>(<span class="dv">2021</span>, <span class="dv">6</span>))</span>
+<span id="cb50-4"><a href="#cb50-4"></a>subset_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>          Jan      Feb      Mar      Apr      May      Jun      Jul      Aug
+2020 17.02259 29.37203 25.61750 23.80800 34.74780 19.44434 21.03135 21.72338
+2021 21.92506 32.04422 31.67719 28.24664 31.03517 24.46138                  
+          Sep      Oct      Nov      Dec
+2020 30.28193 23.46485 24.80147 24.69073
+2021                                    </code></pre>
+</div>
+</div>
+<ol start="3" type="1">
+<li><em>Plotting Time Series Data</em></li>
+</ol>
+<p>Plotting time series data is a common task in analyzing and visualizing temporal patterns and trends. In R, there are various packages and functions available for creating plots of time series data. Let’s explore two commonly used plotting methods: base R plots and ggplot2 package.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-base" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3_files/figure-html/fig-base-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;4.1<strong>.</strong> Time series plotted with base-R</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ggplot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3_files/figure-html/fig-ggplot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;4.2<strong>.</strong> Time series plotted with ggplot</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li>
+<em>Calculating Summary Statistics</em>: When working with time series data, calculating summary statistics often involves considering specific aspects related to the temporal dimension. Here are some common summary statistics for time series data</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>   <span class="co"># Calculate summary statistics of the time series data</span></span>
+<span id="cb52-2"><a href="#cb52-2"></a>   <span class="fu">summary</span>(ts_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  13.37   21.79   24.41   24.70   27.29   35.29 </code></pre>
+</div>
+</div>
+<ol start="5" type="1">
+<li>
+<em>Applying Smoothing Techniques</em>: Smoothing techniques are commonly used in time series analysis to reduce noise, identify patterns, and reveal underlying trends in the data. In R, there are several smoothing techniques available that can be applied to time series data. Let’s explore some commonly used smoothing techniques and their implementation in R</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>   <span class="co"># Apply moving average smoothing to the time series data</span></span>
+<span id="cb54-2"><a href="#cb54-2"></a>   smoothed_data <span class="ot">&lt;-</span> <span class="fu">filter</span>(ts_data, <span class="at">filter =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>, <span class="dv">3</span>), <span class="at">sides =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-filtered" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3_files/figure-html/fig-filtered-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;4.3<strong>.</strong> Smoothed time series</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="6" type="1">
+<li>
+<em>Decomposing Time Series Components</em>:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>   <span class="co"># Decompose the time series data into trend, seasonal, and random components</span></span>
+<span id="cb55-2"><a href="#cb55-2"></a>   decomposition <span class="ot">&lt;-</span> <span class="fu">decompose</span>(ts_data)</span>
+<span id="cb55-3"><a href="#cb55-3"></a>   trend <span class="ot">&lt;-</span> decomposition<span class="sc">$</span>trend</span>
+<span id="cb55-4"><a href="#cb55-4"></a>   seasonal <span class="ot">&lt;-</span> decomposition<span class="sc">$</span>seasonal</span>
+<span id="cb55-5"><a href="#cb55-5"></a>   random <span class="ot">&lt;-</span> decomposition<span class="sc">$</span>random</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="applying-smoothing-techniques" class="level3" data-number="4.1.4"><h3 data-number="4.1.4" class="anchored" data-anchor-id="applying-smoothing-techniques">
+<span class="header-section-number">4.1.4</span> Applying Smoothing Techniques</h3>
+<p>Smoothing techniques are commonly used in time series analysis to reduce noise, identify patterns, and reveal underlying trends in the data. In R, there are several smoothing techniques available that can be applied to time series data. Let’s explore some commonly used smoothing techniques and their implementation in R:</p>
+<ol type="1">
+<li>
+<strong>Moving Average</strong>: The moving average is a simple smoothing technique that calculates the average of a fixed window of observations. It helps to smooth out short-term fluctuations and highlight the overall trend. In R, you can apply the moving average using the <code>ma()</code> function from the <code>forecast</code> package. For example:</li>
+</ol>
+<div class="sourceCode" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>   <span class="co"># Apply moving average smoothing</span></span>
+<span id="cb56-2"><a href="#cb56-2"></a>   smoothed_data <span class="ot">&lt;-</span> <span class="fu">ma</span>(ts_data, <span class="at">order =</span> <span class="dv">5</span>)  <span class="co"># Moving average with a window of size 5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>
+<strong>Exponential Smoothing</strong>: Exponential smoothing is a popular smoothing technique that assigns exponentially decreasing weights to past observations. It places more emphasis on recent observations and is suitable for data with a changing trend. In R, you can apply exponential smoothing using the <code>ets()</code> function from the <code>forecast</code> package. For example:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>   <span class="co"># Apply exponential smoothing</span></span>
+<span id="cb57-2"><a href="#cb57-2"></a>smoothed_data <span class="ot">&lt;-</span> ts_data <span class="sc">|&gt;</span></span>
+<span id="cb57-3"><a href="#cb57-3"></a>  forecast<span class="sc">::</span><span class="fu">ets</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ets" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3_files/figure-html/fig-ets-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;4.4<strong>.</strong> ETS smoothed time series</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li>
+<strong>Loess Smoothing</strong>: Loess smoothing is a non-parametric technique that fits a smooth curve through the data using local weighted regression. It is effective in capturing complex patterns and is particularly useful for data with irregular or nonlinear trends. In R, you can apply loess smoothing using the <code><a href="https://rdrr.io/r/stats/loess.html">loess()</a></code> function. For example:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>   <span class="co"># Apply loess smoothing</span></span>
+<span id="cb58-2"><a href="#cb58-2"></a>   smoothed_data <span class="ot">&lt;-</span> <span class="fu">loess</span>(ts_data <span class="sc">~</span> <span class="fu">time</span>(ts_data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-loess" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3_files/figure-html/fig-loess-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;4.5<strong>.</strong> loess smoothed time series</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li>
+<strong>Spline Smoothing</strong>: Spline smoothing is a flexible technique that fits a piecewise polynomial function to the data. It is useful for capturing both local and global trends in the time series. In R, you can apply spline smoothing using the <code><a href="https://rdrr.io/r/stats/smooth.spline.html">smooth.spline()</a></code> function. For example:</li>
+</ol>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a><span class="co"># Apply spline smoothing</span></span>
+<span id="cb59-2"><a href="#cb59-2"></a>   smoothed_data <span class="ot">&lt;-</span> <span class="fu">smooth.spline</span>(<span class="fu">time</span>(ts_data), ts_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-spline" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3_files/figure-html/fig-spline-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;4.6<strong>.</strong> Spline smoothed</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./ch2.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch3Edition.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

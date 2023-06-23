@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Geospatial Technology and Spatial Analysis in R - 2&nbsp; Introduction  The R environment</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch2.html" rel="next">
+<link href="./ch0.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><link rel="stylesheet" href="style.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch1.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li>
+<a href="#programming" id="toc-programming" class="nav-link active" data-scroll-target="#programming"><span class="header-section-number">2.1</span> Programming</a>
+  <ul class="collapse">
+<li><a href="#why-is-programming-necessary" id="toc-why-is-programming-necessary" class="nav-link" data-scroll-target="#why-is-programming-necessary"><span class="header-section-number">2.1.1</span> Why is programming necessary?</a></li>
+  <li><a href="#what-is-programming" id="toc-what-is-programming" class="nav-link" data-scroll-target="#what-is-programming"><span class="header-section-number">2.1.2</span> What is programming?</a></li>
+  <li><a href="#computer-hardware" id="toc-computer-hardware" class="nav-link" data-scroll-target="#computer-hardware"><span class="header-section-number">2.1.3</span> Computer hardware</a></li>
+  <li><a href="#object-oriented-programming" id="toc-object-oriented-programming" class="nav-link" data-scroll-target="#object-oriented-programming"><span class="header-section-number">2.1.4</span> Object-oriented programming</a></li>
+  <li><a href="#inheritance" id="toc-inheritance" class="nav-link" data-scroll-target="#inheritance"><span class="header-section-number">2.1.5</span> Inheritance</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#sec-r" id="toc-sec-r" class="nav-link" data-scroll-target="#sec-r"><span class="header-section-number">2.2</span> Starting R</a>
+  <ul class="collapse">
+<li><a href="#console" id="toc-console" class="nav-link" data-scroll-target="#console"><span class="header-section-number">2.2.1</span> Console</a></li>
+  <li><a href="#basic-r-expressions" id="toc-basic-r-expressions" class="nav-link" data-scroll-target="#basic-r-expressions"><span class="header-section-number">2.2.2</span> Basic R expressions</a></li>
+  <li><a href="#console-input-and-output" id="toc-console-input-and-output" class="nav-link" data-scroll-target="#console-input-and-output"><span class="header-section-number">2.2.3</span> Console input and output</a></li>
+  <li><a href="#arithmetic-operators" id="toc-arithmetic-operators" class="nav-link" data-scroll-target="#arithmetic-operators"><span class="header-section-number">2.2.4</span> Arithmetic operators</a></li>
+  <li><a href="#spaces-and-comments" id="toc-spaces-and-comments" class="nav-link" data-scroll-target="#spaces-and-comments"><span class="header-section-number">2.2.5</span> Spaces and comments</a></li>
+  <li><a href="#conditional-operators" id="toc-conditional-operators" class="nav-link" data-scroll-target="#conditional-operators"><span class="header-section-number">2.2.6</span> Conditional operators</a></li>
+  <li><a href="#special-values" id="toc-special-values" class="nav-link" data-scroll-target="#special-values"><span class="header-section-number">2.2.7</span> Special values</a></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions"><span class="header-section-number">2.2.8</span> Functions</a></li>
+  <li><a href="#error-messages" id="toc-error-messages" class="nav-link" data-scroll-target="#error-messages"><span class="header-section-number">2.2.9</span> Error messages</a></li>
+  <li><a href="#pre-loaded-objects" id="toc-pre-loaded-objects" class="nav-link" data-scroll-target="#pre-loaded-objects"><span class="header-section-number">2.2.10</span> Pre-loaded objects</a></li>
+  <li><a href="#decimal-places" id="toc-decimal-places" class="nav-link" data-scroll-target="#decimal-places"><span class="header-section-number">2.2.11</span> Decimal places</a></li>
+  <li><a href="#case-sensitivity" id="toc-case-sensitivity" class="nav-link" data-scroll-target="#case-sensitivity"><span class="header-section-number">2.2.12</span> Case-sensitivity</a></li>
+  <li><a href="#classes" id="toc-classes" class="nav-link" data-scroll-target="#classes"><span class="header-section-number">2.2.13</span> Classes</a></li>
+  <li><a href="#using-help-files" id="toc-using-help-files" class="nav-link" data-scroll-target="#using-help-files"><span class="header-section-number">2.2.14</span> Using help files</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages"><span class="header-section-number">2.3</span> Packages</a>
+  <ul class="collapse">
+<li><a href="#installing-r-packages" id="toc-installing-r-packages" class="nav-link" data-scroll-target="#installing-r-packages"><span class="header-section-number">2.3.1</span> Installing R packages</a></li>
+  <li><a href="#loading-installed-packages" id="toc-loading-installed-packages" class="nav-link" data-scroll-target="#loading-installed-packages"><span class="header-section-number">2.3.2</span> Loading installed packages</a></li>
+  <li><a href="#flavours-of-r-base-and-tidyverse" id="toc-flavours-of-r-base-and-tidyverse" class="nav-link" data-scroll-target="#flavours-of-r-base-and-tidyverse"><span class="header-section-number">2.3.3</span> Flavours of R: base and tidyverse</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span id="sec-introduction" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>In this chapter, our aims are to introduce the main advantages and properties of programming, to familiarize ourselves with the R environment, and to learn how to write and execute basic expressions in R.</p>
+<section id="programming" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="programming">
+<span class="header-section-number">2.1</span> Programming</h2>
+<p>In this section, we are going to demontrate the way that programming differs from Graphical User Interfaces (GUI), and its advantages, through two examples. The first example (Section <a href="https://geobgu.xyz/r-2021/the-r-environment.html#example-1-csv-file">1.1.1.2</a>) shows how the graphical interface hides essential details about the data we are working with, and ways to interact with them. The second example (Section <a href="https://geobgu.xyz/r-2021/the-r-environment.html#example-2-changing-raster-value">1.1.1.3</a>) is similar, but related to spatial data—it shows how a seemingly simple operation is in fact complex when working with a graphical interface, but it is made simple through programming.</p>
+<section id="why-is-programming-necessary" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="why-is-programming-necessary">
+<span class="header-section-number">2.1.1</span> Why is programming necessary?</h3>
+<p>Programming is an essential skill for spatial data analysis due to the complexity of the data involved. Spatial data analysis involves working with data that has a geographic component, such as maps, satellite imagery, and GPS coordinates. This type of data can be incredibly large and complex, making it difficult to work with using traditional data analysis tools. Programming allows analysts to automate tasks, manipulate data, and create custom algorithms that can handle large amounts of spatial data. In addition, programming languages such as Python and R have libraries specifically designed for spatial data analysis, making it easier for analysts to work with this type of data. Overall, programming is necessary for spatial data analysis because it allows analysts to efficiently and effectively work with complex spatial data.</p>
+</section><section id="what-is-programming" class="level3" data-number="2.1.2"><h3 data-number="2.1.2" class="anchored" data-anchor-id="what-is-programming">
+<span class="header-section-number">2.1.2</span> What is programming?</h3>
+<p>A <strong>computer program</strong> is a sequence of text instructions that can be “understood” by a computer and executed. A <strong>programming language</strong> is a machine-readable artificial language designed to express computations that can be performed by a computer. Programming is the preferred way for giving instructions to the computer.</p>
+<p>Programming is the process of designing, writing, testing, and maintaining computer programs. It involves using various programming languages and tools to create software that can perform specific tasks. When it comes to data analysis, programming plays a crucial role in processing and analyzing large volumes of data. Data analysis is the process of examining data sets to extract meaningful insights and information.</p>
+<p>Programming provides the necessary tools and techniques to manipulate and analyze data efficiently. This includes using programming languages such as Python, R, and SQL, as well as specialized libraries and frameworks for data analysis. With programming, data analysts can automate repetitive tasks, visualize data, and build complex models to make predictions and identify patterns. In summary, programming is an essential skill for data analysts as it enables them to work with large datasets and extract valuable insights from them.</p>
+</section><section id="computer-hardware" class="level3" data-number="2.1.3"><h3 data-number="2.1.3" class="anchored" data-anchor-id="computer-hardware">
+<span class="header-section-number">2.1.3</span> Computer hardware</h3>
+<p>Computing is an essential aspect of modern life, and it comprises of five key elements that are crucial for its functioning (<a href="#fig-cpu">Figure&nbsp;<span>2.1</span></a>). The first element is the Central Processing Unit (CPU), which is the brain of a computer. It performs all the processing tasks and manages the computer’s hardware and software components. The second element is Random Access Memory (RAM), which stores data temporarily and enables the CPU to access it quickly. The third element is the Display, which shows the output of the CPU’s processing in a visual format. It allows users to interact with the computer and access information easily.</p>
+<p>The fourth element is Storage, which stores all the data and programs permanently, even when the computer is turned off. It includes hard drives, solid-state drives, and other types of storage devices. The final element is Network, which enables computers to communicate with each other and share data over a network. It includes wired and wireless networks and is crucial for internet connectivity. Understanding these five key elements of computing is essential for anyone who uses technology in their daily lives.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-cpu" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="graphics/preface/cpu.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;2.1<strong>.</strong> Key component of the computing system</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="object-oriented-programming" class="level3" data-number="2.1.4"><h3 data-number="2.1.4" class="anchored" data-anchor-id="object-oriented-programming">
+<span class="header-section-number">2.1.4</span> Object-oriented programming</h3>
+<p>In object-oriented programming, the interaction with the computer takes places through <strong>objects</strong>. Each object belongs to a <strong>class</strong>: an abstract structure with certain properties. Objects are in fact <strong>instances</strong> of a class.</p>
+<p>The class comprises a template which sets the <strong>properties</strong> and <strong>methods</strong> each object of that class should have, while an object contains specific values for that particular instance (Figure <a href="https://geobgu.xyz/r-2021/the-r-environment.html#fig:js-object">1.12</a>).</p>
+<p>For example:</p>
+<ul>
+<li><p>All cars we see in the parking lot are instances of the “car” class</p></li>
+<li><p>The “car” class has certain properties (manufacturer, color, year) and methods (start, drive, stop)</p></li>
+<li><p>Each “car” object has specific values for the properties (Suzuki, brown, 2011)</p></li>
+</ul>
+<p>Figure 1.12: An object (<a href="https://www.w3schools.com/js/" class="uri">https://www.w3schools.com/js/</a>)</p>
+<p>In R, as we will see later on, everything we work with are objects. For example, a raster—such as <code>rainfall.tif</code> which we mentioned earlier (Section <a href="https://geobgu.xyz/r-2021/the-r-environment.html#example-2-changing-raster-value">1.1.1.3</a>)—that we import into R is actually translated to an object of a class named <code>stars</code>. The object has numerous properties, such as the number of rows an columns, the resolution, the Coordinate Reference System (CRS), and so on.</p>
+<p>The following two expressions are used to import the raster <code>rainfall.tif</code> into the R environment (we will elaborate on that later on, in Sections <a href="https://geobgu.xyz/r-2021/vectors.html#assignment">2.2</a> and <a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#reading-raster-from-file">5.3.6</a>):</p>
+<pre><code>library(stars) r = read_stars("rainfall.tif")</code></pre>
+<p>Once imported, an <em>object</em> named <code>r</code>, belonging to the <em>class</em> named <code>stars</code> is used to represent rasters in R, exists in the R environment (more specifically in the RAM, see Section <a href="https://geobgu.xyz/r-2021/the-r-environment.html#computer-hardware">1.1.3</a>). For example, printing to object displays some of its <em>properties</em> and their specific values, such as a resolution (<code>delta</code>) of 1000 meters:</p>
+<pre><code>r ## stars object with 2 dimensions and 1 attribute ## attribute(s): ##  rainfall.tif    ##  Min.   :200.0   ##  1st Qu.:373.3   ##  Median :500.7   ##  Mean   :483.8   ##  3rd Qu.:585.6   ##  Max.   :908.5   ##  NA's   :20780   ## dimension(s): ##   from  to  offset delta                refsys point values x/y ## x    1 153  616965  1000 WGS 84 / UTM zone 36N FALSE   NULL [x] ## y    1 240 3691819 -1000 WGS 84 / UTM zone 36N FALSE   NULL [y]</code></pre>
+<p>You don’t need to worry about the meaning of the different properties in the above output yet. Again, we are going to cover these in detail later on (Sections <a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#stars-class-and-structure">5.3.8.1</a>–<a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#dimensions-and-spatial-properties">5.3.8.3</a> and <a href="https://geobgu.xyz/r-2021/raster-processing.html#raster-dimensions">6.3</a>).</p>
+</section><section id="inheritance" class="level3" data-number="2.1.5"><h3 data-number="2.1.5" class="anchored" data-anchor-id="inheritance">
+<span class="header-section-number">2.1.5</span> Inheritance</h3>
+<p>One of the implications of object-oriented programming is <strong>inheritance</strong>. Inheritance makes it possible for one class to “extend” another class, by adding new properties and/or new methods. Using our car example (Figure <a href="https://geobgu.xyz/r-2021/the-r-environment.html#fig:js-object">1.12</a>):</p>
+<ul>
+<li><p>A “taxi” is an extension of the “car” class, inheriting all of its properties and methods</p></li>
+<li><p>In addition to the inherited properties, a “taxi” has new properties (taxi company name) and new methods (switching the taximeter on and off)</p></li>
+</ul>
+<p>In R, the idea of inheritance is realized in various ways. For example, every complex object (such as a raster) is actually a collection of smaller components (the properties). Looking at the structure of the raster object <code>r</code> (using the <code>str</code> function, see Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#data-frame-row-and-column-names">4.1.4.2</a>) reveals that it is, in fact, a collection of many small objects belonging to simpler classes, each holding a piece of information. For example, the resolution property (named <code>delta</code>) is in fact a numeric vector (class <code>numeric</code>, see Section <a href="https://geobgu.xyz/r-2021/vectors.html#vectors-section">2.3</a>) of length 1 (i.e., containing a single value, <code>1000</code>):</p>
+<pre><code>str(r) ## List of 1 ##  $ rainfall.tif: num [1:153, 1:240] NA NA NA NA NA NA NA NA NA NA ... ##  - attr(*, "dimensions")=List of 2 ##   ..$ x:List of 7 ##   .. ..$ from  : num 1 ##   .. ..$ to    : num 153 ##   .. ..$ offset: num 616965 ##   .. ..$ delta : num 1000 ##   .. ..$ refsys:List of 2 ##   .. .. ..$ input: chr "WGS 84 / UTM zone 36N" ##   .. .. ..$ wkt  : chr "PROJCRS[\"WGS 84 / UTM zone 36N\",\n    BASEGEOGCRS[\"WGS 84\",\n        DATUM[\"World Geodetic System 1984\",\"| __truncated__ ##   .. .. ..- attr(*, "class")= chr "crs" ##   .. ..$ point : logi FALSE ##   .. ..$ values: NULL ##   .. ..- attr(*, "class")= chr "dimension" ##   ..$ y:List of 7 ##   .. ..$ from  : num 1 ##   .. ..$ to    : num 240 ##   .. ..$ offset: num 3691819 ##   .. ..$ delta : num -1000 ##   .. ..$ refsys:List of 2 ##   .. .. ..$ input: chr "WGS 84 / UTM zone 36N" ##   .. .. ..$ wkt  : chr "PROJCRS[\"WGS 84 / UTM zone 36N\",\n    BASEGEOGCRS[\"WGS 84\",\n        DATUM[\"World Geodetic System 1984\",\"| __truncated__ ##   .. .. ..- attr(*, "class")= chr "crs" ##   .. ..$ point : logi FALSE ##   .. ..$ values: NULL ##   .. ..- attr(*, "class")= chr "dimension" ##   ..- attr(*, "raster")=List of 3 ##   .. ..$ affine     : num [1:2] 0 0 ##   .. ..$ dimensions : chr [1:2] "x" "y" ##   .. ..$ curvilinear: logi FALSE ##   .. ..- attr(*, "class")= chr "stars_raster" ##   ..- attr(*, "class")= chr "dimensions" ##  - attr(*, "class")= chr "stars"</code></pre>
+<p>The benefit of inheritance is that the programmer does not need to write every class from scratch. Instead, new classes can be built on top of existing ones, while re-using their properties and methods.</p>
+</section></section><section id="sec-r" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="sec-r">
+<span class="header-section-number">2.2</span> Starting R</h2>
+<p>Now that we covered some central theoretical concepts related to programming, we are staring the practical part—writing R code to work with spatial data. In this chapter, we will become familiar with the R environment, its basic operators and syntax rules. To install R on a Windows computer, follow these steps:</p>
+<ol type="1">
+<li>Visit the official R website at https://www.r-project.org/.</li>
+<li>Click on the “Download R” link in the “Getting Started” section.</li>
+<li>Choose a CRAN mirror site that is geographically closest to your location.</li>
+<li>Select the appropriate version of R for your operating system (Windows in this case).</li>
+<li>Click on the download link for the base distribution of R.</li>
+<li>Run the installer and follow the prompts to complete the installation process.</li>
+<li>Once installed, launch R by clicking on its icon on your desktop or from the Start menu.</li>
+</ol>
+<p>The current version at the time of writing (October 2020) is <a href="https://cran.r-project.org/src/base/R-4"><strong>R version 4.3.0</strong></a> released on 2023-04-21. Once R is installed, we can open the default interface (<strong>RGui</strong>) with <strong>Start</strong> → <strong>All Programs</strong> → <strong>R</strong> → <strong>R x64 4.3.0</strong> (<a href="#fig-rbase">Figure&nbsp;<span>2.2</span></a>).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rbase" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="graphics/preface/rstudio.png" class="img-fluid figure-img" width="882"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;2.2<strong>.</strong> R language Graphic User Interaface (GUI)</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We will be working with R through a more advanced interface than the default one, called the <strong>RStudio</strong>. It can be downloaded from the RStudio company <a href="https://www.rstudio.com/">website</a>. The current version is <a href="https://download1.rstudio.org/electron/windows/RStudio-2023.03.1-446.exe">RSTUDIO-2023.03.1-446</a>. Once both R and RStudio are installed, we can open RStudio with <strong>Start</strong> → <strong>All Programs</strong> → <strong>RStudio</strong> → <strong>RStudio</strong> <a href="#fig-rstudio">Figure&nbsp;<span>2.3</span></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-rstudio" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="graphics/preface/rstudio.png" class="img-fluid figure-img" width="882"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;2.3<strong>.</strong> Interactive Development Environment of R simplified in RStudio</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="console" class="level3" data-number="2.2.1"><h3 data-number="2.2.1" class="anchored" data-anchor-id="console">
+<span class="header-section-number">2.2.1</span> Console</h3>
+<p>In this section, we will only work with the <strong>console</strong> shown in <a href="#fig-console">Figure&nbsp;<span>2.4</span></a>. The console in RStudio is an essential tool for coding in R. It is a command-line interface that allows users to interact with the R programming language. The console is where users can enter and execute R commands and see the output of those commands.</p>
+<p>It is a powerful tool for data analysis and statistical modeling, allowing users to quickly test and iterate on code. The console also displays error messages and warnings, making it easier to debug code. In addition, the console can be used to install and load packages, set working directories, and manage data objects. Overall, the console in RStudio is a valuable tool for any programmer working with R, providing a streamlined way to write, test, and debug code.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-console" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="graphics/preface/rstudio_console.png" class="img-fluid figure-img" width="881"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;2.4<strong>.</strong> RStudio console</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="basic-r-expressions" class="level3" data-number="2.2.2"><h3 data-number="2.2.2" class="anchored" data-anchor-id="basic-r-expressions">
+<span class="header-section-number">2.2.2</span> Basic R expressions</h3>
+</section><section id="console-input-and-output" class="level3" data-number="2.2.3"><h3 data-number="2.2.3" class="anchored" data-anchor-id="console-input-and-output">
+<span class="header-section-number">2.2.3</span> Console input and output</h3>
+<p>The simplest way to interact with the R environment is typing an expression into the R console, pressing <strong>Enter</strong> to execute it. For example, let’s type the expression <code>1+3+5+7</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">5</span> <span class="sc">+</span> <span class="dv">7</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 16</code></pre>
+</div>
+</div>
+<p>After we press <strong>Enter</strong>, the expression <code>1+3+5+7</code> is sent to the processor. The returned value, <code>16</code>, is then printed in the console. Note that the value <code>16</code> is not kept in in the RAM or Mass Storage, just printed on screen.</p>
+<p>We can type a number, the number itself is returned:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="dv">600</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 600</code></pre>
+</div>
+</div>
+<p>We can type text inside single <code>'</code> or double <code>"</code> quotes:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="st">"Hello"</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "Hello"</code></pre>
+</div>
+</div>
+<p>The last two expressions are examples of constant values, <code>numeric</code> or <code>character</code>. These are the simplest type of expressions in R.</p>
+</section><section id="arithmetic-operators" class="level3" data-number="2.2.4"><h3 data-number="2.2.4" class="anchored" data-anchor-id="arithmetic-operators">
+<span class="header-section-number">2.2.4</span> Arithmetic operators</h3>
+<p>Through interactive use of the command line, we can experiment with basic operators in R. For example, R includes the standard <strong>arithmetic operators</strong> (Table <a href="https://geobgu.xyz/r-2021/the-r-environment.html#tab:arithmetic-operators">1.1</a>).</p>
+<table class="table"><tbody>
+<tr class="odd">
+<td></td>
+<td>Table 1.1: Arithmetic operators</td>
+</tr>
+<tr class="even">
+<td><strong>Operator</strong></td>
+<td><strong>Meaning</strong></td>
+</tr>
+<tr class="odd">
+<td><code>+</code></td>
+<td>Addition</td>
+</tr>
+<tr class="even">
+<td><code>-</code></td>
+<td>Subtraction</td>
+</tr>
+<tr class="odd">
+<td><code>*</code></td>
+<td>Multiplication</td>
+</tr>
+<tr class="even">
+<td><code>/</code></td>
+<td>Division</td>
+</tr>
+<tr class="odd">
+<td><code>^</code></td>
+<td>Exponent</td>
+</tr>
+</tbody></table>
+<p>Here are some examples of expressions that use the arithmetic operators:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="dv">5</span> <span class="sc">+</span> <span class="dv">3</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="dv">4</span> <span class="sc">-</span> <span class="dv">5</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] -1</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="dv">1</span> <span class="sc">*</span> <span class="dv">10</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="dv">1</span> <span class="sc">/</span> <span class="dv">10</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="dv">10</span> <span class="sc">^</span> <span class="dv">2</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 100</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We can use the up ↑ and down ↓ keys to scroll through the executed expressions history. Try to execute several different expressions, then scroll up until you reach one of the previous expressions and re-execute it by pressing <strong>Enter</strong>. Scrolling through expression history is convenient for going back to previously exceuted code, without re-typing it, possibly making modifications before excecuting it once again.</p>
+</div>
+</div>
+<p>Note that very large or very small numbers are formatted in <em>exponential</em> notation:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="dv">1</span> <span class="sc">/</span> <span class="dv">1000000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 1e-06</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="dv">7</span> <span class="sc">*</span> <span class="dv">100000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 7e+05</code></pre>
+</div>
+</div>
+<p><em>Infinity</em> is treated as a special numeric value, <code>Inf</code> or <code>-Inf</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] Inf</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] -Inf</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="cn">Inf</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] Inf</code></pre>
+</div>
+</div>
+<pre><code>-1 *</code></pre>
+<p>We can control operator precedence with <strong>brackets</strong>, just like in math:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="dv">2</span> <span class="sc">*</span> <span class="dv">3</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="dv">2</span> <span class="sc">*</span> (<span class="dv">3</span> <span class="sc">+</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+<p>It is recommended to use brackets for clarity, even where not strictly required.</p>
+</section><section id="spaces-and-comments" class="level3" data-number="2.2.5"><h3 data-number="2.2.5" class="anchored" data-anchor-id="spaces-and-comments">
+<span class="header-section-number">2.2.5</span> Spaces and comments</h3>
+<p>The interpreter ignores everything to the right of the number symbol <code>#</code>:</p>
+<pre><code>1 * 2 # * 3 </code></pre>
+<p>The <code>#</code> symbol is therefore used for code comments:</p>
+<pre><code># Multiplication example 5 * 5 </code></pre>
+<blockquote class="blockquote">
+<p>Why do you think the code outputs are marked by <code>##</code> in the code sections (such as <code>## [1] 25</code> in the above code section)?</p>
+</blockquote>
+<p>The interpreter ignores spaces, so the following expressions are treated exactly the same way:</p>
+<pre><code>1 + 1 </code></pre>
+<pre><code>1+1 </code></pre>
+<pre><code>1+1</code></pre>
+<p>We can type <strong>Enter</strong> in the middle of an expression and keep typing on the next line. The interpreter displays the <code>+</code> symbol, which means that the expression is incomplete (Figure <a href="https://geobgu.xyz/r-2021/the-r-environment.html#fig:incomplete-expression">1.18</a>):</p>
+<pre><code>5 *  2 #</code></pre>
+<p>Figure 1.18: Incomplete expression</p>
+<p>We can exit from the “completion” state, or from an ongoing computation, any time, by pressing <strong>Esc</strong>.</p>
+<p>Clearing the console can be done with <strong>Ctrl+L</strong>.</p>
+</section><section id="conditional-operators" class="level3" data-number="2.2.6"><h3 data-number="2.2.6" class="anchored" data-anchor-id="conditional-operators">
+<span class="header-section-number">2.2.6</span> Conditional operators</h3>
+<p><strong>Conditions</strong> are expressions that use <strong>conditional operators</strong> and have a yes/no result, i.e., the condition can be either true or false. The result of a condition is a <strong>logical</strong> value, <code>TRUE</code> or <code>FALSE</code>:</p>
+<ul>
+<li><p><code>TRUE</code> means the expression is true</p></li>
+<li><p><code>FALSE</code> means the expression is false</p></li>
+<li><p>(<code>NA</code> means it is <em>unknown</em>)</p></li>
+</ul>
+<p>The conditional operators in R are listed in Table <a href="https://geobgu.xyz/r-2021/the-r-environment.html#tab:conditional-operators">1.2</a>.</p>
+<table class="table"><tbody>
+<tr class="odd">
+<td></td>
+<td>Table 1.2: Conditional operators</td>
+</tr>
+<tr class="even">
+<td><strong>Operator</strong></td>
+<td><strong>Meaning</strong></td>
+</tr>
+<tr class="odd">
+<td><code>==</code></td>
+<td>Equal</td>
+</tr>
+<tr class="even">
+<td><code>&gt;</code></td>
+<td>Greater than</td>
+</tr>
+<tr class="odd">
+<td><code>&gt;=</code></td>
+<td>Greater than or equal</td>
+</tr>
+<tr class="even">
+<td><code>&lt;</code></td>
+<td>Less than</td>
+</tr>
+<tr class="odd">
+<td><code>&lt;=</code></td>
+<td>Less than or equal</td>
+</tr>
+<tr class="even">
+<td><code>!=</code></td>
+<td>Not equal</td>
+</tr>
+<tr class="odd">
+<td><code>&amp;</code></td>
+<td>And</td>
+</tr>
+<tr class="even">
+<td><code>|</code></td>
+<td>Or</td>
+</tr>
+<tr class="odd">
+<td><code>!</code></td>
+<td>Not</td>
+</tr>
+</tbody></table>
+<p>For example, we can use conditional operators to compare numeric values:</p>
+<pre><code>1 &lt; 2</code></pre>
+<pre><code>1 &gt; 2</code></pre>
+<pre><code>2 &gt; 2</code></pre>
+<pre><code>2 &gt;= 2</code></pre>
+<pre><code>2 != 2</code></pre>
+<p>“Equal” (<code>==</code>) and “not equal” (<code>!=</code>) are opposites of each other, since a pair of values can be either equal or not:</p>
+<pre><code>1 == 1 </code></pre>
+<pre><code>1 == 2 </code></pre>
+<p>The “and” (<code>&amp;</code>) and “or” (<code>|</code>) operators are used to create more complex conditions. “And” (<code>&amp;</code>) returns <code>TRUE</code> when both sides are <code>TRUE</code>:</p>
+<pre><code>(1 &lt; 10) &amp; (10 &lt; 100) </code></pre>
+<pre><code>(1 &lt; 10) &amp; (10 &gt; 100) </code></pre>
+<p>“Or” (<code>|</code>) returns <code>TRUE</code> when at least one of the sides is <code>TRUE</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>(<span class="dv">1</span> <span class="sc">&lt;</span> <span class="dv">10</span>) <span class="sc">|</span> (<span class="dv">10</span> <span class="sc">&lt;</span> <span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>(<span class="dv">1</span> <span class="sc">&lt;</span> <span class="dv">10</span>) <span class="sc">|</span> (<span class="dv">10</span> <span class="sc">&gt;</span> <span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>The last conditional operator is “not” (<code>!</code>), which reverses <code>TRUE</code> to <code>FALSE</code> and <code>FALSE</code> to <code>TRUE</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="dv">1</span> <span class="sc">==</span> <span class="dv">1</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="sc">!</span>(<span class="dv">1</span> <span class="sc">==</span> <span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>(<span class="dv">1</span> <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">&amp;</span> (<span class="dv">2</span> <span class="sc">==</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>(<span class="dv">1</span> <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">&amp;</span> <span class="sc">!</span>(<span class="dv">2</span> <span class="sc">==</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Run the following expression and explain their result:</p>
+<p><code>FALSE == FALSE</code></p>
+<p><code>!(TRUE == TRUE)</code></p>
+<p><code>!(!(1 == 1))</code></p>
+</blockquote>
+</section><section id="special-values" class="level3" data-number="2.2.7"><h3 data-number="2.2.7" class="anchored" data-anchor-id="special-values">
+<span class="header-section-number">2.2.7</span> Special values</h3>
+<p>R has several special values, as listed in Table <a href="https://geobgu.xyz/r-2021/the-r-environment.html#tab:special-values">1.3</a>.</p>
+<table class="table"><tbody>
+<tr class="odd">
+<td></td>
+<td>Table 1.3: Special values in R</td>
+</tr>
+<tr class="even">
+<td><strong>Value</strong></td>
+<td><strong>Meaning</strong></td>
+</tr>
+<tr class="odd">
+<td><code>Inf</code></td>
+<td>Infinity</td>
+</tr>
+<tr class="even">
+<td><code>NA</code></td>
+<td>Not Available</td>
+</tr>
+<tr class="odd">
+<td><code>NaN</code></td>
+<td>Not a Number</td>
+</tr>
+<tr class="even">
+<td><code>NULL</code></td>
+<td>Empty object</td>
+</tr>
+</tbody></table>
+<p>We already met <code>Inf</code>, and have shown how it can be the result of particular arithmetic operations such as division by zero (Section <a href="https://geobgu.xyz/r-2021/the-r-environment.html#arithmetic-operators">1.3.2</a>):</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="dv">1</span> <span class="sc">/</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] Inf</code></pre>
+</div>
+</div>
+<p><code>NA</code> specifies an unknown, or missing, value. Later on, we are going to encounter several situations where <code>NA</code> values can arise. For example, empty cells in a table imported into R, such as from a CSV file (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#reading-tables-from-a-file">4.4</a>), are encoded in R as <code>NA</code> values.</p>
+<p><code>NA</code> values can participate in any arithmetic or logical operation. For example:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a><span class="cn">NA</span> <span class="sc">+</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Why do you think the result of the above expression is <code>NA</code>?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>What do you think will be the result of the expression <code>NA == NA</code>?</p>
+</blockquote>
+<p><code>NaN</code> is less relevant for the material of this book, but it is important to be familiar with it. <code>NaN</code> values often result from “meaningless” arithmetic operations:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a><span class="dv">0</span> <span class="sc">/</span> <span class="dv">0</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] NaN</code></pre>
+</div>
+</div>
+<p>For most practical purposes, <code>NaN</code> values behave exactly the same way as <code>NA</code> values.</p>
+<p>Finally, the value of <code>NULL</code> specifies an empty object:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<p><code>NULL</code> has some uses which we will discuss later on (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#loops">4.2.3</a>).</p>
+</section><section id="functions" class="level3" data-number="2.2.8"><h3 data-number="2.2.8" class="anchored" data-anchor-id="functions">
+<span class="header-section-number">2.2.8</span> Functions</h3>
+<p>In math, a <strong>function</strong> (Figure <a href="https://geobgu.xyz/r-2021/the-r-environment.html#fig:function">1.19</a>) is a relation that associates each element x of a set X, to a single element y of another set Y. For example, the function y=2x�=2� is a mathematical function that associates any number x� with the number 2x2�.</p>
+<p>Figure 1.19: A function</p>
+<p>The concept of functions in programming is similar. A function is a code piece that “knows” how to do a certain task. Executing the function is known as a <strong>function call</strong>. The function accepts zero or more objects as input (e.g., <code>2</code>) and returns a single object as output (e.g., <code>4</code>). In addition to the returned value, the function may perform other task(s), known as <strong>side effects</strong> (for example: writing information to a file, or displaying graphical output).</p>
+<p>The number and type of inputs the function needs are determined in the function definition; these are known as the function <strong>parameters</strong> (e.g., a single number). The objects the function received in practice, as part of a particular function call, are known as <strong>arguments</strong> (e.g., <code>2</code>).</p>
+<p>A function is basically a set of pre-defined <em>instructions</em>. There are thousands of built-in functions in R. Later on we will learn to define our own functions (Section <a href="https://geobgu.xyz/r-2021/time-series-and-function-definitions.html#defining-custom-functions">3.3</a>).</p>
+<p>A <strong>function call</strong> is composed of the function name, followed by the arguments inside brackets <code>()</code> and separated by commas <code>,</code>. For example, the <code>sqrt</code> function calculates the square root of its input. For example, the following expression calls the <code>sqrt</code> function with the argument <code>4</code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="fu">sqrt</span>(<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>Here, the <code>sqrt</code> function received a single argument <code>4</code> and returned its square root <code>2</code>.</p>
+<p>As a side note, it is interesting to mention that everything we do in R in fact involves functions (Figure <a href="https://geobgu.xyz/r-2021/the-r-environment.html#fig:chambers-quote">1.20</a>).</p>
+<p>Figure 1.20: From <em>Chambers 2014</em>, <em>Statistical Science</em> (<a href="https://arxiv.org/pdf/1409.3531.pdf" class="uri">https://arxiv.org/pdf/1409.3531.pdf</a>)</p>
+<p>Even arithmetic operators are functions, just written in a special way. The arithmetic operators can be executed in the “ordinary” function syntax, too, as follows:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a><span class="st">`</span><span class="at">+</span><span class="st">`</span>(<span class="dv">5</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+</div>
+</section><section id="error-messages" class="level3" data-number="2.2.9"><h3 data-number="2.2.9" class="anchored" data-anchor-id="error-messages">
+<span class="header-section-number">2.2.9</span> Error messages</h3>
+<p>Consider the following three different expressions:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a><span class="fu">sqrt</span>(<span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<pre><code>sqrt("16")</code></pre>
+<pre><code>sqrt(a)</code></pre>
+<p>In last two expressions we got <strong>error messages</strong>, because the expressions were illegal, i.e., not in agreement with the syntax rules of R. The <em>first</em> error occurred because we tried to run a mathematical operation <code>sqrt</code> on a text value <code>"a"</code>. The <em>second</em> error occurred because we tried to use a non-existing object <code>a</code>. Any text without quotes is treated as a name of an object, i.e., a label for an actual object stored in RAM. Since we don’t have an object named <code>a</code> we got an error.</p>
+</section><section id="pre-loaded-objects" class="level3" data-number="2.2.10"><h3 data-number="2.2.10" class="anchored" data-anchor-id="pre-loaded-objects">
+<span class="header-section-number">2.2.10</span> Pre-loaded objects</h3>
+<p>When starting R, a default set of <em>objects</em> is loaded into the RAM, such as <code>TRUE</code>, <code>FALSE</code>, <code>sqrt</code> and <code>pi</code>. For example, type <code>pi</code> and see what happens:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1"></a>pi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.141593</code></pre>
+</div>
+</div>
+</section><section id="decimal-places" class="level3" data-number="2.2.11"><h3 data-number="2.2.11" class="anchored" data-anchor-id="decimal-places">
+<span class="header-section-number">2.2.11</span> Decimal places</h3>
+<p>Is the value of π� stored in memory really equal to the value we see on screen (<code>3.141593</code>)? Executing the following condition reveals that the answer is no:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1"></a>pi <span class="sc">==</span> <span class="fl">3.141593</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p>If not, what is the difference?</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1"></a>pi <span class="sc">-</span> <span class="fl">3.141593</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] -3.464102e-07</code></pre>
+</div>
+</div>
+<p>The reason for the discrepancy is that, by default, R prints only the first 7 digits:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1"></a><span class="fu">options</span>()<span class="sc">$</span>digits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<p>When working with R we should keep in mind that the printed value and object contents are not always identical, so that the printed output is more convenient for the user.</p>
+<blockquote class="blockquote">
+<p>The number of digits to print can be changed with an expression such as <code>options(digits=22)</code>. Try running the latter expression, then print the value of <code>pi</code> once again.</p>
+</blockquote>
+</section><section id="case-sensitivity" class="level3" data-number="2.2.12"><h3 data-number="2.2.12" class="anchored" data-anchor-id="case-sensitivity">
+<span class="header-section-number">2.2.12</span> Case-sensitivity</h3>
+<p>R is <strong>case-sensitive</strong>, it distinguishes between lower-case and upper-case letters. For example, <code>TRUE</code> is a logical value, but <code>True</code> and <code>true</code> are undefined:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1"></a><span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<pre><code>True</code></pre>
+<pre><code>true</code></pre>
+</section><section id="classes" class="level3" data-number="2.2.13"><h3 data-number="2.2.13" class="anchored" data-anchor-id="classes">
+<span class="header-section-number">2.2.13</span> Classes</h3>
+<p>R is an object-oriented language (Section <a href="https://geobgu.xyz/r-2021/the-r-environment.html#object-oriented-programming">1.1.5</a>), where each object belongs to a <strong>class</strong>. The <code>class</code> functions accepts an object and returns the <em>class name</em>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1"></a><span class="fu">class</span>(<span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "logical"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a><span class="fu">class</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a><span class="fu">class</span>(pi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a><span class="fu">class</span>(<span class="st">"a"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1"></a><span class="fu">class</span>(sqrt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "function"</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Explain the returned value of the following expressions.</p>
+</blockquote>
+<pre><code>class(1 &lt; 2)</code></pre>
+<pre><code>class("logical")</code></pre>
+<pre><code>class(1) == class(2)</code></pre>
+<pre><code>class(class)</code></pre>
+<pre><code>class(class(sqrt))</code></pre>
+<pre><code>class(class(1))</code></pre>
+</section><section id="using-help-files" class="level3" data-number="2.2.14"><h3 data-number="2.2.14" class="anchored" data-anchor-id="using-help-files">
+<span class="header-section-number">2.2.14</span> Using help files</h3>
+<p>Every built-in object is associated with a <strong>help document</strong>, which can be accessed using the <code>help</code> function or the <code>?</code> operator:</p>
+<pre><code>help(class) ?class ?TRUE ?pi</code></pre>
+</section></section><section id="packages" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="packages">
+<span class="header-section-number">2.3</span> Packages</h2>
+<p>So far we’ve been using a couple functions that are included with R out-of-the-box such as <code><a href="https://rdrr.io/r/base/search.html">search()</a></code> and <code><a href="https://rdrr.io/r/base/quit.html">q()</a></code>. We say that these functions are from “Base R”. But, one of the amazing things about R is its users’ community that create new functions and packages. An R <strong>package</strong> is a collection of functions, data, and documentation that extends the capabilities of base R. Using packages is key to the successful use of R. The majority of the packages that you will learn in this manual are part of the so-called <strong>tidyverse</strong>, which is an ecosystem of packages that <em>share a common philosophy of data and R programming, and are designed to work together naturally</em>.</p>
+<p>The tidyverse is a coherent system of packages for data manipulation, exploration and visualization that share a common design philosophy. The <strong>Tidyverse</strong> <span class="citation" data-cites="tidyverse">(<a href="references.html#ref-tidyverse" role="doc-biblioref">Wickham et al. 2019</a>)</span> packages form a core set of functions that will allow us to perform most any type of data cleaning or analysis we will need to do. We will use the following packages from the tidyverse</p>
+<ul>
+<li>
+<strong>ggplot2</strong>—for data visualisation.</li>
+<li>
+<strong>dplyr</strong>—for data manipulation.</li>
+<li>
+<strong>tidyr</strong>—for data tidying.</li>
+<li>
+<strong>readr</strong>—for data import.</li>
+<li>
+<strong>purrr</strong>—for functional programming.</li>
+<li>
+<strong>tibble</strong>—for tibbles, a modern re-imagining of data frames.</li>
+</ul>
+<section id="installing-r-packages" class="level3" data-number="2.3.1"><h3 data-number="2.3.1" class="anchored" data-anchor-id="installing-r-packages">
+<span class="header-section-number">2.3.1</span> Installing R packages</h3>
+<p>For us to use <strong>tidyverse</strong> and any other package that is not included in Base R, we must install them first. The easiest way to install packages is to use the <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages()</a></code> command. For example, let’s go ahead and install the <strong>tidyverse</strong> package on your machine:</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>On your own computer, type that line of code in the console, and then press enter to run it. R will download the packages from CRAN and install it to your computer. If you have problems installing, make sure that you are connected to the internet, and that https://cloud.r-project.org/ isn’t blocked by your firewall or proxy.</p>
+</section><section id="loading-installed-packages" class="level3" data-number="2.3.2"><h3 data-number="2.3.2" class="anchored" data-anchor-id="loading-installed-packages">
+<span class="header-section-number">2.3.2</span> Loading installed packages</h3>
+<p>Now we’ve installed the package, but we need to tell R that we are going to use some functions within the <strong>tidyverse</strong> package. With exception to base R package, add on package that are installed must be called with either <code>library</code> or <code>require</code> functions to make their tools accessible in R session. Let’s us load the <strong>tidyverse</strong> package we just installed</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1"></a><span class="fu">require</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You notice that when we load <strong>tidyverse</strong>, it popup a notification message showing the loaded packages and the conflicts they bring in. These conflicts happen when packages have functions with the same names as other functions. This is OK when you prefer the function in a package like tidyverse rather than some other function. Basically the last package loaded in will mask over other functions if they have common names.</p>
+</section><section id="flavours-of-r-base-and-tidyverse" class="level3" data-number="2.3.3"><h3 data-number="2.3.3" class="anchored" data-anchor-id="flavours-of-r-base-and-tidyverse">
+<span class="header-section-number">2.3.3</span> Flavours of R: base and tidyverse</h3>
+<p>R is a programming language, and just like any language, it has different dialects. When you read about R online, you’ll frequently see people mentioning the words “base” and “tidyverse.” These are the two most common dialects of R. Base R is just that, R in its purest form. The tidyverse is a collection of add-on packages for working with different types of data. The two are fully compatible, and you can mix and match as much as you like. Both <strong>ggplot2</strong> and <strong>magrittr</strong> are part of the <strong>tidyverse</strong>.</p>
+<p>In recent years, the tidyverse has been heavily promoted as being “modern” R which “makes data science faster, easier and more fun.” You should believe the hype. The tidyverse is marvellous. But if you only learn tidyverse R, you will miss out on much of what R has to offer. Base R is just as marvellous, and can definitely make data science as fast, easy and fun as the tidyverse. Besides, nobody uses just base R anyway - there are a ton of non-tidyverse packages that extend and enrich R in exciting new ways. Perhaps “extended R” would be better names for the non-tidyverse dialect.</p>
+<p>Anyone who tells you to just learn one of these dialects is wrong. Both are great, they work extremely well together, and they are similar enough that you shouldn’t limit yourself to just mastering one of them. This book will show you both base R and tidyverse solutions to problems, so that you can decide for yourself which is faster, easier, and more fun.</p>
+<p>A defining property of the tidyverse is that there are separate functions for everything, which is perfect for code that relies on pipes. In contrast, base R uses fewer functions, but with more parameters, to perform the same tasks. If you use tidyverse solutions there is a good chance that there exists a function which performs exactly the task you’re going to do with its default settings. This is great (once again, especially if you want to use pipes), but it means that there are many more functions to master for tidyverse users, whereas you can make do with much fewer in base R. You will spend more time looking up function arguments when working with base R (which fortunately is fairly straightforward using the ? documentation), but on the other hand, looking up arguments for a function that you know the name of is easier than finding a function that does something very specific that you don’t know the name of. There are advantages and disadvantages to both approaches.</p>
+<div id="exm-rep" class="theorem example">
+<p><span class="theorem-title"><strong>Example 2.1 </strong></span>Oh no! After all our analyses and everything we’ve done, our colleague just emailed us that Tanzania and Zanzibar should not be separated but combined to form a single country Tanzania.</p>
+</div>
+<div class="solution proof">
+<p><span class="proof-title"><em>Solution</em>. </span></p>
+<blockquote class="blockquote">
+<p>That request force us to start over the analysis and combine the catch data for mainland Tanzania and Zanzibar. Aaaaah! If we were doing this in <em>Excel</em>, this would be a bummer; we’d have to rebuild our pivot table and click through all of our logic again. And then export our figures and save them into our report.</p>
+</blockquote>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-tidyverse" class="csl-entry" role="listitem">
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. <span>“Welcome to the <span class="nocase">tidyverse</span>.”</span> <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.
+</div>
+</div>
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./ch0.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch2.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

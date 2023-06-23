@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Geospatial Technology and Spatial Analysis in R - 13&nbsp; Geometric operations with vector layers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch9.html" rel="next">
+<link href="./ch7.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch8.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#aims" id="toc-aims" class="nav-link active" data-scroll-target="#aims"><span class="header-section-number">13.1</span> Aims</a></li>
+  <li><a href="#join-by-location" id="toc-join-by-location" class="nav-link" data-scroll-target="#join-by-location"><span class="header-section-number">13.2</span> Join by location</a></li>
+  <li><a href="#subsetting-by-location" id="toc-subsetting-by-location" class="nav-link" data-scroll-target="#subsetting-by-location"><span class="header-section-number">13.3</span> Subsetting by location</a></li>
+  <li><a href="#geometric-calculations" id="toc-geometric-calculations" class="nav-link" data-scroll-target="#geometric-calculations"><span class="header-section-number">13.4</span> Geometric calculations</a>
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">13.4.1</span> Introduction</a></li>
+  <li><a href="#numeric-geometric-calculations" id="toc-numeric-geometric-calculations" class="nav-link" data-scroll-target="#numeric-geometric-calculations"><span class="header-section-number">13.4.2</span> Numeric geometric calculations</a></li>
+  <li><a href="#logical-geometric-calculations" id="toc-logical-geometric-calculations" class="nav-link" data-scroll-target="#logical-geometric-calculations"><span class="header-section-number">13.4.3</span> Logical geometric calculations</a></li>
+  <li><a href="#spatial-geometric-calculations" id="toc-spatial-geometric-calculations" class="nav-link" data-scroll-target="#spatial-geometric-calculations"><span class="header-section-number">13.4.4</span> Spatial geometric calculations</a></li>
+  </ul></li>
+  <li><a href="#vector-layer-aggregation" id="toc-vector-layer-aggregation" class="nav-link" data-scroll-target="#vector-layer-aggregation"><span class="header-section-number">13.5</span> Vector layer aggregation</a></li>
+  <li><a href="#join-by-attributes" id="toc-join-by-attributes" class="nav-link" data-scroll-target="#join-by-attributes"><span class="header-section-number">13.6</span> Join by attributes</a></li>
+  <li><a href="#recap-main-data-structures" id="toc-recap-main-data-structures" class="nav-link" data-scroll-target="#recap-main-data-structures"><span class="header-section-number">13.7</span> Recap: main data structures</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="aims" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="aims"><span class="header-section-number">13.1</span> Aims</h2>
+<p>Our aims in this chapter are:</p>
+<ul>
+<li><p>Learn how to join data to a vector layer, by attributes or by location</p></li>
+<li><p>Learn to make geometric calculations with vector layers</p></li>
+</ul>
+<p>We will use the following R packages:</p>
+<ul>
+<li><p><code>sf</code></p></li>
+<li><p><code>units</code></p></li>
+</ul>
+</section>
+<section id="join-by-location" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="join-by-location"><span class="header-section-number">13.2</span> Join by location</h2>
+<p>For most of the examples in this Chapter, we are going to use the US counties and three airports layers (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#reading-vector-layers">7.7</a>):</p>
+<pre><code>library(sf) airports = st_read("airports.geojson") county = st_read("USA_2_GADM_fips.shp")</code></pre>
+<p>transformed to the US National Atlas projection (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#vector-layer-reprojection">7.9.2</a>):</p>
+<pre><code>airports = st_transform(airports, 2163) county = st_transform(county, 2163)</code></pre>
+<p>Join by spatial location, or <strong>spatial join</strong>, is one of the most common operations in spatial analysis. In a spatial join we are "attaching" attributes from one layer to another, based on their spatial relations. In ArcGIS this is done using "Join data from another layer based on spatial location" Figures <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:arcgis-join-by-location1">8.1</a>–<a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:arcgis-join-by-location2">8.2</a>.</p>
+<p>Figure 8.1: Join by location in ArcGIS (Step 1)</p>
+<p>Figure 8.2: Join by location in ArcGIS (Step 2)</p>
+<p>For simplicity, we will create a subset of the counties of New Mexico only, since all three airports are located in that state:</p>
+<pre><code>nm = county[county$NAME_1 == "New Mexico", ]</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:nm-and-airports">8.3</a> shows the geometry of the <code>nm</code> and <code>airports</code> layers. Note that the <code>pch</code> parameter determines point shape (see <code>?points</code>), while <code>cex</code> determines point size (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#sf-basic-plotting">7.8</a>):</p>
+<pre><code>plot(st_geometry(nm)) plot(st_geometry(airports), col = "red", pch = 16, cex = 2, add = TRUE)</code></pre>
+<p>Figure 8.3: The <code>nm</code> and <code>airports</code> layers</p>
+<p>Given two layers <code>x</code> and <code>y</code>, a function call of the form <code>st_join(x, y)</code> returns the <code>x</code> layer along with <em>matching attributes</em> from <code>y</code>. The default join type is by <strong>intersection</strong>, meaning that two geometries are considered matching if they intersect. Other join types can be specified using the <code>join</code> parameter (see <code>?st_join</code>).</p>
+<p>For example, the following expression joins the <code>airports</code> layer with the matching <code>nm</code> attributes. The resulting layer contains all three airports with their original geometry and <code>name</code> attribute, plus the <code>NAME_1</code>, <code>NAME_2</code>, <code>TYPE_2</code> and <code>FIPS</code> of the <code>nm</code> feature that each airport intersects with:</p>
+<pre><code>st_join(airports, nm) ## Simple feature collection with 3 features and 5 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: -619184.5 ymin: -1081605 xmax: -551689.8 ymax: -1022366 ## Projected CRS: US National Atlas Equal Area ##                        name     NAME_1     NAME_2 TYPE_2  FIPS ## 1 Albuquerque International New Mexico Bernalillo County 35001 ## 2           Double Eagle II New Mexico Bernalillo County 35001 ## 3        Santa Fe Municipal New Mexico   Santa Fe County 35049 ##                     geometry ## 1 POINT (-603868.2 -1081605) ## 2 POINT (-619184.5 -1068431) ## 3 POINT (-551689.8 -1022366)</code></pre>
+<blockquote class="blockquote">
+<p>What do you think will happen if we reverse the order of the arguments, as in <code>st_join(nm, airports)</code>? How many features is the result going to have, and why?</p>
+</blockquote>
+</section>
+<section id="subsetting-by-location" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="subsetting-by-location"><span class="header-section-number">13.3</span> Subsetting by location</h2>
+<p>In Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#subsetting-based-on-attributes">7.6</a> we learned how to subset <code>sf</code> vector layers based on their attributes, just like an ordinary <code>data.frame</code> (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#data-frame-subsetting">4.1.5</a>). We can also subset an <code>sf</code> layer based on its intersection with another layer. Subsetting by location uses the same <code>[</code> operator, only using a layer as the "index." Namely, an expression of the form <code>x[y, ]</code>—where <code>x</code> and <code>y</code> are vector layers—returns a subset of <code>x</code> features that <em>intersect</em> with <code>y</code>.</p>
+<p>For example, the following expression returns only those <code>nm</code> counties that intersect with the <code>airports</code> layer:</p>
+<pre><code>nm1 = nm[airports, ]</code></pre>
+<p>The subset is shown in light blue in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:nm-subset">8.4</a>:</p>
+<pre><code>plot(st_geometry(nm)) plot(st_geometry(nm1), col = "lightblue", add = TRUE) plot(st_geometry(airports), col = "red", pch = 16, cex = 2, add = TRUE)</code></pre>
+<p>Figure 8.4: Subset of the <code>nm</code> layer based on intersection with <code>airports</code></p>
+<blockquote class="blockquote">
+<p>What will be the result of <code>airports[nm, ]</code>?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>What will be the result of <code>nm[nm[20, ], ]</code>?</p>
+</blockquote>
+</section>
+<section id="geometric-calculations" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="geometric-calculations"><span class="header-section-number">13.4</span> Geometric calculations</h2>
+<section id="introduction" class="level3" data-number="13.4.1">
+<h3 data-number="13.4.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">13.4.1</span> Introduction</h3>
+<p><strong>Geometric operations</strong> on vector layers can conceptually be divided into three groups, according to their output:</p>
+<ul>
+<li><p><strong>Numeric</strong> values (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#numeric-geometric-calculations">8.3.2</a>)—Functions that summarize geometrical properties of:</p>
+<ul>
+<li><p>A <em>single</em> layer—e.g., area, length (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#area">8.3.2.2</a>)</p></li>
+<li><p>A <em>pair</em> of layers—e.g., distance (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#distance">8.3.2.3</a>)</p></li>
+</ul></li>
+<li><p><strong>Logical</strong> values (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#logical-geometric-calculations">8.3.3</a>)—Functions that evaluate whether a certain condition holds true, regarding:</p>
+<ul>
+<li><p>A <em>single</em> layer—e.g., geometry is valid</p></li>
+<li><p>A <em>pair</em> of layers—e.g., feature A intersects feature B (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#logical-geometric-calculations">8.3.3</a>)</p></li>
+</ul></li>
+<li><p><strong>Spatial</strong> layers (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#spatial-geometric-calculations">8.3.4</a>)—Functions that create a new layer based on:</p>
+<ul>
+<li><p>A <em>single</em> layer—e.g., centroid, buffer (Sections <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#centroids">8.3.4.2</a>, <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-casting">8.3.4.4</a>, <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#buffers">8.3.4.5</a>, <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#convex-hull">8.3.4.7</a>)</p></li>
+<li><p>A <em>pair</em> of layers—e.g., intersection area (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-generation-from-pairs">8.3.4.6</a>)</p></li>
+</ul></li>
+</ul>
+<p>The following three sections elaborate and give examples of numeric (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#numeric-geometric-calculations">8.3.2</a>), logical (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#logical-geometric-calculations">8.3.3</a>) and spatial (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#spatial-geometric-calculations">8.3.4</a>) geometric calculations on vector layers.</p>
+</section>
+<section id="numeric-geometric-calculations" class="level3" data-number="13.4.2">
+<h3 data-number="13.4.2" class="anchored" data-anchor-id="numeric-geometric-calculations"><span class="header-section-number">13.4.2</span> Numeric geometric calculations</h3>
+<section id="introduction-1" class="level4" data-number="13.4.2.1">
+<h4 data-number="13.4.2.1" class="anchored" data-anchor-id="introduction-1"><span class="header-section-number">13.4.2.1</span> Introduction</h4>
+<p>There are several functions to calculate numeric geometric properties of vector layers in package <code>sf</code>:</p>
+<ul>
+<li><p><code>st_bbox</code>—Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#sf-spatial-properties">7.5.2</a></p></li>
+<li><p><code>st_area</code>—Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#area">8.3.2.2</a></p></li>
+<li><p><code>st_distance</code>—Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#distance">8.3.2.3</a></p></li>
+<li><p><code>st_length</code>—Section <a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#trajectory-length">11.4.6</a></p></li>
+<li><p><code>st_dimension</code></p></li>
+</ul>
+<p>Functions <code>st_bbox</code>, <code>st_area</code>, <code>st_length</code> and <code>st_dimension</code> are operation applicable for individual geometries. The <code>st_distance</code> function is applicable to <em>pairs</em> of geometries. The next two sections give an example from each category: <code>st_area</code> for individual geometries (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#area">8.3.2.2</a>) and <code>st_distance</code> for pairs of geometries (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#distance">8.3.2.3</a>).</p>
+</section>
+<section id="area" class="level4" data-number="13.4.2.2">
+<h4 data-number="13.4.2.2" class="anchored" data-anchor-id="area"><span class="header-section-number">13.4.2.2</span> Area</h4>
+<p>The <code>st_area</code> function returns the <em>area</em> of each feature or geometry. For example, we can use <code>st_area</code> to calculate the area of each feature in the <code>county</code> layer (i.e., each county):</p>
+<pre><code>county$area = st_area(county) county$area[1:6] ## Units: [m^2] ## [1]  2451875694  1941109814  1077788608  1350475635 16416571545  2626706989</code></pre>
+<p>The result is an object of class <code>units</code>, which is basically a numeric vector associated with the <em>units</em> of measurement:</p>
+<pre><code>class(county$area) ## [1] "units"</code></pre>
+<p><strong>CRS units</strong> (e.g., meters) are used by default in length, area and distance calculations. For example, the units of measurement in the US National Atlas CRS are <em>meters</em>, which is why the area values are returned in m2�2 units.</p>
+<p>We can convert <code>units</code> objects to different units, with <code>set_units</code> from package <code>units</code><sup><a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fn29">29</a></sup>. Note that the <code>units</code> package needs to be loaded to do that. For example, here is how we can convert the <code>area</code> column from m2�2 to km2��2:</p>
+<pre><code>library(units) county$area = set_units(county$area, "km^2") county$area[1:6] ## Units: [km^2] ## [1]  2451.876  1941.110  1077.789  1350.476 16416.572  2626.707</code></pre>
+<p>Dealing with <code>units</code>, rather than <code>numeric</code> values has several advantages:</p>
+<ul>
+<li><p>We don't need to remember the coefficients for conversion between one unit to another, avoiding conversion mistakes.</p></li>
+<li><p>We don't need to remember, or somehow encode, the units of measurement (e.g., rename the area column to <code>area_m2</code>) since they are already binded with the values.</p></li>
+<li><p>We can keep track of the units when making numeric calculations. For example, if we divide a numeric value by km2��2, the result is going to be associated with units of density, km−2��−2 (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#join-by-attributes">8.5</a>).</p></li>
+</ul>
+<p>Nevertheless, if necessary, we can always convert <code>units</code> to an ordinary <code>numeric</code> vector with <code>as.numeric</code>:</p>
+<pre><code>as.numeric(county$area[1:6]) ## [1]  2451.876  1941.110  1077.789  1350.476 16416.572  2626.707</code></pre>
+<p>The calculated county <code>area</code> attribute values are visualized in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:county-area">8.5</a>:</p>
+<pre><code>plot(county[, "area"])</code></pre>
+<p>Figure 8.5: Calculated <code>area</code> attribute</p>
+</section>
+<section id="distance" class="level4" data-number="13.4.2.3">
+<h4 data-number="13.4.2.3" class="anchored" data-anchor-id="distance"><span class="header-section-number">13.4.2.3</span> Distance</h4>
+<p>An example of a numeric operator on a <em>pair</em> of geometries is <strong>geographical distance</strong>. Distances can be calculated using function <code>st_distance</code>. For example, the following expression calculates the distance between each feature in <code>airports</code> and each feature in <code>nm</code>:</p>
+<pre><code>d = st_distance(airports, nm)</code></pre>
+<p>The result is a <code>matrix</code> of <code>units</code> values:</p>
+<pre><code>d[, 1:6] ## Units: [m] ##          [,1]     [,2]      [,3]      [,4]      [,5]      [,6] ## [1,] 266778.9 140470.5 103328.22 140913.62 175353.34 121934.94 ## [2,] 275925.0 120879.9  93753.25 141511.80 177624.40 125327.45 ## [3,] 197540.4 145580.9  34956.53  62231.01  96549.17  43630.68</code></pre>
+<p>In the distance matrix resulting from <code>st_distance(x,y)</code>:</p>
+<ul>
+<li><p><em>Rows</em> refer to features of <code>x</code>, e.g., <code>airports</code></p></li>
+<li><p><em>Columns</em> refer to features of <code>y</code>, e.g., <code>nm</code></p></li>
+</ul>
+<p>Therefore, the matrix dimensions are equal to <code>c(nrow(x), nrow(y))</code>:</p>
+<pre><code>c(nrow(airports), nrow(nm)) ## [1]  3 33</code></pre>
+<pre><code>dim(d) ## [1]  3 33</code></pre>
+<p>Just like areas (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#area">8.3.2.2</a>), distances can be converted to different units with <code>set_units</code>. For example, the following expression converts the distance matrix <code>d</code> from m� to km��:</p>
+<pre><code>d = set_units(d, "km") d[, 1:6] ## Units: [km] ##          [,1]     [,2]      [,3]      [,4]      [,5]      [,6] ## [1,] 266.7789 140.4705 103.32822 140.91362 175.35334 121.93494 ## [2,] 275.9250 120.8799  93.75325 141.51180 177.62440 125.32745 ## [3,] 197.5404 145.5809  34.95653  62.23101  96.54917  43.63068</code></pre>
+<p>To work with the distance <code>matrix</code>, it can be convenient to set row and column names. We can use any of the unique attributes of <code>x</code> and <code>y</code>, such as airport names and county names:</p>
+<pre><code>rownames(d) = airports$name colnames(d) = nm$NAME_2 d[, 1:6] ## Units: [km] ##                              Union San Juan Rio Arriba      Taos    Colfax ## Albuquerque International 266.7789 140.4705  103.32822 140.91362 175.35334 ## Double Eagle II           275.9250 120.8799   93.75325 141.51180 177.62440 ## Santa Fe Municipal        197.5404 145.5809   34.95653  62.23101  96.54917 ##                                Mora ## Albuquerque International 121.93494 ## Double Eagle II           125.32745 ## Santa Fe Municipal         43.63068</code></pre>
+<p>Once row and column names are set, it is more convenient to find out the distance between a <em>specific</em> airport and a <em>specific</em> county:</p>
+<pre><code>d["Santa Fe Municipal", "Santa Fe", drop = FALSE] ## Units: [km] ##                    Santa Fe ## Santa Fe Municipal        0</code></pre>
+</section>
+</section>
+<section id="logical-geometric-calculations" class="level3" data-number="13.4.3">
+<h3 data-number="13.4.3" class="anchored" data-anchor-id="logical-geometric-calculations"><span class="header-section-number">13.4.3</span> Logical geometric calculations</h3>
+<p>Given two sets of geometries, or layers, <code>x</code> and <code>y</code>, the following logical geometric functions check whether each of the geometries in <code>x</code> maintains the specified <a href="https://en.wikipedia.org/wiki/DE-9IM#Spatial_predicates">relation</a> with each of the geometries in <code>y</code>:</p>
+<ul>
+<li><p><code>st_contains_properly</code></p></li>
+<li><p><code>st_contains</code></p></li>
+<li><p><code>st_covered_by</code></p></li>
+<li><p><code>st_covers</code></p></li>
+<li><p><code>st_crosses</code></p></li>
+<li><p><code>st_disjoint</code></p></li>
+<li><p><code>st_equals_exact</code></p></li>
+<li><p><code>st_equals</code></p></li>
+<li><p><code>st_intersects</code></p></li>
+<li><p><code>st_is_within_distance</code></p></li>
+<li><p><code>st_overlaps</code></p></li>
+<li><p><code>st_touches</code></p></li>
+<li><p><code>st_within</code></p></li>
+</ul>
+<p>In this book we mostly use the first function in the above list, <code>st_intersects</code>. The <code>st_intersects</code> function detects intersection, which is the simplest and most useful type of relation. Two geometries <em>intersect</em> when they share at least one point in common. However, it is important to be aware of the many other relations that can be evaluated using the other 12 functions.</p>
+<p>By default, the above functions return a <code>list</code>, which takes less memory but is less convenient to work with. When specifying <code>sparse=FALSE</code> the functions return a logical <code>matrix</code> which is more convenient to work with. Each element <code>i,j</code> in the matrix is <code>TRUE</code> when <code>f(x[i], y[j])</code> is <code>TRUE</code>. For example, the following expression creates a matrix of <em>intersection</em> relations between counties in <code>nm</code>:</p>
+<pre><code>int = st_intersects(nm, nm, sparse = FALSE) int[1:4, 1:4] ##       [,1]  [,2]  [,3]  [,4] ## [1,]  TRUE FALSE FALSE FALSE ## [2,] FALSE  TRUE  TRUE FALSE ## [3,] FALSE  TRUE  TRUE  TRUE ## [4,] FALSE FALSE  TRUE  TRUE</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:spatial-realations-matrix">8.6</a> shows two matrices of spatial relations between counties in New Mexico: <code>st_intersects</code> (left) and <code>st_touches</code> (right).</p>
+<p>Figure 8.6: Spatial relations between counties in New Mexico, <code>st_intersects</code> (left) and <code>st_touches</code> (right)</p>
+<blockquote class="blockquote">
+<p>How can we calculate <code>airports</code> count per county in <code>nm</code>, using <code>st_intersects</code> (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:nm-airport-count">8.7</a>)?</p>
+</blockquote>
+<p>Figure 8.7: Airport count per county in New Mexico</p>
+</section>
+<section id="spatial-geometric-calculations" class="level3" data-number="13.4.4">
+<h3 data-number="13.4.4" class="anchored" data-anchor-id="spatial-geometric-calculations"><span class="header-section-number">13.4.4</span> Spatial geometric calculations</h3>
+<section id="introduction-2" class="level4" data-number="13.4.4.1">
+<h4 data-number="13.4.4.1" class="anchored" data-anchor-id="introduction-2"><span class="header-section-number">13.4.4.1</span> Introduction</h4>
+<p>The <code>sf</code> package provides common <em>geometry-generating</em> functions applicable to <em>individual</em> geometries, such as:</p>
+<ul>
+<li><p><code>st_centroid</code>—Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#centroids">8.3.4.2</a></p></li>
+<li><p><code>st_buffer</code>—Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#buffers">8.3.4.5</a></p></li>
+<li><p><code>st_convex_hull</code>—Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#convex-hull">8.3.4.7</a></p></li>
+<li><p><code>st_voronoi</code></p></li>
+<li><p><code>st_sample</code></p></li>
+</ul>
+<p>What each function does is illustrated in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:sf-geometry-generating-functions">8.8</a>.</p>
+<p>Figure 8.8: Geometry-generating operations on individual layers. The input geometries are shown in red, the output geometries are shown in black.</p>
+<p>Additionally, the <code>st_cast</code> function is used to transform geometries from one type to another (Figure <a href="https://geobgu.xyz/r-2021/vector-layers.html#fig:geometry-types">7.6</a>), which can also be considred as geometry generation (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-casting">8.3.4.4</a>). The <code>st_union</code> and <code>st_combine</code> functions are used to combine multiple geometries into one, possibly dissolving their borders (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#combining-and-dissolving">8.3.4.3</a>).</p>
+<p>Finally, geometry-generating functions which operate on <em>pairs</em> of geometries (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-generation-from-pairs">8.3.4.6</a>) include:</p>
+<ul>
+<li><p><code>st_intersection</code></p></li>
+<li><p><code>st_difference</code></p></li>
+<li><p><code>st_sym_difference</code></p></li>
+<li><p><code>st_union</code></p></li>
+</ul>
+<p>We elaborate on these functions in the following Sections <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#centroids">8.3.4.2</a>–<a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#convex-hull">8.3.4.7</a>.</p>
+</section>
+<section id="centroids" class="level4" data-number="13.4.4.2">
+<h4 data-number="13.4.4.2" class="anchored" data-anchor-id="centroids"><span class="header-section-number">13.4.4.2</span> Centroids</h4>
+<p>A <strong>centroid</strong> is the geometric center of a geometry, i.e., its center of mass, represented as a point. For example, the following expression uses <code>st_centroid</code> to create the centroid of each polygon in <code>county</code>:</p>
+<pre><code>ctr = st_centroid(nm)</code></pre>
+<p>The <code>nm</code> layer along with the calculated centroids is shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:nm-centroids">8.9</a>:</p>
+<pre><code>plot(st_geometry(nm), border = "grey") plot(st_geometry(ctr), col = "red", pch = 3, add = TRUE)</code></pre>
+<p>Figure 8.9: Centroids of New Mexico counties</p>
+</section>
+<section id="combining-and-dissolving" class="level4" data-number="13.4.4.3">
+<h4 data-number="13.4.4.3" class="anchored" data-anchor-id="combining-and-dissolving"><span class="header-section-number">13.4.4.3</span> Combining and dissolving</h4>
+<p>The <code>st_combine</code> and <code>st_union</code> functions can be used to combine multiple geometries into a single one. The difference is that <code>st_combine</code> only combines the geometries into one, just like the <code>c</code> function combines <code>sfg</code> objects into one <code>sfg</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-sfg">7.2.2</a>), while <code>st_union</code> also dissolves internal borders.</p>
+<p>To understand the difference between <code>st_combine</code> and <code>st_union</code>, let's examine the result of applying each of them on <code>nm</code>:</p>
+<pre><code>st_combine(nm) ## Geometry set for 1 feature  ## Geometry type: MULTIPOLYGON ## Dimension:     XY ## Bounding box:  xmin: -863763.9 ymin: -1478601 xmax: -267074.1 ymax: -845634.3 ## Projected CRS: US National Atlas Equal Area ## MULTIPOLYGON (((-267074.1 -884175.1, -267309.2 ...</code></pre>
+<pre><code>st_union(nm) ## Geometry set for 1 feature  ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: -863763.9 ymin: -1478601 xmax: -267074.1 ymax: -845634.3 ## Projected CRS: US National Atlas Equal Area ## POLYGON ((-852411.9 -1350402, -850603.1 -133127...</code></pre>
+<p>The results are plotted in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:combine-union">8.10</a>:</p>
+<pre><code>plot(st_combine(nm), main = "st_combine(nm)") plot(st_union(nm), main = "st_union(nm)")</code></pre>
+<p>Figure 8.10: Combining (<code>st_combine</code>) and dissolving (<code>st_union</code>) polygons</p>
+<blockquote class="blockquote">
+<p>What is the class of the resulting objects? Why? What happened to the original <code>nm</code> attributes?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Why did <code>st_combine</code> return a <code>MULTIPOLYGON</code>, while <code>st_union</code> returned a <code>POLYGON</code>?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Why do you think there are internal "patches" in the result of <code>st_union(nm)</code> (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:combine-union">8.10</a>)<sup><a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fn30">30</a></sup>?</p>
+</blockquote>
+<p>Let's solve a geometric question to practice some of the functions we learned so far. What is the distance between the centroids of California and New Jersey, in kilometers? Using <code>[</code>, <code>st_union</code>, <code>st_centroid</code> and <code>st_distance</code>, we can calculate the distance as follows:</p>
+<pre><code># Subsetting ca = county[county$NAME_1 == "California", ] nj = county[county$NAME_1 == "New Jersey", ]  # Union ca = st_union(ca) nj = st_union(nj)  # Calculating centroids ca_ctr = st_centroid(ca) nj_ctr = st_centroid(nj)  # Calculating distance d = st_distance(ca_ctr, nj_ctr)  # Converting to km set_units(d, "km") ## Units: [km] ##         [,1] ## [1,] 3846.64</code></pre>
+<p>Note that we are using <code>st_union</code> to combine the <em>county</em> polygons into a single geometry, so that we can calculate the centroid of the <em>state</em> polygon, as a whole.</p>
+<p>To plot the centroids more conveniently, we can use the <code>c</code> function to combine two <code>sfc</code> (geometry columns) into one, long, geometry column. Recall that this is unlike what the <code>c</code> function does when given <code>sfg</code> (geometries), in which case the geometries are combined to one (multi- or collection) geometry (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#geometry-sfg">7.2.2</a>).</p>
+<pre><code>p = c(ca_ctr, nj_ctr) p ## Geometry set for 2 features  ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: -1707694 ymin: -667480.7 xmax: 2111204 ymax: -206332.8 ## Projected CRS: US National Atlas Equal Area ## POINT (-1707694 -667480.7) ## POINT (2111204 -206332.8)</code></pre>
+<p>The centroids we calculated can be displayed as follows (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:ca-nj-centroids">8.11</a>):</p>
+<pre><code>plot(st_geometry(county), border = "grey") plot(p, col = "red", pch = 16, cex = 2, add = TRUE)</code></pre>
+<p>Figure 8.11: California and New Jersey centroids</p>
+<p>How can we draw a line line between the centroids, corresponding to the distance we just calculated (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:ca-nj-line">8.12</a>)?</p>
+<p>First, we can use <code>st_combine</code> to transform the points into a single <code>MULTIPOINT</code> geometry. Remember, the <code>st_combine</code> function is similar to <code>st_union</code>, but only combines and <em>does not dissolve</em>.</p>
+<pre><code>p = st_combine(p) p ## Geometry set for 1 feature  ## Geometry type: MULTIPOINT ## Dimension:     XY ## Bounding box:  xmin: -1707694 ymin: -667480.7 xmax: 2111204 ymax: -206332.8 ## Projected CRS: US National Atlas Equal Area ## MULTIPOINT ((-1707694 -667480.7), (2111204 -206...</code></pre>
+<blockquote class="blockquote">
+<p>Do you think the results of <code>st_union(p)</code> and <code>st_combine(p)</code> will be different, and if so in what way?</p>
+</blockquote>
+<p>What is left to be done is to transform the <code>MULTIPOINT</code> geometry to a <code>LINESTRING</code> geometry, which is what we learn next (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-casting">8.3.4.4</a>).</p>
+</section>
+<section id="geometry-casting" class="level4" data-number="13.4.4.4">
+<h4 data-number="13.4.4.4" class="anchored" data-anchor-id="geometry-casting"><span class="header-section-number">13.4.4.4</span> Geometry casting</h4>
+<p>Sometimes we need to convert a given geometry to a different <em>type</em>, to express different aspects of the geometries in our analysis. For example, we would have to convert the county <code>MULTIPOLYGON</code> geometries to <code>MULTILINESTRING</code> geometries to calculate the perimeter of each county, using <code>st_length</code> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#numeric-geometric-calculations">8.3.2</a>).</p>
+<p>The <code>st_cast</code> function can be used to convert between different geometry types. The <code>st_cast</code> function accepts:</p>
+<ul>
+<li><p>The input <code>sfg</code>, <code>sfc</code> or <code>sf</code></p></li>
+<li><p>The target geometry <em>type</em></p></li>
+</ul>
+<p>For example, we can use <code>st_cast</code> to convert our <code>MULTIPOINT</code> geometry <code>p</code> (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:ca-nj-centroids">8.11</a>), which we calculated in Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#combining-and-dissolving">8.3.4.3</a>, to a <code>LINESTRING</code> geometry <code>l</code>:</p>
+<pre><code>l = st_cast(p, "LINESTRING") l ## Geometry set for 1 feature  ## Geometry type: LINESTRING ## Dimension:     XY ## Bounding box:  xmin: -1707694 ymin: -667480.7 xmax: 2111204 ymax: -206332.8 ## Projected CRS: US National Atlas Equal Area ## LINESTRING (-1707694 -667480.7, 2111204 -206332.8)</code></pre>
+<p>Each <code>MULTIPOINT</code> geometry is replaced with a <code>LINESTRING</code> geometry, comprising a line that goes through all points from first to last. In this case, <code>p</code> contains just one <code>MULTIPOINT</code> geometry that contains two points. Therefore, the resulting geometry column <code>l</code> contains one <code>LINESTRING</code> geometry with a straight line.</p>
+<p>The line we calculated is shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:ca-nj-line">8.12</a>:</p>
+<pre><code>plot(st_geometry(county), border = "grey") plot(st_geometry(ca_ctr), col = "red", pch = 16, cex = 2, add = TRUE) plot(st_geometry(nj_ctr), col = "red", pch = 16, cex = 2, add = TRUE) plot(l, col = "red", add = TRUE)</code></pre>
+<p>Figure 8.12: California and New Jersey centroids, with a line</p>
+<p>It is worth mentioning that not every conversion operation between geometry types is possible. Meaningless <code>st_cast</code> operations will fail with an error message. For example, a <code>LINESTRING</code> composed of just two points cannot be converted to a <code>POLYGON</code>:</p>
+<pre><code>st_cast(l, "POLYGON") ## Error in FUN(X[[i]], ...): polygons require at least 4 points</code></pre>
+</section>
+<section id="buffers" class="level4" data-number="13.4.4.5">
+<h4 data-number="13.4.4.5" class="anchored" data-anchor-id="buffers"><span class="header-section-number">13.4.4.5</span> Buffers</h4>
+<p>Another example of a function that generates new geometries based on individual input geometries is <code>st_buffer</code>. The <code>st_buffer</code> function calculates <strong>buffers</strong>, polygons encompassing all point up to the specified distance from a given geometry.</p>
+<p>For example, here is how we can calculate 100 km�� buffers around the <code>airports</code>. Note that the <code>st_buffer</code> requires buffer distance (<code>dist</code>), which can be passed as <code>numeric</code>, in which case CRS units are assumed, or as <code>units</code>, in which case we can use any distance unit we wish. The following two expressions are equivalent, in both cases resulting in a layer of 100 km�� buffers named <code>airports_100</code>:</p>
+<pre><code># Buffer distance as 'numeric' airports_100 = st_buffer(airports, dist = 100 * 10^3)</code></pre>
+<pre><code># Buffer distance as 'units' airports_100 = st_buffer(airports, dist = set_units(100, "km"))</code></pre>
+<p>The <code>airports_100</code> layer with the airport buffers is shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:airport-buffers">8.13</a>:</p>
+<pre><code>plot(st_geometry(nm)) plot(st_geometry(airports_100), add = TRUE)</code></pre>
+<p>Figure 8.13: <code>airports</code> buffered by 100 km</p>
+</section>
+<section id="geometry-generation-from-pairs" class="level4" data-number="13.4.4.6">
+<h4 data-number="13.4.4.6" class="anchored" data-anchor-id="geometry-generation-from-pairs"><span class="header-section-number">13.4.4.6</span> Geometry generation from pairs</h4>
+<p>In addition to geometry-generating functions that operate on individual geometries, such as <code>st_centroid</code> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#centroids">8.3.4.2</a>) and <code>st_buffer</code> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#buffers">8.3.4.5</a>), there are four geometry-generating functions that operate on <em>pairs</em> of input geometries. These are:</p>
+<ul>
+<li><p><code>st_intersection</code></p></li>
+<li><p><code>st_difference</code></p></li>
+<li><p><code>st_sym_difference</code></p></li>
+<li><p><code>st_union</code></p></li>
+</ul>
+<p>Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:geometry-generating-pairs">8.14</a> shows what each of these four functions does. Note that <code>st_intersection</code>, <code>st_sym_difference</code>, <code>st_union</code> are <em>symmetrical</em> meaning that the order of the two inputs <code>x</code> and <code>y</code> does not matter. The <code>st_difference</code> function is not symmetrical: it returns the area of <code>x</code>, minus the intersection of <code>x</code> and <code>y</code>.</p>
+<p>Figure 8.14: Geometry-generating operations on pairs of layers</p>
+<p>For example, suppose that we need to calculate the area that is within 100 km�� range of <em>all</em> three airports at the same time? We can find the area of intersection of the three airports, using <code>st_intersection</code>. Since <code>st_intersection</code> accepts two geometries at a time, this can be done in two steps:</p>
+<pre><code>inter1 = st_intersection(airports_100[1, ], airports_100[2, ]) inter2 = st_intersection(inter1, airports_100[3, ])</code></pre>
+<p>The resulting polygon <code>inter2</code> is shown, in blue, in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:airports-buffer-intersection">8.15</a>:</p>
+<pre><code>plot(st_geometry(nm)) plot(st_geometry(airports_100), add = TRUE) plot(inter2, col = "lightblue", add = TRUE)</code></pre>
+<p>Figure 8.15: The intersection of three <code>airports</code> buffers</p>
+<p>How can we calculate the area that is within 100 km�� range of <em>at least one</em> of the three airports? We can use exactly the same technique, only replacing <code>st_intersection</code> with <code>st_union</code>, as follows:</p>
+<pre><code>union1 = st_union(airports_100[1, ], airports_100[2, ]) union2 = st_union(union1, airports_100[3, ])</code></pre>
+<p>As shown in Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#combining-and-dissolving">8.3.4.3</a>, <code>st_union</code> can be applied on an individual layer, in which case it returns the (dissolved) union of all geometries. Therefore we can get to the same result with just one expression, as follows:</p>
+<pre><code>union2 = st_union(airports_100)</code></pre>
+<p>The resulting polygon <code>union2</code> is shown, in blue, in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:airports-buffer-union">8.16</a>:</p>
+<pre><code>plot(st_geometry(nm)) plot(union2, col = "lightblue", add = TRUE)</code></pre>
+<p>Figure 8.16: The union of three <code>airports</code> buffers</p>
+</section>
+<section id="convex-hull" class="level4" data-number="13.4.4.7">
+<h4 data-number="13.4.4.7" class="anchored" data-anchor-id="convex-hull"><span class="header-section-number">13.4.4.7</span> Convex hull</h4>
+<p>The <strong>Convex Hull</strong> of a set X� of points is the smallest convex polygon that contains X�. The convex hull may be visualized as the shape resulting when stretching a rubber band around X�, then releasing it until it shrinks to minimal size (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:convex-hull">8.17</a>).</p>
+<p>Figure 8.17: Convex Hull: elastic-band analogy (<a href="https://en.wikipedia.org/wiki/Convex_hull" class="uri">https://en.wikipedia.org/wiki/Convex_hull</a>)</p>
+<p>The <code>st_convex_hull</code> function is used to calculate the convex hull of the given geometry or geometries. For example, the following expression calculates the convex hull (per feature) in <code>nm1</code>:</p>
+<pre><code>h = st_convex_hull(nm1)</code></pre>
+<p>The resulting layer is shown in red in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:nm1-convex-hull">8.18</a>:</p>
+<pre><code>plot(st_geometry(nm1)) plot(st_geometry(h), add = TRUE, border = "red")</code></pre>
+<p>Figure 8.18: Convex hull polygons for two counties in New Mexico</p>
+<blockquote class="blockquote">
+<p>How can we calculate the convex hull of <em>all</em> polygons in <code>nm1</code> (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:nm1-convex-hull-union">8.19</a>)?</p>
+</blockquote>
+<p>Figure 8.19: Convex Hull of multiple polygons</p>
+<p>Here is another question to practice the geometric operations we learned in this chapter. Suppose we build a tunnel, 10 km�� wide, between the centroids of <code>"Harding"</code> and <code>"Sierra"</code> counties in New Mexico. Which counties does the tunnel go through? The following code gives the result. Take a moment to go over it and make sure you understand what happens in each step:</p>
+<pre><code>w = nm[nm$NAME_2 %in% c("Harding", "Sierra"), ] w_ctr = st_centroid(w) w_ctr_buf = st_buffer(w_ctr, dist = 5000) w_ctr_buf_u = st_combine(w_ctr_buf) w_ctr_buf_u_ch = st_convex_hull(w_ctr_buf_u) nm_w = nm[w_ctr_buf_u_ch, ] nm_w$NAME_2 ## [1] "Harding"    "San Miguel" "Guadalupe"  "Torrance"   "Socorro"    ## [6] "Lincoln"    "Sierra"</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:tunnel-counties">8.20</a> shows the calculated tunnel geometry and highlights the counties that the tunnel goes through. The 4<sup>th</sup> expression uses the <code>text</code> function to draw text labels. The <code>text</code> function accepts the <code>matrix</code> of coordinates, where labels should be drawn (in this case, county centroid coordinates), and the corresponding <code>character</code> vector of lables. In this case, the labels are county names (<code>nm_w$NAME_2</code>). (Note that in case the labels are <code>numeric</code>, such as in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:nm-airport-count">8.7</a>, then we must convert them to <code>character</code> using <code>as.character</code> for them to be displayed using the <code>text</code> function.)</p>
+<pre><code>plot(st_geometry(nm_w), border = NA, col = "lightblue") plot(st_geometry(nm), add = TRUE) plot(st_geometry(w_ctr_buf_u_ch), add = TRUE) text(st_coordinates(st_centroid(nm_w)), nm_w$NAME_2)</code></pre>
+<p>Figure 8.20: Tunnel between "Sierra" and "Harding" county centroids</p>
+<p>How is the area of the "tunnel" divided between the various counties that it crosses? We can use <code>st_intersection</code> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometry-generation-from-pairs">8.3.4.6</a>) to calculate all intersections between the tunnel polygon <code>w_ctr_buf_u_ch</code>, and the county polygons <code>nm_w</code>. Since we already know that the tunnel (<code>w_ctr_buf_u_ch</code>) intersects with each of the seven polygons in <code>nm_w</code>, the result of the intersection is of the same length, and in the same order, as the corresponding geometries in <code>nm_w</code>:</p>
+<pre><code>int = st_intersection(w_ctr_buf_u_ch, nm_w) int ## Geometry set for 7 features  ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: -677075.1 ymin: -1293982 xmax: -340138.8 ymax: -1002634 ## Projected CRS: US National Atlas Equal Area ## First 5 geometries: ## POLYGON ((-359510.4 -1013406, -348484.4 -100391... ## POLYGON ((-430575.6 -1074562, -359510.4 -101340... ## POLYGON ((-484643 -1121091, -430575.6 -1074562,... ## POLYGON ((-545452.3 -1173421, -484643 -1121091,... ## POLYGON ((-638440.3 -1253443, -546193.4 -117405...</code></pre>
+<p>Therefore, we can divide the area (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#area">8.3.2.2</a>) of each county <em>intersection</em>, by the total area of the tunnel, to get the proportion of tunnel area in each county:</p>
+<pre><code>area = st_area(int) area ## Units: [m^2] ## [1]  199064581  872145769  813577715  702562404 1119738156  108077571  575538789</code></pre>
+<pre><code>prop = area / sum(area) prop ## Units: [1] ## [1] 0.04533773 0.19863456 0.18529546 0.16001130 0.25502469 0.02461508 0.13108118</code></pre>
+<p>The proportions can be displayed as text labels, using the <code>text</code> function (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:tunnel-counties-prop">8.21</a>):</p>
+<pre><code>plot(st_geometry(nm_w), border = "darkgrey") plot(int, col = hcl.colors(7, "Set3"), border = "grey", add = TRUE) text(st_coordinates(st_centroid(int)), paste0(round(prop, 2)*100, "%"))</code></pre>
+<p>Figure 8.21: Proportion of tunnel area within each county</p>
+</section>
+</section>
+</section>
+<section id="vector-layer-aggregation" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="vector-layer-aggregation"><span class="header-section-number">13.5</span> Vector layer aggregation</h2>
+<p>We don't always want to dissolve <em>all</em> features into a single geometry (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#combining-and-dissolving">8.3.4.3</a>). Sometimes, we need to dissolve each group of geometries, whereas groups are specified by <em>attribute</em> or by <em>location</em>. To demonstrate dissolving by attribute, also known as aggregation, let's take a subset of <code>county</code> with the counties of just Arizona and Utah states:</p>
+<pre><code>s = county[county$NAME_1 %in% c("Arizona", "Utah"), ]</code></pre>
+<p>The selected counties are shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:arizona-utah">8.22</a>:</p>
+<pre><code>plot(s[, "NAME_1"], key.width = lcm(3))</code></pre>
+<p>Figure 8.22: Subset of two states from <code>county</code></p>
+<p>As shown previously (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#combining-and-dissolving">8.3.4.3</a>), we can dissolve all features into a single geometry with <code>st_union</code>:</p>
+<pre><code>s1 = st_union(s) s1 ## Geometry set for 1 feature  ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: -1389076 ymin: -1470784 xmax: -757960.3 ymax: -235145.7 ## Projected CRS: US National Atlas Equal Area ## POLYGON ((-852411.9 -1350402, -852611 -1352512,...</code></pre>
+<p>The dissolved geometry is shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:arizona-utah-union">8.23</a>:</p>
+<pre><code>plot(s1)</code></pre>
+<p>Figure 8.23: Union of all counties in <code>s</code></p>
+<p>Aggregating/dissolving <em>by attributes</em> can be done with <code>aggregate</code><sup><a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fn31">31</a></sup>, which accepts the following arguments:</p>
+<ul>
+<li><p><code>x</code>—The <code>sf</code> layer being dissolved</p></li>
+<li><p><code>by</code>—A corresponding <code>data.frame</code> determining the groups</p></li>
+<li><p><code>FUN</code>—The function to be applied on each attribute in <code>x</code></p></li>
+</ul>
+<p>For example, the following expression dissolves the layer <code>s</code>, summing the <code>area</code> attribute, <em>by state</em>:</p>
+<pre><code>s2 = aggregate(s[, "area"], st_drop_geometry(s[, "NAME_1"]), sum) s2 ## Simple feature collection with 2 features and 2 fields ## Attribute-geometry relationship: 0 constant, 1 aggregate, 1 identity ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: -1389076 ymin: -1470784 xmax: -757960.3 ymax: -235145.7 ## Projected CRS: US National Atlas Equal Area ##    NAME_1            area                       geometry ## 1 Arizona 295423.1 [km^2] POLYGON ((-852411.9 -135040... ## 2    Utah 219634.4 [km^2] POLYGON ((-1011317 -819521....</code></pre>
+<p>The result is shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:arizona-utah-union-by-state">8.24</a>:</p>
+<pre><code>plot(s2[, "area"])</code></pre>
+<p>Figure 8.24: Union by state name of <code>s</code></p>
+</section>
+<section id="join-by-attributes" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="join-by-attributes"><span class="header-section-number">13.6</span> Join by attributes</h2>
+<p>Attaching new attributes to a vector layer from a table, based on common attribute(s), is known as a non-spatial join, or join <em>by attributes</em>. Joining by attributes works exactly the same way as a join between two tables, e.g., using the <code>merge</code> function (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#table-joins">4.6</a>). The difference is just that the "left" table, <code>x</code>, is an <code>sf</code> layer, instead of a <code>data.frame</code>. Using <code>merge</code> to join an <code>sf</code> layer with a <code>data.frame</code> is analogous to the "Join attributes from a table" workflow in ArcGIS (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:join-by-attrs-arcgis">8.25</a>).</p>
+<p>Figure 8.25: Join by attributes in ArcGIS</p>
+<p>In the next example we will join county-level demographic data, from <code>CO-EST2012-Alldata.csv</code>, with the <code>county</code> layer. The join will be based on the common <em>Federal Information Processing Standards (FIPS)</em> code of each county.</p>
+<p>First, let's read the <code>CO-EST2012-Alldata.csv</code> file into a <code>data.frame</code> named <code>dat</code>. This file contains numerous demographic variables, on the county level, in the US:</p>
+<pre><code>dat = read.csv("CO-EST2012-Alldata.csv")</code></pre>
+<p>Next, we subset the columns we are interested in, so that it is easier to display the table:</p>
+<ul>
+<li><p><code>STATE</code>—State code</p></li>
+<li><p><code>COUNTY</code>—County code</p></li>
+<li><p><code>CENSUS2010POP</code>—Population size in 2010</p></li>
+</ul>
+<p>The first two columns, <code>STATE</code> and <code>COUNTY</code>, contain the state and county components of the FIPS code, which we will use to join the data. The third column, <code>CENSUS2010POP</code>, contains our variable of interest, which we want to attach to the <code>county</code> layer.</p>
+<pre><code>dat = dat[, c("STATE", "COUNTY", "CENSUS2010POP")] head(dat) ##   STATE COUNTY CENSUS2010POP ## 1     1      0       4779736 ## 2     1      1         54571 ## 3     1      3        182265 ## 4     1      5         27457 ## 5     1      7         22915 ## 6     1      9         57322</code></pre>
+<p>Records where <code>COUNTY</code> code is <code>0</code> are state sums, i.e.&nbsp;sub-totals. We need to remove the state sums and keep just the county-level records:</p>
+<pre><code>dat = dat[dat$COUNTY != 0, ] head(dat) ##   STATE COUNTY CENSUS2010POP ## 2     1      1         54571 ## 3     1      3        182265 ## 4     1      5         27457 ## 5     1      7         22915 ## 6     1      9         57322 ## 7     1     11         10914</code></pre>
+<p>The FIPS code in the <code>county</code> layer is a character value with five digits, where the first two digits are the state code and the last three digits are the county code. When necessary, leading zeros are added. For example, state code <code>9</code> and county code <code>5</code> is encoded as <code>"09005"</code>.</p>
+<pre><code>county$FIPS[1:6] ## [1] "09005" "09003" "09013" "09015" "06093" "06015"</code></pre>
+<p>while the <code>dat</code> table contains separate state and county codes as <code>numeric</code> values:</p>
+<pre><code>dat$STATE[1:10] ##  [1] 1 1 1 1 1 1 1 1 1 1</code></pre>
+<pre><code>dat$COUNTY[1:10] ##  [1]  1  3  5  7  9 11 13 15 17 19</code></pre>
+<p>To get the corresponding county FIPS codes in <code>dat</code>, we need to:</p>
+<ul>
+<li><p>Standardize the state code to a <em>two-digit</em> code</p></li>
+<li><p>Standardize the county code to <em>three-digit</em> code</p></li>
+<li><p>Paste the state code and the county code, to obtain the <em>five-digit</em> FIPS code</p></li>
+</ul>
+<p>The <code>formatC</code> function can be used to format numeric values into different <em>formats</em>, using different "scenarios." The "add leading zeros" scenario is specified using <code>width=n</code>, where <code>n</code> is the required number of digits, and <code>flag="0"</code>. Therefore:</p>
+<pre><code>dat$STATE = formatC(dat$STATE, width = 2, flag = "0") dat$COUNTY = formatC(dat$COUNTY, width = 3, flag = "0") dat$FIPS = paste0(dat$STATE, dat$COUNTY)</code></pre>
+<p>Now we have a column named <code>FIPS</code>, with FIPS codes in exactly the same format as in the <code>county</code> layer:</p>
+<pre><code>head(dat) ##   STATE COUNTY CENSUS2010POP  FIPS ## 2    01    001         54571 01001 ## 3    01    003        182265 01003 ## 4    01    005         27457 01005 ## 5    01    007         22915 01007 ## 6    01    009         57322 01009 ## 7    01    011         10914 01011</code></pre>
+<p>This means we can join the <code>county</code> layer with the <code>dat</code> table, based on the common column named <code>FIPS</code>:</p>
+<pre><code>county = merge(county, dat[, c("FIPS", "CENSUS2010POP")], by = "FIPS", all.x = TRUE) county ## Simple feature collection with 3103 features and 6 fields ## Geometry type: MULTIPOLYGON ## Dimension:     XY ## Bounding box:  xmin: -2031903 ymin: -2116922 xmax: 2516534 ymax: 732304.6 ## Projected CRS: US National Atlas Equal Area ## First 10 features: ##     FIPS  NAME_1   NAME_2 TYPE_2            area CENSUS2010POP ## 1  01001 Alabama  Autauga County 1562.805 [km^2]         54571 ## 2  01003 Alabama  Baldwin County 4247.589 [km^2]        182265 ## 3  01005 Alabama  Barbour County 2330.135 [km^2]         27457 ## 4  01007 Alabama     Bibb County 1621.356 [km^2]         22915 ## 5  01009 Alabama   Blount County 1692.125 [km^2]         57322 ## 6  01011 Alabama  Bullock County 1623.924 [km^2]         10914 ## 7  01013 Alabama   Butler County 2013.066 [km^2]         20947 ## 8  01015 Alabama  Calhoun County 1591.091 [km^2]        118572 ## 9  01017 Alabama Chambers County 1557.054 [km^2]         34215 ## 10 01019 Alabama Cherokee County 1549.770 [km^2]         25989 ##                          geometry ## 1  MULTIPOLYGON (((1225972 -12... ## 2  MULTIPOLYGON (((1200268 -15... ## 3  MULTIPOLYGON (((1408158 -13... ## 4  MULTIPOLYGON (((1207082 -12... ## 5  MULTIPOLYGON (((1260171 -11... ## 6  MULTIPOLYGON (((1370531 -12... ## 7  MULTIPOLYGON (((1280245 -13... ## 8  MULTIPOLYGON (((1313695 -11... ## 9  MULTIPOLYGON (((1374433 -12... ## 10 MULTIPOLYGON (((1333380 -10...</code></pre>
+<p>Note that we are using a left join, therefore the <code>county</code> layer retains all of its records, whether or not there is a match in the <code>dat</code> table (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#joining-tables">4.6.2</a>). Features in <code>county</code> that do not have a matching <code>FIPS</code> value in <code>dat</code> get <code>NA</code> in the new <code>CENSUS2010POP</code> column.</p>
+<p>A map of the new <code>CENSUS2010POP</code> attribute, using the default equal breaks, is shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:census-pop">8.26</a>:</p>
+<pre><code>plot(county[, "CENSUS2010POP"])</code></pre>
+<p>Figure 8.26: Population size per county in the US (equal breaks)</p>
+<p>Almost all counties fall into the first category, therefore the map is uniformely colored and not very informative. A map using <em>quantile</em> breaks (Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:census-pop-quantile">8.27</a>) reveals the spatial pattern of population sizes more clearly:</p>
+<pre><code>plot(county[, "CENSUS2010POP"], breaks = "quantile")</code></pre>
+<p>Figure 8.27: Population size per county in the US (quantile breaks)</p>
+<p>Another issue with the map is that county population size also depends on county <em>area</em>, which can make the pattern misleading in case when county area sizes are variable (which they are). To safely compare the counties we need to standardize population size by county area. In other words, we need to calculate population <strong>density</strong>:</p>
+<pre><code>county$density = county$CENSUS2010POP / county$area</code></pre>
+<p>Note how the measurement units (km−2��−2, i.e., number of people per km2��2) for the new column are automatically determined based on the inputs:</p>
+<pre><code>head(county$density) ## Units: [1/km^2] ## [1] 34.91863 42.91023 11.78344 14.13323 33.87575  6.72076</code></pre>
+<p>The map of population densities per county is shown in Figure <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#fig:census-pop-density">8.28</a>:</p>
+<pre><code>plot(county[, "density"], breaks = "quantile")</code></pre>
+<p>Figure 8.28: Population density in the US, quantile breaks</p>
+<blockquote class="blockquote">
+<p>How many features in <code>county</code> did not have a matching FIPS code in <code>dat</code>? What are their names?</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>How many features in <code>dat</code> do not have a matching FIPS code in <code>county</code>?</p>
+</blockquote>
+<p>We can also calculate the <em>average</em> population density in the US, by dividing the total population by the total area:</p>
+<pre><code>sum(county$CENSUS2010POP, na.rm = TRUE) / sum(county$area) ## 39.2295 [1/km^2]</code></pre>
+<p>This is close to the population density in 2010 according to <a href="https://en.wikipedia.org/wiki/Contiguous_United_States">Wikipedia</a>, which is <code>40.015</code>.</p>
+<p>Simply averaging the <code>density</code> column gives an overestimation, because all counties get equal weight while in reality the smaller counties are more dense:</p>
+<pre><code>mean(county$density, na.rm = TRUE) ## 93.87977 [1/km^2]</code></pre>
+</section>
+<section id="recap-main-data-structures" class="level2" data-number="13.7">
+<h2 data-number="13.7" class="anchored" data-anchor-id="recap-main-data-structures"><span class="header-section-number">13.7</span> Recap: main data structures</h2>
+<p>Table <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#tab:data-structures-in-course">8.1</a> summarizes the main data structures we learn in this book.</p>
+<table class="table">
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Table 8.1: Main data structures in the book</td>
+</tr>
+<tr class="even">
+<td><strong>Category</strong></td>
+<td><strong>Class</strong></td>
+<td><strong>Chapter</strong></td>
+</tr>
+<tr class="odd">
+<td>Vector</td>
+<td><code>numeric</code>, <code>character</code>, <code>logical</code></td>
+<td><a href="https://geobgu.xyz/r-2021/vectors.html#vectors">2</a></td>
+</tr>
+<tr class="even">
+<td>Date</td>
+<td><code>Date</code></td>
+<td><a href="https://geobgu.xyz/r-2021/time-series-and-function-definitions.html#time-series-and-function-definitions">3</a></td>
+</tr>
+<tr class="odd">
+<td>Table</td>
+<td><code>data.frame</code></td>
+<td><a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#tables-conditionals-and-loops">4</a></td>
+</tr>
+<tr class="even">
+<td>Matrix</td>
+<td><code>matrix</code></td>
+<td><a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#matrices-and-rasters">5</a></td>
+</tr>
+<tr class="odd">
+<td>Array</td>
+<td><code>array</code></td>
+<td><a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#matrices-and-rasters">5</a></td>
+</tr>
+<tr class="even">
+<td>Raster</td>
+<td><code>stars</code></td>
+<td><a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#matrices-and-rasters">5</a></td>
+</tr>
+<tr class="odd">
+<td>Vector layer</td>
+<td><code>sfg</code>, <code>sfc</code>, <code>sf</code></td>
+<td><a href="https://geobgu.xyz/r-2021/vector-layers.html#vector-layers">7</a></td>
+</tr>
+<tr class="even">
+<td>Units</td>
+<td><code>units</code></td>
+<td><a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#geometric-operations-with-vector-layers">8</a></td>
+</tr>
+<tr class="odd">
+<td>List</td>
+<td><code>list</code></td>
+<td><a href="https://geobgu.xyz/r-2021/processing-spatio-temporal-data.html#processing-spatio-temporal-data">11</a></td>
+</tr>
+<tr class="even">
+<td>Geostatistical model</td>
+<td><code>gstat</code></td>
+<td><a href="https://geobgu.xyz/r-2021/spatial-interpolation-of-point-data.html#spatial-interpolation-of-point-data">12</a></td>
+</tr>
+<tr class="odd">
+<td>Variogram model</td>
+<td><code>variogramModel</code></td>
+<td><a href="https://geobgu.xyz/r-2021/spatial-interpolation-of-point-data.html#spatial-interpolation-of-point-data">12</a></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ch7.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch9.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

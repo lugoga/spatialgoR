@@ -1,0 +1,2878 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Geospatial Technology and Spatial Analysis in R - 5&nbsp; Data types and data frame</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch4.html" rel="next">
+<link href="./ch3.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><link rel="stylesheet" href="style.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch3Edition.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#vectors" id="toc-vectors" class="nav-link active" data-scroll-target="#vectors"><span class="header-section-number">5.0.1</span> Vectors</a></li>
+  <li><a href="#data-frame" id="toc-data-frame" class="nav-link" data-scroll-target="#data-frame"><span class="header-section-number">5.0.2</span> Data Frame</a></li>
+  <li>
+<a href="#importing-data" id="toc-importing-data" class="nav-link" data-scroll-target="#importing-data"><span class="header-section-number">5.1</span> Importing Data</a>
+  <ul class="collapse">
+<li><a href="#importing-csv-files" id="toc-importing-csv-files" class="nav-link" data-scroll-target="#importing-csv-files"><span class="header-section-number">5.1.1</span> Importing csv files</a></li>
+  <li><a href="#importing-excel-files" id="toc-importing-excel-files" class="nav-link" data-scroll-target="#importing-excel-files"><span class="header-section-number">5.1.2</span> Importing Excel files</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#saving-and-exporting-your-data" id="toc-saving-and-exporting-your-data" class="nav-link" data-scroll-target="#saving-and-exporting-your-data"><span class="header-section-number">5.2</span> Saving and exporting your data</a>
+  <ul class="collapse">
+<li><a href="#exporting-data" id="toc-exporting-data" class="nav-link" data-scroll-target="#exporting-data"><span class="header-section-number">5.2.1</span> Exporting data</a></li>
+  <li><a href="#saving-and-loading-r-data" id="toc-saving-and-loading-r-data" class="nav-link" data-scroll-target="#saving-and-loading-r-data"><span class="header-section-number">5.2.2</span> Saving and loading R data</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span id="sec-data-types" class="quarto-section-identifier"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>Before the beginning of data collection, it should be clearly defined which type of data one wants to collect. It may be operational data, biological data, economic data or socio-cultural data. Each data type may be used for a variety of indicators. Catch, for instance, may be used both in calculations of revenue for economic purposes and as a rough measure of resource depletion. The length frequency data of the catch can be collected for determining the healthy of the stock. The selection of a data type also depends on the available analyses.</p>
+<p>There are several kind of data and require different kinds of statistical methods. For <em>quantitative</em> data we create boxplots and compute means, but for <em>qualitative</em> data we don’t. Instead we produce bar charts and summarise the data in tables either in percentage or proportion. We can summarize qualitative data by counting the number of observations in each category or by computing the proportion of the observations in each category. However, even when the qualitative data are identified by a numerical code, arithmetic operations such as addition, subtraction, multiplication, and division do not provide meaningful results. Arithmetic operations provide meaningful results for quantitative variables.</p>
+<p>In R, a variable describes what kind of object is assigned to it. We can assign many different types of objects to the variable. It may for instance contain a <code>number</code>, <code>text</code>, <code>date</code>. In order to treat a correctly, R needs to know what data type its assigned object has. In some programming languages, you have to explicitly state what data type a variable has, but not in R. This makes programming in R simpler and faster, but can cause problems if a variable turns out to have a different data type than what you thought. The common six data types are highlighted in <a href="#fig-datatypes">Figure&nbsp;<span>5.1</span></a>;</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-datatypes" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="graphics/chp3E/DATATYPES-01.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;5.1<strong>.</strong> Common data types often collected and stored for anaysis and modelling</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For most people, it suffices to know about the first three in the list below:</p>
+<ol type="1">
+<li>
+<em>numeric</em>: numbers like 1 and 16.823 (sometimes also called double);</li>
+<li>
+<em>logical</em>: true/false values (boolean): either TRUE or FALSE;</li>
+<li>
+<em>character</em>: text, e.g.&nbsp;“a”, “Indian Ocean.” and “FAO”;</li>
+<li>
+<em>integer</em>: integer numbers, denoted in R by the letter L: 1L, 55L;</li>
+<li>
+<em>complex</em>: complex numbers, like 2+3i. Rarely used in statistical work.</li>
+<li>
+<em>date</em>: date like 2022-12-15</li>
+</ol>
+<p>In addition, these can be combined into special data types sometimes called data structures, examples of which include <code>vectors</code> and <code>data frames</code>. Important data structures include factor, which is used to store categorical data, and the awkwardly named POSIXct which is used to store date and time data.</p>
+<section id="vectors" class="level3" data-number="5.0.1"><h3 data-number="5.0.1" class="anchored" data-anchor-id="vectors">
+<span class="header-section-number">5.0.1</span> Vectors</h3>
+<p>Often times we want to store a set of numbers in once place. One way to do this is using the vectors in R. Vector is the most basic data structure in R. It is a sequence of elements of the same data type. if the elements are of different data types, they be coerced to a common type that can accommodate all the elements. Vector are generally created using the <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> function widely called <code>concatenate</code>, though depending on the type vector being created, other method. Vectors store several numbers– a set of numbers in one container. let us look on the example below</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>id <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>mean.tl <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">158</span>,<span class="dv">659</span>,<span class="dv">782</span>,<span class="dv">659</span>,<span class="dv">759</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>country <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Somalia"</span>, <span class="st">"Kenya"</span>, <span class="st">"Mauritius"</span>, <span class="st">"Seychelles"</span>,  <span class="st">"Mozambique"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Notice that the <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> function, which is short for concatenate wraps the list of numbers. The <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> function combines all numbers together into one container. Notice also that all the individual numbers are separated with a comma. The comma is referred to an an item-delimiter. It allows R to hold each of the numbers separately. This is vital as without the item-delimiter, R will treat a vector as one big, unseperated number.</p>
+<section id="numeric-vector" class="level4" data-number="5.0.1.1"><h4 data-number="5.0.1.1" class="anchored" data-anchor-id="numeric-vector">
+<span class="header-section-number">5.0.1.1</span> Numeric vector</h4>
+<p>The most common data type in R is numeric. The numeric class holds the set of real numbers — decimal place numbers. We create a numeric vector using a <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> function but you can use any function that creates a sequence of numbers. For example, we can create a numeric vector of SST as follows;</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>sst <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">25.4</span>, <span class="dv">26</span>, <span class="dv">28</span>, <span class="fl">27.8</span>, <span class="dv">29</span>, <span class="fl">24.8</span>, <span class="fl">22.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We can check whether the variable sst is numeric with <code>is.numeric</code> function</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">is.numeric</span>(sst)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section><section id="integer-vector" class="level4" data-number="5.0.1.2"><h4 data-number="5.0.1.2" class="anchored" data-anchor-id="integer-vector">
+<span class="header-section-number">5.0.1.2</span> Integer vector</h4>
+<p>Integer vector data type is actually a special case of numeric data. Unlike <code>numeric</code>, <code>integer</code> values do not have decimal places.They are commonly used for counting or indexing. Creating an integer vector is similar to numeric vector except that we need to instruct R to treat the data as integer and not numeric or double. To command R creating integer, we specify a suffix <code>L</code> to an element</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>depth <span class="ot">=</span> <span class="fu">c</span>(5L, 10L, 15L, 20L, 25L,30L)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">is.vector</span>(depth);<span class="fu">class</span>(depth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "integer"</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>if your variable does not have decimals, R will automatically set the type as integers instead of numeric.</p>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>aa <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">20</span>,<span class="dv">68</span>,<span class="dv">78</span>,<span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>You can check if the data is integer with <code><a href="https://rdrr.io/r/base/integer.html">is.integer()</a></code> and can convert numeric value to an integer with <code><a href="https://rdrr.io/r/base/integer.html">as.integer()</a></code></p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">is.integer</span>(aa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p>You can query the class of the object with the <code><a href="https://rdrr.io/r/base/class.html">class()</a></code> to know the class of the object</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">class</span>(aa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+</div>
+<p>Although the object bb is integer as confirmed with <code><a href="https://rdrr.io/r/base/integer.html">as.integer()</a></code> function, the <code><a href="https://rdrr.io/r/base/class.html">class()</a></code> ouput the answer as numeric. This is because the defaul type of number in r is numeric. However, you can use the function <code><a href="https://rdrr.io/r/base/integer.html">as.integer()</a></code> to convert numeric value to integer</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">class</span>(<span class="fu">as.integer</span>(aa))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "integer"</code></pre>
+</div>
+</div>
+</section><section id="character-vector" class="level4" data-number="5.0.1.3"><h4 data-number="5.0.1.3" class="anchored" data-anchor-id="character-vector">
+<span class="header-section-number">5.0.1.3</span> Character vector</h4>
+<p>In programming terms, we usually call text as <em>string</em>. This often are <code>text</code> data like names. A character vector may contain a single character , a word or a group of words. The elements must be enclosed with a single or double quotations mark.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>sites <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Pemba Channel"</span>, <span class="st">"Zanzibar Channnel"</span>, <span class="st">"Pemba Channel"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="fu">is.vector</span>(sites); <span class="fu">class</span>(sites)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+<p>We can be sure whether the object is a string with <code><a href="https://rdrr.io/r/base/character.html">is.character()</a></code> or check the class of the object with <code><a href="https://rdrr.io/r/base/class.html">class()</a></code>.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>countries <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Kenya"</span>, <span class="st">"Uganda"</span>, <span class="st">"Rwanda"</span>, <span class="st">"Tanzania"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">class</span>(countries)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Everything inside <code>""</code> will be considered as character, no matter if it looks like character or not</p>
+</div>
+</div>
+</section><section id="factor" class="level4" data-number="5.0.1.4"><h4 data-number="5.0.1.4" class="anchored" data-anchor-id="factor">
+<span class="header-section-number">5.0.1.4</span> Factor</h4>
+<p>Factor variables are a special case of character variables in the sense that it also contains text. However, factor variables are used when there are a limited number of unique character strings. It often represents a categorical variable. For instance, the gender will usually take on only two values, "female" or "male" (and will be considered as a factor variable) whereas the name will generally have lots of possibilities (and thus will be considered as a character variable). To create a factor variable use the <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> function:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>    maturity.stage <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>, <span class="st">"III"</span>, <span class="st">"IV"</span>, <span class="st">"V"</span>))</span>
+<span id="cb20-2"><a href="#cb20-2"></a>    maturity.stage</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] I   II  III IV  V  
+Levels: I II III IV V</code></pre>
+</div>
+</div>
+<p>To know the different levels of a factor variable, use <code><a href="https://rdrr.io/r/base/levels.html">levels()</a></code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a> <span class="fu">levels</span>(maturity.stage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "I"   "II"  "III" "IV"  "V"  </code></pre>
+</div>
+</div>
+<p>By default, the levels are sorted alphabetically. You can reorder the levels with the argument <code>levels</code> in the <code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code> function:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>mature <span class="ot">&lt;-</span> <span class="fu">factor</span>(maturity.stage, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"V"</span>, <span class="st">"III"</span>))</span>
+<span id="cb24-2"><a href="#cb24-2"></a>    <span class="fu">levels</span>(mature)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "V"   "III"</code></pre>
+</div>
+</div>
+<p>Character strings can be converted to factors with <code><a href="https://rdrr.io/r/base/factor.html">as.factor()</a></code>:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a> text <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"test1"</span>, <span class="st">"test2"</span>, <span class="st">"test1"</span>, <span class="st">"test1"</span>) <span class="co"># create a character vector</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>    <span class="fu">class</span>(text) <span class="co"># to know the class</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "character"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a> text_factor <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(text) <span class="co"># transform to factor</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>    <span class="fu">class</span>(text_factor) <span class="co"># recheck the class</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "factor"</code></pre>
+</div>
+</div>
+<p>The character strings have been transformed to factors, as shown by its class of the type <code>factor</code>.</p>
+<p>Often we wish to take a continuous numerical vector and transform it into a factor. The function <code><a href="https://rdrr.io/r/base/cut.html">cut()</a></code> takes a vector of numerical data and creates a factor based on your give cut-points. Let us make a fictional total length of 508 bigeye tuna with <code><a href="https://rdrr.io/r/stats/Normal.html">rnorm()</a></code> function.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="do">## Simulate data for plotting</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>tl.cm <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">508</span>, <span class="at">mean =</span> <span class="dv">40</span>, <span class="at">sd =</span> <span class="dv">18</span>)</span>
+<span id="cb30-3"><a href="#cb30-3"></a></span>
+<span id="cb30-4"><a href="#cb30-4"></a>tl.cm <span class="sc">|&gt;</span></span>
+<span id="cb30-5"><a href="#cb30-5"></a>  tibble<span class="sc">::</span><span class="fu">as.tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb30-6"><a href="#cb30-6"></a>  ggstatsplot<span class="sc">::</span><span class="fu">gghistostats</span>(<span class="at">x =</span> value, <span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">test.value =</span> <span class="fl">40.2</span>, <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">normal.curve =</span> T, <span class="at">centrality.type =</span> <span class="st">"p"</span>, <span class="at">xlab =</span> <span class="st">"Total length (cm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="fig-hist" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3Edition_files/figure-html/fig-hist-1.png" class="img-fluid figure-img" width="480"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;5.2<strong>.</strong> Normal distribution of bigeye tuna’s tota length</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can now breaks the distribution into groups and make a simple plot as shown in <span class="quarto-unresolved-ref">?fig-lfq</span>, where frequency of bigeye tuna color coded with the group size</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>group <span class="ot">=</span> <span class="fu">cut</span>(tl.cm, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">110</span>),</span>
+<span id="cb31-2"><a href="#cb31-2"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Below 20"</span>, <span class="st">"30-60"</span>, <span class="st">"Above 60"</span>))</span>
+<span id="cb31-3"><a href="#cb31-3"></a><span class="fu">is.factor</span>(group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">levels</span>(group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "Below 20" "30-60"    "Above 60"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(group), <span class="at">las =</span> <span class="dv">1</span>, <span class="at">horiz =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span>), <span class="at">ylab =</span> <span class="st">"Frequency"</span>, <span class="at">xlab =</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="fig-bar" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch3Edition_files/figure-html/fig-bar-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;5.3<strong>.</strong> Length frequency of bigeye tuna</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="logical" class="level4" data-number="5.0.1.5"><h4 data-number="5.0.1.5" class="anchored" data-anchor-id="logical">
+<span class="header-section-number">5.0.1.5</span> Logical</h4>
+<p>Logical data (or simply logical ) represent the logical <code>TRUE</code> state and the logical <code>FALSE</code> state. Logical variables are the variables in which logical data are stored. Logical variables can assume only two states:</p>
+<ul>
+<li>FALSE, always represent by 0;</li>
+<li>TRUE, always represented by a nonzero object. Usually, the digit 1 is used for TRUE.</li>
+</ul>
+<p>We can create logical variables indirectly, through logical operations, such as the result of a comparison between two numbers. These operations return logical values. For example, type the following statement at the R console:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="dv">5</span> <span class="sc">&gt;</span> <span class="dv">3</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="dv">5</span> <span class="sc">&lt;</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p>Since 5 is indeed greater than 3, the result of the comparison is true, however, 5 is not less than 3, and hence the comparison is false. The sign <code>&gt;</code> and <code>&lt;</code> are relational operators, returning logical data types as a result.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a> value1 <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a>    value2 <span class="ot">&lt;-</span> <span class="dv">9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>    greater <span class="ot">&lt;-</span> value1 <span class="sc">&gt;</span> value2</span>
+<span id="cb41-2"><a href="#cb41-2"></a>    greater</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>    <span class="fu">class</span>(greater)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "logical"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>    <span class="co"># is value1 less than or equal to value2?</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a>    less <span class="ot">&lt;-</span> value1 <span class="sc">&lt;=</span> value2</span>
+<span id="cb45-3"><a href="#cb45-3"></a>    less</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>    <span class="fu">class</span>(less)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "logical"</code></pre>
+</div>
+</div>
+<p>It is also possible to transform logical data into numeric data. After the transformation from logical to numeric with the <code><a href="https://rdrr.io/r/base/numeric.html">as.numeric()</a></code> command, <code>FALSE</code> values equal to 0 and <code>TRUE</code> values equal to 1:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a> greater_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(greater)</span>
+<span id="cb49-2"><a href="#cb49-2"></a>    <span class="fu">sum</span>(greater)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a>   less_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(less)</span>
+<span id="cb51-2"><a href="#cb51-2"></a>    <span class="fu">sum</span>(less)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>Conversely, numeric data can be converted to logical data, with <code>FALSE</code> for all values equal to 0 and <code>TRUE</code> for all other values.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>  x <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb53-2"><a href="#cb53-2"></a>  <span class="fu">as.logical</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a> y <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb55-2"><a href="#cb55-2"></a><span class="fu">as.logical</span>(y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>3## Date and Time</p>
+<p>Date and time are also treated as vector in R</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>date.time <span class="ot">=</span> <span class="fu">seq</span>(lubridate<span class="sc">::</span><span class="fu">dmy</span>(<span class="dv">010121</span>), </span>
+<span id="cb57-2"><a href="#cb57-2"></a>                lubridate<span class="sc">::</span><span class="fu">dmy</span>(<span class="dv">250121</span>), </span>
+<span id="cb57-3"><a href="#cb57-3"></a>                <span class="at">length.out =</span> <span class="dv">5</span>)</span>
+<span id="cb57-4"><a href="#cb57-4"></a>date.time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "2021-01-01" "2021-01-07" "2021-01-13" "2021-01-19" "2021-01-25"</code></pre>
+</div>
+</div>
+</section><section id="generating-sequence-of-vectors-numbers" class="level4" data-number="5.0.1.6"><h4 data-number="5.0.1.6" class="anchored" data-anchor-id="generating-sequence-of-vectors-numbers">
+<span class="header-section-number">5.0.1.6</span> Generating sequence of vectors Numbers</h4>
+<p>There are few R operators that are designed for creating vecor of non-random numbers. These functions provide multiple ways for generating sequences of numbers</p>
+<p>The colon <code>:</code> operator, explicitly generate regular sequence of numbers between the lower and upper boundary numbers specified. For example, generating number beween 0 and 10, we simply write;</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>vector.seq <span class="ot">=</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb59-2"><a href="#cb59-2"></a>vector.seq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code> [1]  0  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+</div>
+<p>However, if you want to generate a vector of sequence number with specified interval, let say we want to generate number between 0 and 10 with interval of 2, then the <code><a href="https://rdrr.io/r/base/seq.html">seq()</a></code> function is used</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a>regular.vector <span class="ot">=</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>,<span class="at">to =</span> <span class="dv">10</span>, <span class="at">by =</span> <span class="dv">2</span>)</span>
+<span id="cb61-2"><a href="#cb61-2"></a>regular.vector</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1]  0  2  4  6  8 10</code></pre>
+</div>
+</div>
+<p>unlike the <code><a href="https://rdrr.io/r/base/seq.html">seq()</a></code> function and <code>:</code> operator that works with numbers, the <code><a href="https://rdrr.io/r/base/rep.html">rep()</a></code> function generate sequence of repeated numbers or strings to create a vector</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>id <span class="ot">=</span> <span class="fu">rep</span>(<span class="at">x =</span> <span class="dv">3</span>, <span class="at">each =</span> <span class="dv">4</span>)</span>
+<span id="cb63-2"><a href="#cb63-2"></a>station <span class="ot">=</span> <span class="fu">rep</span>(<span class="at">x =</span> <span class="st">"Station1"</span>, <span class="at">each =</span> <span class="dv">4</span>)</span>
+<span id="cb63-3"><a href="#cb63-3"></a>id;station</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 3 3 3</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Station1" "Station1" "Station1" "Station1"</code></pre>
+</div>
+</div>
+<p>The <code><a href="https://rdrr.io/r/base/rep.html">rep()</a></code> function allows to parse <code>each</code> and <code>times</code> arguments. The <code>each</code> argument allows creation of vector that that repeat each element in a vector according to specified number.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a>sampled.months <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"January"</span>, <span class="st">"March"</span>, <span class="st">"May"</span>)</span>
+<span id="cb66-2"><a href="#cb66-2"></a><span class="fu">rep</span>(<span class="at">x =</span> sampled.months, <span class="at">each =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "January" "January" "January" "March"   "March"   "March"   "May"    
+[8] "May"     "May"    </code></pre>
+</div>
+</div>
+<p>But the <code>times</code> argument repeat the whole vector to specfied times</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="fu">rep</span>(<span class="at">x =</span> sampled.months, <span class="at">times =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "January" "March"   "May"     "January" "March"   "May"     "January"
+[8] "March"   "May"    </code></pre>
+</div>
+</div>
+</section><section id="generating-vector-of-normal-distribution" class="level4" data-number="5.0.1.7"><h4 data-number="5.0.1.7" class="anchored" data-anchor-id="generating-vector-of-normal-distribution">
+<span class="header-section-number">5.0.1.7</span> Generating vector of normal distribution</h4>
+<p>The central limit theorem that ensure the data is normal distributed is well known to statistician. R has a <code><a href="https://rdrr.io/r/stats/Normal.html">rnorm()</a></code> function which makes vector of normal distributed values. For example to generate a vector of 40 sea surface temperature values from a normal distribution with a <code>mean</code> of 25, and <code>standard deviation</code> of 1.58, we simply type this expression in console;</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a>sst <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">40</span>, <span class="at">mean =</span> <span class="dv">25</span>,<span class="at">sd =</span> <span class="fl">1.58</span>)</span>
+<span id="cb70-2"><a href="#cb70-2"></a>sst</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code> [1] 25.41518 25.21072 26.71524 25.31299 23.67707 24.93742 25.83991 23.72739
+ [9] 27.01509 26.31437 27.31131 26.74432 22.65567 23.33602 21.93929 25.57172
+[17] 27.34873 24.16969 25.60321 25.09302 24.12103 25.58342 23.53130 27.83015
+[25] 24.06510 25.36209 25.53053 26.75029 23.38904 24.79264 23.18190 23.25597
+[33] 26.40546 25.21376 24.28244 23.52630 25.01735 25.61513 27.22470 25.00760</code></pre>
+</div>
+</div>
+</section><section id="rounding-off-numbers" class="level4" data-number="5.0.1.8"><h4 data-number="5.0.1.8" class="anchored" data-anchor-id="rounding-off-numbers">
+<span class="header-section-number">5.0.1.8</span> Rounding off numbers</h4>
+<p>There are many ways of rounding off numerical number to the nearest integers or specify the number of decimal places. the code block below illustrate the common way to round off:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a>chl <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="dv">20</span>, <span class="at">mean =</span> .<span class="dv">55</span>, <span class="at">sd =</span> .<span class="dv">2</span>)</span>
+<span id="cb72-2"><a href="#cb72-2"></a>chl <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code> [1] 0.58 0.07 0.48 0.63 0.35 0.61 0.66 0.30 0.32 0.39 0.63 0.84 0.65 0.58 0.62
+[16] 0.28 0.54 0.21 0.34 0.91</code></pre>
+</div>
+</div>
+</section><section id="number-of-elements-in-a-vector" class="level4" data-number="5.0.1.9"><h4 data-number="5.0.1.9" class="anchored" data-anchor-id="number-of-elements-in-a-vector">
+<span class="header-section-number">5.0.1.9</span> Number of elements in a vector</h4>
+<p>Sometimes you may have a long vector and want to know the numbers of elements in the object. R has <code><a href="https://rdrr.io/r/base/length.html">length()</a></code> function that allows you to query the vector and print the answer</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a><span class="fu">length</span>(chl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 20</code></pre>
+</div>
+</div>
+</section></section><section id="data-frame" class="level3" data-number="5.0.2"><h3 data-number="5.0.2" class="anchored" data-anchor-id="data-frame">
+<span class="header-section-number">5.0.2</span> Data Frame</h3>
+<p>The basis for most data analyses in R are data frames – spreadsheet-like tables. data frame is the primary structures for storing data in R. Data frames are made up of rows and columns. The top row is a header and describes the contents of each variable. Each row represents an individual measured or observed record. Records can also have names. Each record contains multiple cells of values. The unique of data frame is the capability to different types of data - as you’d expect, the different types of objects have different properties and can be used with different functions. Here’s the run-down of four common types:</p>
+<ol type="1">
+<li><p><em>matrix</em>: a table where all columns must contain objects of the same type (e.g.&nbsp;all numeric or all character). Uses less memory than other types and allows for much faster computations, but is difficult to use for certain types of data manipulation, plotting and analyses.</p></li>
+<li><p><em>data.frame</em>: the most common type, where different columns can contain different types (e.g.&nbsp;one numeric column, one character column).</p></li>
+<li><p><em>data.table</em>: an enhanced version of data.frame.</p></li>
+<li><p><em>tibble</em>: another enhanced version of data.frame.</p></li>
+</ol>
+<p>Let’s illustrates data frame using historical catch data in the Western Indian Ocean Region from FAO. This dataset is called <code>landings_wio_country.csv</code> and contains some data about total landed catches of ten countries in the WIO region reported in FAO between 1951 and 2015.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+   country       year    catch
+   &lt;chr&gt;        &lt;dbl&gt;    &lt;dbl&gt;
+ 1 Kenya         2015   33080 
+ 2 Tanzania      2015  110703 
+ 3 Zanzibar      2015   45972 
+ 4 Seychelles    2015  325291 
+ 5 South Africa  2015 1086810.
+ 6 Mozambique    2015   16080 
+ 7 Somalia       2015    1831 
+ 8 Mauritius     2015   16373 
+ 9 Mayotte       2015   28936 
+10 Madagascar    2015  145629 </code></pre>
+</div>
+</div>
+<p>Notice that data frame follow the same structure: each column represents a variable (e.g.&nbsp;country, year, catch) and each row represents an record (e.g.&nbsp;an individual). This is the standard way to store data in R (as well as the standard format in statistics in general). In what follows, we will use the terms column and variable interchangeably, to describe the columns/variables in a data frame. That is imported data, but R allows us to create data frames and add attributes to data frames. Perhaps the easiest way to create a data frame is to parse vectors in a <code><a href="https://rdrr.io/r/base/data.frame.html">data.frame()</a></code> function. For instance, in this case we create a simple data frame <code>dt</code> and assess its internal structure</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a><span class="co"># create vectors</span></span>
+<span id="cb77-2"><a href="#cb77-2"></a>country  <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'Kenya'</span>,<span class="st">'Mozambique'</span>,<span class="st">'Seychelles'</span>)</span>
+<span id="cb77-3"><a href="#cb77-3"></a>weight <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">75</span>, <span class="dv">92</span>)</span>
+<span id="cb77-4"><a href="#cb77-4"></a>maturity <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>, <span class="st">"V"</span>)</span>
+<span id="cb77-5"><a href="#cb77-5"></a></span>
+<span id="cb77-6"><a href="#cb77-6"></a><span class="do">## use the vectors to make a data frame</span></span>
+<span id="cb77-7"><a href="#cb77-7"></a>dt <span class="ot">=</span> <span class="fu">data.frame</span>(country, weight, maturity)</span>
+<span id="cb77-8"><a href="#cb77-8"></a></span>
+<span id="cb77-9"><a href="#cb77-9"></a><span class="do">## assess the internal structure</span></span>
+<span id="cb77-10"><a href="#cb77-10"></a><span class="fu">str</span>(dt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   3 obs. of  3 variables:
+ $ country : chr  "Kenya" "Mozambique" "Seychelles"
+ $ weight  : num  90 75 92
+ $ maturity: chr  "I" "II" "V"</code></pre>
+</div>
+</div>
+<p>Note how Variable <code>Name</code> in dt was converted to a column of factors . This is because there is a default setting in <code><a href="https://rdrr.io/r/base/data.frame.html">data.frame()</a></code> that converts character columns to factors . We can turn this off by setting the <code>stringsAsFactors = FALSE</code> argument:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1"></a><span class="do">## use the vectors to make a data frame</span></span>
+<span id="cb79-2"><a href="#cb79-2"></a>df <span class="ot">=</span> <span class="fu">data.frame</span>(country, weight, maturity, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb79-3"><a href="#cb79-3"></a>df <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   3 obs. of  3 variables:
+ $ country : chr  "Kenya" "Mozambique" "Seychelles"
+ $ weight  : num  90 75 92
+ $ maturity: chr  "I" "II" "V"</code></pre>
+</div>
+</div>
+<p>Now the variable <code>Name</code> is of character class in the data frame. The inherited problem of data frame to convert character columns into a factor is resolved by introduction f advanced data frames called <em>tibble</em> <span class="citation" data-cites="tibble">(<a href="references.html#ref-tibble" role="doc-biblioref">Müller and Wickham 2022</a>)</span>, which provides sticker checking and better formating than the traditional data.frame.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a><span class="do">## use the vectors to make a tibble</span></span>
+<span id="cb81-2"><a href="#cb81-2"></a>tb <span class="ot">=</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(country, weight, maturity) </span>
+<span id="cb81-3"><a href="#cb81-3"></a><span class="do">## check the internal structure of the tibble</span></span>
+<span id="cb81-4"><a href="#cb81-4"></a>tb <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>Rows: 3
+Columns: 3
+$ country  &lt;chr&gt; "Kenya", "Mozambique", "Seychelles"
+$ weight   &lt;dbl&gt; 90, 75, 92
+$ maturity &lt;chr&gt; "I", "II", "V"</code></pre>
+</div>
+</div>
+<p><a href="#tbl-score">Table&nbsp;<span>5.1</span></a> show the the data frame created by fusing the two vectors together.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-score" class="anchored">
+
+<div id="hpykkminaf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#hpykkminaf table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#hpykkminaf thead, #hpykkminaf tbody, #hpykkminaf tfoot, #hpykkminaf tr, #hpykkminaf td, #hpykkminaf th {
+  border-style: none;
+}
+
+#hpykkminaf p {
+  margin: 0;
+  padding: 0;
+}
+
+#hpykkminaf .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#hpykkminaf .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#hpykkminaf .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#hpykkminaf .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#hpykkminaf .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#hpykkminaf .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#hpykkminaf .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#hpykkminaf .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#hpykkminaf .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#hpykkminaf .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#hpykkminaf .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#hpykkminaf .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#hpykkminaf .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#hpykkminaf .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#hpykkminaf .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hpykkminaf .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#hpykkminaf .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#hpykkminaf .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#hpykkminaf .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hpykkminaf .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#hpykkminaf .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hpykkminaf .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#hpykkminaf .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hpykkminaf .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#hpykkminaf .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#hpykkminaf .gt_left {
+  text-align: left;
+}
+
+#hpykkminaf .gt_center {
+  text-align: center;
+}
+
+#hpykkminaf .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#hpykkminaf .gt_font_normal {
+  font-weight: normal;
+}
+
+#hpykkminaf .gt_font_bold {
+  font-weight: bold;
+}
+
+#hpykkminaf .gt_font_italic {
+  font-style: italic;
+}
+
+#hpykkminaf .gt_super {
+  font-size: 65%;
+}
+
+#hpykkminaf .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#hpykkminaf .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#hpykkminaf .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#hpykkminaf .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#hpykkminaf .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#hpykkminaf .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#hpykkminaf .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<caption>TABLE&nbsp;5.1.  <p>Variables in the data frame</p> </caption>
+  <thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="country">country</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="weight">weight</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="maturity">maturity</th>
+    </tr></thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="country" class="gt_row gt_left">Kenya</td>
+<td headers="weight" class="gt_row gt_right">90</td>
+<td headers="maturity" class="gt_row gt_left">I</td>
+</tr>
+<tr>
+<td headers="country" class="gt_row gt_left">Mozambique</td>
+<td headers="weight" class="gt_row gt_right">75</td>
+<td headers="maturity" class="gt_row gt_left">II</td>
+</tr>
+<tr>
+<td headers="country" class="gt_row gt_left">Seychelles</td>
+<td headers="weight" class="gt_row gt_right">92</td>
+<td headers="maturity" class="gt_row gt_left">V</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<p>Because the columns have meaning and we have given them column names, it is desirable to want to access an element by the name of the column as opposed to the column number.In large Excel spreadsheets I often get annoyed trying to remember which column something was. The <code>$</code>sign and <code>[]</code>are used in R to select variable from the data frame.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1"></a>dt<span class="sc">$</span>country</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "Kenya"      "Mozambique" "Seychelles"</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1"></a>dt[,<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "Kenya"      "Mozambique" "Seychelles"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1"></a>dt<span class="sc">$</span>weight</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 90 75 92</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1"></a>dt[,<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 90 75 92</code></pre>
+</div>
+</div>
+<p>The FSA package in R has build in dataset that we can use for illustration. For example, <code>ChinookArg</code> dataset contains total length and weight of 112 Chinook salmon collected in three sites in Argentina. (<a href="#tbl-chinook">Table&nbsp;<span>5.2</span></a>).</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1"></a>chinook <span class="ot">=</span> FSA<span class="sc">::</span>ChinookArg</span>
+<span id="cb91-2"><a href="#cb91-2"></a></span>
+<span id="cb91-3"><a href="#cb91-3"></a></span>
+<span id="cb91-4"><a href="#cb91-4"></a></span>
+<span id="cb91-5"><a href="#cb91-5"></a>chinook <span class="sc">|&gt;</span></span>
+<span id="cb91-6"><a href="#cb91-6"></a>  dplyr<span class="sc">::</span><span class="fu">sample_n</span>(<span class="at">size =</span> <span class="dv">12</span>) <span class="sc">|&gt;</span></span>
+<span id="cb91-7"><a href="#cb91-7"></a>  gt<span class="sc">::</span><span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="tbl-chinook" class="anchored">
+
+<div id="ajthlmkfaj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ajthlmkfaj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ajthlmkfaj thead, #ajthlmkfaj tbody, #ajthlmkfaj tfoot, #ajthlmkfaj tr, #ajthlmkfaj td, #ajthlmkfaj th {
+  border-style: none;
+}
+
+#ajthlmkfaj p {
+  margin: 0;
+  padding: 0;
+}
+
+#ajthlmkfaj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ajthlmkfaj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ajthlmkfaj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ajthlmkfaj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ajthlmkfaj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ajthlmkfaj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ajthlmkfaj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ajthlmkfaj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ajthlmkfaj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ajthlmkfaj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ajthlmkfaj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ajthlmkfaj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ajthlmkfaj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ajthlmkfaj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ajthlmkfaj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ajthlmkfaj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ajthlmkfaj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ajthlmkfaj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ajthlmkfaj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ajthlmkfaj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ajthlmkfaj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ajthlmkfaj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ajthlmkfaj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ajthlmkfaj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ajthlmkfaj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ajthlmkfaj .gt_left {
+  text-align: left;
+}
+
+#ajthlmkfaj .gt_center {
+  text-align: center;
+}
+
+#ajthlmkfaj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ajthlmkfaj .gt_font_normal {
+  font-weight: normal;
+}
+
+#ajthlmkfaj .gt_font_bold {
+  font-weight: bold;
+}
+
+#ajthlmkfaj .gt_font_italic {
+  font-style: italic;
+}
+
+#ajthlmkfaj .gt_super {
+  font-size: 65%;
+}
+
+#ajthlmkfaj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ajthlmkfaj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ajthlmkfaj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ajthlmkfaj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ajthlmkfaj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ajthlmkfaj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ajthlmkfaj .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<caption>TABLE&nbsp;5.2.  <p>Longleys’ Economic dataset</p> </caption>
+  <thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="tl">tl</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="w">w</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="loc">loc</th>
+    </tr></thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="tl" class="gt_row gt_right">18.0</td>
+<td headers="w" class="gt_row gt_right">0.1</td>
+<td headers="loc" class="gt_row gt_center">Puyehue</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">82.2</td>
+<td headers="w" class="gt_row gt_right">6.7</td>
+<td headers="loc" class="gt_row gt_center">Argentina</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">62.7</td>
+<td headers="w" class="gt_row gt_right">3.0</td>
+<td headers="loc" class="gt_row gt_center">Puyehue</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">88.7</td>
+<td headers="w" class="gt_row gt_right">10.8</td>
+<td headers="loc" class="gt_row gt_center">Argentina</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">59.9</td>
+<td headers="w" class="gt_row gt_right">3.9</td>
+<td headers="loc" class="gt_row gt_center">Argentina</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">97.2</td>
+<td headers="w" class="gt_row gt_right">7.9</td>
+<td headers="loc" class="gt_row gt_center">Petrohue</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">99.0</td>
+<td headers="w" class="gt_row gt_right">9.7</td>
+<td headers="loc" class="gt_row gt_center">Argentina</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">74.5</td>
+<td headers="w" class="gt_row gt_right">4.6</td>
+<td headers="loc" class="gt_row gt_center">Puyehue</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">57.7</td>
+<td headers="w" class="gt_row gt_right">2.6</td>
+<td headers="loc" class="gt_row gt_center">Puyehue</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">32.1</td>
+<td headers="w" class="gt_row gt_right">2.8</td>
+<td headers="loc" class="gt_row gt_center">Puyehue</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">94.9</td>
+<td headers="w" class="gt_row gt_right">11.8</td>
+<td headers="loc" class="gt_row gt_center">Argentina</td>
+</tr>
+<tr>
+<td headers="tl" class="gt_row gt_right">64.2</td>
+<td headers="w" class="gt_row gt_right">1.6</td>
+<td headers="loc" class="gt_row gt_center">Puyehue</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<p>Sometimes you may need to create set of values and store them in vectors, then combine the vectors into a data frame. Let us see how this can be done. First create three vectors. One contains id for ten individuals, the second vector hold the time each individual signed in the attendane book and the third vector is the distance of each individual from office. We can concatenate the set of values to make vectors.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1"></a>vessel.id  <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>)</span>
+<span id="cb92-2"><a href="#cb92-2"></a></span>
+<span id="cb92-3"><a href="#cb92-3"></a>departure.time <span class="ot">=</span> lubridate<span class="sc">::</span><span class="fu">ymd_hms</span>(<span class="fu">c</span>(<span class="st">"2018-11-20 06:35:25 EAT"</span>, <span class="st">"2018-11-20 06:52:05 EAT"</span>, </span>
+<span id="cb92-4"><a href="#cb92-4"></a>                 <span class="st">"2018-11-20 07:08:45 EAT"</span>, <span class="st">"2018-11-20 07:25:25 EAT"</span>, </span>
+<span id="cb92-5"><a href="#cb92-5"></a>                 <span class="st">"2018-11-20 07:42:05 EAT"</span>, <span class="st">"2018-11-20 07:58:45 EAT"</span>, </span>
+<span id="cb92-6"><a href="#cb92-6"></a>                 <span class="st">"2018-11-20 08:15:25 EAT"</span>, <span class="st">"2018-11-20 08:32:05 EAT"</span>, </span>
+<span id="cb92-7"><a href="#cb92-7"></a>                 <span class="st">"2018-11-20 08:48:45 EAT"</span>, <span class="st">"2018-11-20 09:05:25 EAT"</span>), <span class="at">tz =</span> <span class="st">""</span>)</span>
+<span id="cb92-8"><a href="#cb92-8"></a></span>
+<span id="cb92-9"><a href="#cb92-9"></a>distance.ground <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">85</span>, <span class="dv">45</span>, <span class="dv">69</span>, <span class="dv">42</span>,  <span class="dv">52</span>, <span class="dv">6</span>, <span class="dv">45</span>, <span class="dv">36</span>, <span class="dv">7</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Once we have the vectors that have the same length dimension, we can use the function <code><a href="https://rdrr.io/r/base/data.frame.html">data.frame()</a></code> to combine the the three vectors into one data frame shown in <a href="#tbl-tab23">Table&nbsp;<span>5.3</span></a></p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a>fishing.dep <span class="ot">=</span> <span class="fu">data.frame</span>(vessel.id, </span>
+<span id="cb93-2"><a href="#cb93-2"></a>                     departure.time, </span>
+<span id="cb93-3"><a href="#cb93-3"></a>                     distance.ground)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-tab23" class="anchored">
+
+<div id="ddstovcwnw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ddstovcwnw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ddstovcwnw thead, #ddstovcwnw tbody, #ddstovcwnw tfoot, #ddstovcwnw tr, #ddstovcwnw td, #ddstovcwnw th {
+  border-style: none;
+}
+
+#ddstovcwnw p {
+  margin: 0;
+  padding: 0;
+}
+
+#ddstovcwnw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ddstovcwnw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ddstovcwnw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ddstovcwnw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ddstovcwnw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ddstovcwnw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ddstovcwnw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ddstovcwnw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ddstovcwnw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ddstovcwnw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ddstovcwnw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ddstovcwnw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ddstovcwnw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ddstovcwnw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ddstovcwnw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ddstovcwnw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ddstovcwnw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ddstovcwnw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ddstovcwnw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ddstovcwnw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ddstovcwnw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ddstovcwnw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ddstovcwnw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ddstovcwnw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ddstovcwnw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ddstovcwnw .gt_left {
+  text-align: left;
+}
+
+#ddstovcwnw .gt_center {
+  text-align: center;
+}
+
+#ddstovcwnw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ddstovcwnw .gt_font_normal {
+  font-weight: normal;
+}
+
+#ddstovcwnw .gt_font_bold {
+  font-weight: bold;
+}
+
+#ddstovcwnw .gt_font_italic {
+  font-style: italic;
+}
+
+#ddstovcwnw .gt_super {
+  font-size: 65%;
+}
+
+#ddstovcwnw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ddstovcwnw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ddstovcwnw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ddstovcwnw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ddstovcwnw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ddstovcwnw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ddstovcwnw .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<caption>TABLE&nbsp;5.3.  <p>The time fishers departed for fishing with the distance to th fishing
+ground</p> </caption>
+  <thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="vessel.id">vessel.id</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="date">date</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="time">time</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="distance.ground">distance.ground</th>
+    </tr></thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">1</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">06:35:25</td>
+<td headers="distance.ground" class="gt_row gt_right">20</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">2</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">06:52:05</td>
+<td headers="distance.ground" class="gt_row gt_right">85</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">3</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">07:08:45</td>
+<td headers="distance.ground" class="gt_row gt_right">45</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">4</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">07:25:25</td>
+<td headers="distance.ground" class="gt_row gt_right">69</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">5</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">07:42:05</td>
+<td headers="distance.ground" class="gt_row gt_right">42</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">6</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">07:58:45</td>
+<td headers="distance.ground" class="gt_row gt_right">52</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">7</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">08:15:25</td>
+<td headers="distance.ground" class="gt_row gt_right">6</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">8</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">08:32:05</td>
+<td headers="distance.ground" class="gt_row gt_right">45</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">9</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">08:48:45</td>
+<td headers="distance.ground" class="gt_row gt_right">36</td>
+</tr>
+<tr>
+<td headers="vessel.id" class="gt_row gt_right">10</td>
+<td headers="date" class="gt_row gt_right">2018-11-20</td>
+<td headers="time" class="gt_row gt_right">09:05:25</td>
+<td headers="distance.ground" class="gt_row gt_right">7</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section><section id="importing-data" class="level2" data-number="5.1"><h2 data-number="5.1" class="anchored" data-anchor-id="importing-data">
+<span class="header-section-number">5.1</span> Importing Data</h2>
+<p>So far, we’ve looked at several dataset in previous chapter and we have also created ourselves some datasets. While you can do all your data entry work in R or Excel, it is much more common to load data from other sources. Local and international organization have been collecting fisheries dependent and fisheries independent data for years. These historical dataset with fisheries information like fish catch, effort, landing sites, fishing ground and critical habitats can be obtained from several databases—some are open and other closed. Much of the data we download or receive from is either comma-separated value files <code>.csv</code> or and Excel spreadsheets, <code>.xlsx.</code> .csv files are spreadsheets stored as text files - basically Excel files stripped down to the bare minimum - no formatting, no formulas, no macros. You can open and edit them in spreadsheet software like LibreOffice Calc, Google Sheets or Microsoft Excel. Many devices and databases can export data in .csv format, making it a commonly used file format that you are likely to encounter sooner rather than later.</p>
+<p>Whether that be a comma separated (csv) or a tab delimited file, there are multiple functions that can read these data into R. We will stick to loading these data from the <strong>tidyverse</strong> packages but be aware these are not the only methods for doing this. We will use the tidyverse functions just to maintain consistency with everything else we do. The first package in <strong>tidyverse</strong> we will use is called <strong>readr</strong> <span class="citation" data-cites="readr">(<a href="references.html#ref-readr" role="doc-biblioref">Wickham, Hester, and Bryan 2022</a>)</span>, which is a collection of functions to load the tabular data from working directory in our machine into R session. Some of its functions include:</p>
+<ul>
+<li>
+<code>read_csv()</code>: comma separated (CSV) files</li>
+<li>
+<code>read_tsv()</code>: tab separated files</li>
+<li>
+<code>read_delim()</code>: general delimited files</li>
+<li>
+<code>read_fwf()</code>: fixed width files</li>
+<li>
+<code>read_table()</code>: tabular files where columns are separated by white-space.</li>
+<li>
+<code>read_log()</code>: web log files</li>
+<li>
+<strong>readxl</strong> reads in Excel files.</li>
+</ul>
+<p>Before we import the data, we need to load the packages that we will use their functions in this chapter</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1"></a><span class="fu">require</span>(tidyverse)</span>
+<span id="cb94-2"><a href="#cb94-2"></a><span class="fu">require</span>(magrittr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="importing-csv-files" class="level3" data-number="5.1.1"><h3 data-number="5.1.1" class="anchored" data-anchor-id="importing-csv-files">
+<span class="header-section-number">5.1.1</span> Importing csv files</h3>
+<p>A <code>CSV</code> file is a type of file where each line contains a single record, and all the columns are separated from each other via a comma. In order to load data from a file into R, you need its path - that is, you need to tell R where to find the file. Unless you specify otherwise, R will look for files in its current working directory. You can read <code>.csv</code> file using <code>read_csv()</code> function of the <strong>readr</strong> package <span class="citation" data-cites="readr">(<a href="references.html#ref-readr" role="doc-biblioref">Wickham, Hester, and Bryan 2022</a>)</span> as shown in the chunk below;</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1"></a>imported.lfq <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"dataset/project/tidy_LFQ_sample_4.csv"</span>)</span>
+<span id="cb95-2"><a href="#cb95-2"></a></span>
+<span id="cb95-3"><a href="#cb95-3"></a>lf4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We imported <code>tidy_LFQ_sample_4.csv</code> from working directory into R using <code>read_csv()</code> and specify the path to the file in your working directory and store as <code>imported.lfq. If you get an error message, it means that</code>tidy_LFQ_sample_4.csv<code>is not in your working directory. Either move the file to the right directory (remember, you can use run</code>getwd()` to see what your working directory is) or change your working directory.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1"></a>imported.lfq <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"data/tidy/tidy_LFQ_sample_4.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>If you glimpse the dataframe with <code>glimpse()</code> function, you should see the internal structure of the <code>imported.lfq</code> object we just loaded;</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1"></a>imported.lfq <span class="sc">%&gt;%</span> </span>
+<span id="cb97-2"><a href="#cb97-2"></a>  <span class="fu">glimpse</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>Rows: 6,185
+Columns: 6
+$ site  &lt;chr&gt; "Mombasa", "Mombasa", "Mombasa", "Mombasa", "Mombasa", "Mombasa"…
+$ date  &lt;date&gt; 2019-04-05, 2019-04-05, 2019-04-05, 2019-04-05, 2019-04-05, 201…
+$ tl_mm &lt;dbl&gt; 184, 185, 145, 189, 175, 165, 181, 176, 164, 154, 188, 186, 179,…
+$ fl_mm &lt;dbl&gt; 169, 169, 134, 173, 161, 153, 165, 163, 148, 142, 173, 173, 164,…
+$ wt_gm &lt;dbl&gt; 59.50, 54.71, 24.15, 61.36, 49.31, 38.54, 49.68, 45.27, 36.26, 3…
+$ sex   &lt;chr&gt; "M", "M", "M", "M", "M", "M", "M", "M", "M", "M", "M", "M", "M",…</code></pre>
+</div>
+</div>
+<p>The dataset contains six variables and 6,185 records. The variables <code>site</code> and <code>sex</code> both contain text, and have been imported as character vectors4. The <code>date</code> column has been imported as date format, the variable <code>tl_mm</code> and <code>fl_mm</code> are measured length and have been imported as numeric vector measured in millimeters. The variable <code>wt_gm</code> is the weight of fish measured in grams and also have been imported as numeric vector.</p>
+<p>So, what can you do in case you need to import data from a file that is not in your working directory? This is a common problem, as many of us store script files and data files in separate folders (or even on separate drives). One option is to use <code>file.choose</code>, which opens a pop-up window that lets you choose which file to open using a graphical interface:</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1"></a>imported.lfq2 <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="fu">file.choose</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This solution work just fine if you just want to open a single file once. But if you want to reuse your code or run it multiple times, you probably don’t want to have to click and select your file each time. Instead, you can specify the path to your file in the call to <code>read_csv</code>.</p>
+</section><section id="importing-excel-files" class="level3" data-number="5.1.2"><h3 data-number="5.1.2" class="anchored" data-anchor-id="importing-excel-files">
+<span class="header-section-number">5.1.2</span> Importing Excel files</h3>
+<p>Commonly our data is stored as a Excel file. There are several packages that can be used to import Excel files to R. I prefer the <strong>readxl</strong> package <span class="citation" data-cites="readxl">(<a href="references.html#ref-readxl" role="doc-biblioref">Wickham and Bryan 2022</a>)</span>, so let’s install that:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1"></a><span class="fu">install.packages</span>(<span class="st">"readxl"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The package has <code>read_exel()</code> function that allows us to specify which sheet within the Excel file to read. The function automatically convert the worksheet into a <code>.csv</code> file and read it. Let’s us import the the data in first sheet of the <code>tidy_LFQ_sample_4.xlsx</code>. Is a similar dataset that just imported in the previous section, but is in Excel format. We will use this file to illustrate how to import the excel file into R workspace with <code>readxl</code> package <span class="citation" data-cites="readxl">(<a href="references.html#ref-readxl" role="doc-biblioref">Wickham and Bryan 2022</a>)</span>.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1"></a>imported.lfq <span class="ot">=</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"data/tidy/tidy_LFQ_sample_4.xlsx"</span>, <span class="at">sheet =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1"></a>imported.lfq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6,185 × 6
+   site    date                tl_mm fl_mm wt_gm sex  
+   &lt;chr&gt;   &lt;dttm&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+ 1 Mombasa 2019-04-05 00:00:00   184   169  59.5 M    
+ 2 Mombasa 2019-04-05 00:00:00   185   169  54.7 M    
+ 3 Mombasa 2019-04-05 00:00:00   145   134  24.2 M    
+ 4 Mombasa 2019-04-05 00:00:00   189   173  61.4 M    
+ 5 Mombasa 2019-04-05 00:00:00   175   161  49.3 M    
+ 6 Mombasa 2019-04-05 00:00:00   165   153  38.5 M    
+ 7 Mombasa 2019-04-05 00:00:00   181   165  49.7 M    
+ 8 Mombasa 2019-04-05 00:00:00   176   163  45.3 M    
+ 9 Mombasa 2019-04-05 00:00:00   164   148  36.3 M    
+10 Mombasa 2019-04-05 00:00:00   154   142  31.9 M    
+# ℹ 6,175 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1"></a>imported.lfq <span class="sc">%&gt;%</span> </span>
+<span id="cb104-2"><a href="#cb104-2"></a>  skimr<span class="sc">::</span><span class="fu">skim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">Piped data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">6185</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">character</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">POSIXct</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 15%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
+<th style="text-align: right;">empty</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: right;">whitespace</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">site</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sex</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 15%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">tl_mm</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">170.77</td>
+<td style="text-align: right;">21.08</td>
+<td style="text-align: right;">97.0</td>
+<td style="text-align: right;">157.00</td>
+<td style="text-align: right;">171.00</td>
+<td style="text-align: right;">183.00</td>
+<td style="text-align: right;">269.00</td>
+<td style="text-align: left;">▁▅▇▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fl_mm</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">156.00</td>
+<td style="text-align: right;">19.26</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">144.00</td>
+<td style="text-align: right;">156.00</td>
+<td style="text-align: right;">168.00</td>
+<td style="text-align: right;">241.00</td>
+<td style="text-align: left;">▁▁▅▇▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">wt_gm</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">46.03</td>
+<td style="text-align: right;">19.51</td>
+<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">32.77</td>
+<td style="text-align: right;">43.59</td>
+<td style="text-align: right;">55.28</td>
+<td style="text-align: right;">194.18</td>
+<td style="text-align: left;">▇▆▁▁▁</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: POSIXct</strong></p>
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 17%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 11%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">min</th>
+<th style="text-align: left;">max</th>
+<th style="text-align: left;">median</th>
+<th style="text-align: right;">n_unique</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: left;">date</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">2016-03-31</td>
+<td style="text-align: left;">2020-09-11</td>
+<td style="text-align: left;">2020-02-25</td>
+<td style="text-align: right;">42</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+</section></section><section id="saving-and-exporting-your-data" class="level2" data-number="5.2"><h2 data-number="5.2" class="anchored" data-anchor-id="saving-and-exporting-your-data">
+<span class="header-section-number">5.2</span> Saving and exporting your data</h2>
+<p>In many a case, data manipulation is a huge part of statistical work, and of course you want to be able to save a data frame after manipulating it. There are two options for doing this in R - you can either export the data as e.g.&nbsp;a .csv or a .xlsx file, or save it in R format as an .RData file.</p>
+<section id="exporting-data" class="level3" data-number="5.2.1"><h3 data-number="5.2.1" class="anchored" data-anchor-id="exporting-data">
+<span class="header-section-number">5.2.1</span> Exporting data</h3>
+<p>Just as we used the functions <code>read_csv</code> and <code>read_excel</code> to import data, we can use <code>write_csv</code>to export it. The code below saves the bookstore data frame as a .csv file file, which will be created in the current working directory. If you wish to store</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1"></a></span>
+<span id="cb105-2"><a href="#cb105-2"></a>imported.lfq <span class="sc">%&gt;%</span>  <span class="fu">write_csv</span>(<span class="st">"assets/fao_paul_dataset/tidy/tidy_lfq.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section><section id="saving-and-loading-r-data" class="level3" data-number="5.2.2"><h3 data-number="5.2.2" class="anchored" data-anchor-id="saving-and-loading-r-data">
+<span class="header-section-number">5.2.2</span> Saving and loading R data</h3>
+<p>Being able to export to different spreadsheet formats is very useful, but sometimes you want to save an object that can’t be saved in a spreadsheet format. For instance, you may wish to save a multiple processed data, functions and formula that you’ve created. <code>.RData</code> files can be used to store one or more R objects. To save the objects bookstore and age in a <code>.Rdata</code> file, we can use the save function:</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1"></a></span>
+<span id="cb106-2"><a href="#cb106-2"></a><span class="fu">save.image</span>(<span class="st">"assets/fao_paul_dataset/tidy/myData.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-tibble" class="csl-entry" role="listitem">
+Müller, Kirill, and Hadley Wickham. 2022. <em>Tibble: Simple Data Frames</em>. <a href="https://CRAN.R-project.org/package=tibble">https://CRAN.R-project.org/package=tibble</a>.
+</div>
+<div id="ref-readxl" class="csl-entry" role="listitem">
+Wickham, Hadley, and Jennifer Bryan. 2022. <em>Readxl: Read Excel Files</em>. <a href="https://CRAN.R-project.org/package=readxl">https://CRAN.R-project.org/package=readxl</a>.
+</div>
+<div id="ref-readr" class="csl-entry" role="listitem">
+Wickham, Hadley, Jim Hester, and Jennifer Bryan. 2022. <em>Readr: Read Rectangular Text Data</em>. <a href="https://CRAN.R-project.org/package=readr">https://CRAN.R-project.org/package=readr</a>.
+</div>
+</div>
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./ch3.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch4.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Geospatial Technology and Spatial Analysis in R - 15&nbsp; Combining rasters and vector layers</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch11.html" rel="next">
+<link href="./ch9.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch10.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#aims" id="toc-aims" class="nav-link active" data-scroll-target="#aims"><span class="header-section-number">15.1</span> Aims</a></li>
+  <li><a href="#masking-and-cropping-rasters" id="toc-masking-and-cropping-rasters" class="nav-link" data-scroll-target="#masking-and-cropping-rasters"><span class="header-section-number">15.2</span> Masking and cropping rasters</a>
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="header-section-number">15.2.1</span> Introduction</a></li>
+  <li><a href="#masking-and-cropping" id="toc-masking-and-cropping" class="nav-link" data-scroll-target="#masking-and-cropping"><span class="header-section-number">15.2.2</span> Masking and cropping</a></li>
+  <li><a href="#masking-only" id="toc-masking-only" class="nav-link" data-scroll-target="#masking-only"><span class="header-section-number">15.2.3</span> Masking-only</a></li>
+  </ul></li>
+  <li><a href="#vector-layer-raster" id="toc-vector-layer-raster" class="nav-link" data-scroll-target="#vector-layer-raster"><span class="header-section-number">15.3</span> Vector layer → raster</a>
+  <ul class="collapse">
+  <li><a href="#the-st_rasterize-function" id="toc-the-st_rasterize-function" class="nav-link" data-scroll-target="#the-st_rasterize-function"><span class="header-section-number">15.3.1</span> 10.2.1 The <code>st_rasterize</code> function</a></li>
+  <li><a href="#rasterizing-polygon-attributes" id="toc-rasterizing-polygon-attributes" class="nav-link" data-scroll-target="#rasterizing-polygon-attributes"><span class="header-section-number">15.3.2</span> Rasterizing polygon attributes</a></li>
+  <li><a href="#rasterizing-point-counts" id="toc-rasterizing-point-counts" class="nav-link" data-scroll-target="#rasterizing-point-counts"><span class="header-section-number">15.3.3</span> Rasterizing point counts</a></li>
+  <li><a href="#standardizing-density-units" id="toc-standardizing-density-units" class="nav-link" data-scroll-target="#standardizing-density-units"><span class="header-section-number">15.3.4</span> Standardizing density units</a></li>
+  </ul></li>
+  <li><a href="#raster-polygons" id="toc-raster-polygons" class="nav-link" data-scroll-target="#raster-polygons"><span class="header-section-number">15.4</span> Raster → Polygons</a>
+  <ul class="collapse">
+  <li><a href="#raster-to-polygons-conversion" id="toc-raster-to-polygons-conversion" class="nav-link" data-scroll-target="#raster-to-polygons-conversion"><span class="header-section-number">15.4.1</span> Raster to polygons conversion</a></li>
+  <li><a href="#segmentation" id="toc-segmentation" class="nav-link" data-scroll-target="#segmentation"><span class="header-section-number">15.4.2</span> Segmentation</a></li>
+  </ul></li>
+  <li><a href="#raster-points" id="toc-raster-points" class="nav-link" data-scroll-target="#raster-points"><span class="header-section-number">15.5</span> Raster → Points</a></li>
+  <li><a href="#distance-to-nearest-point" id="toc-distance-to-nearest-point" class="nav-link" data-scroll-target="#distance-to-nearest-point"><span class="header-section-number">15.6</span> Distance to nearest point</a></li>
+  <li><a href="#raster-lines-contours" id="toc-raster-lines-contours" class="nav-link" data-scroll-target="#raster-lines-contours"><span class="header-section-number">15.7</span> Raster → Lines (contours)</a></li>
+  <li><a href="#extracting-raster-values" id="toc-extracting-raster-values" class="nav-link" data-scroll-target="#extracting-raster-values"><span class="header-section-number">15.8</span> Extracting raster values</a>
+  <ul class="collapse">
+  <li><a href="#introduction-1" id="toc-introduction-1" class="nav-link" data-scroll-target="#introduction-1"><span class="header-section-number">15.8.1</span> Introduction</a></li>
+  <li><a href="#extracting-to-points-single-band" id="toc-extracting-to-points-single-band" class="nav-link" data-scroll-target="#extracting-to-points-single-band"><span class="header-section-number">15.8.2</span> Extracting to points: single-band</a></li>
+  <li><a href="#extracting-to-points-multi-band" id="toc-extracting-to-points-multi-band" class="nav-link" data-scroll-target="#extracting-to-points-multi-band"><span class="header-section-number">15.8.3</span> Extracting to points: multi-band</a></li>
+  <li><a href="#extracting-to-polygons-single-band" id="toc-extracting-to-polygons-single-band" class="nav-link" data-scroll-target="#extracting-to-polygons-single-band"><span class="header-section-number">15.8.4</span> Extracting to polygons: single-band</a></li>
+  <li><a href="#extracting-to-polygons-multi-band" id="toc-extracting-to-polygons-multi-band" class="nav-link" data-scroll-target="#extracting-to-polygons-multi-band"><span class="header-section-number">15.8.5</span> Extracting to polygons: multi-band</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="aims" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="aims"><span class="header-section-number">15.1</span> Aims</h2>
+<p>Our aims in this chapter are to learn how to:</p>
+<ul>
+<li><p>Crop and mask a raster according to a vector layer</p></li>
+<li><p>Switch from vector to raster representation, and vice versa</p></li>
+<li><p>Calculate a raster of distances to nearest point</p></li>
+<li><p>Extract raster values from locations defined by a vector layer</p></li>
+</ul>
+<p>We will use the following R packages:</p>
+<ul>
+<li><p><code>sf</code></p></li>
+<li><p><code>stars</code></p></li>
+<li><p><code>units</code></p></li>
+</ul>
+</section>
+<section id="masking-and-cropping-rasters" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="masking-and-cropping-rasters"><span class="header-section-number">15.2</span> Masking and cropping rasters</h2>
+<section id="introduction" class="level3" data-number="15.2.1">
+<h3 data-number="15.2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">15.2.1</span> Introduction</h3>
+<p><strong>Masking</strong> a raster means turning pixels values outside of a an area of interest—defined using a polygonal layer—into <code>NA</code> (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:raster-masking">10.1</a>). <strong>Cropping</strong> a raster means deleting whole rows and/or columns, so that raster extent is reduced to a new (smaller) rectangular shape, also according to the extent of a vector layer. The <code>[</code> operator can be used for masking or masking and cropping (the default).</p>
+<p>Figure 10.1: Masking a raster (<a href="http://rpubs.com/etiennebr/visualraster" class="uri">http://rpubs.com/etiennebr/visualraster</a>)</p>
+</section>
+<section id="masking-and-cropping" class="level3" data-number="15.2.2">
+<h3 data-number="15.2.2" class="anchored" data-anchor-id="masking-and-cropping"><span class="header-section-number">15.2.2</span> Masking and cropping</h3>
+<p>For an example of masking and cropping, we will prepare a raster of average NDVI over the period 2000-2019, based on <code>MOD13A3_2000_2019.tif</code>. The following code section combines what we learned in Sections <a href="https://geobgu.xyz/r-2021/raster-processing.html#setting-dimension-properties">6.3.2</a>, <a href="https://geobgu.xyz/r-2021/raster-processing.html#pixel-means">6.6.1.3</a> and <a href="https://geobgu.xyz/r-2021/geometric-operations-with-rasters.html#raster-reprojection">9.3</a>:</p>
+<pre><code>library(stars) r = read_stars("MOD13A3_2000_2019.tif") names(r) = "NDVI" r = st_warp(r, crs = 32636) r_avg = st_apply(r, 1:2, mean, na.rm = TRUE) names(r_avg) = "NDVI" dates = read.csv("MOD13A3_2000_2019_dates2.csv") dates$date = as.Date(dates$date) r = st_set_dimensions(r, "band", values = dates$date, names = "time")</code></pre>
+<p>We will also read a Shapefile with a polygon of Israel borders, named <code>israel_borders.shp</code>:</p>
+<pre><code>borders = st_read("israel_borders.shp")</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:r-avg-and-borders">10.2</a> shows the average NDVI raster and the borders polygon:</p>
+<pre><code>plot(r_avg, breaks = "equal", col = hcl.colors(11, "Spectral"), reset = FALSE) plot(st_geometry(borders), add = TRUE)</code></pre>
+<p>Figure 10.2: Raster and crop/mask geometry</p>
+<p>Masking and cropping a raster, based on an <code>sf</code> layer, can be done with the <code>[</code> operator, as follows:</p>
+<pre><code>r_avg = r_avg[borders]</code></pre>
+<p>As we can see in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:r-avg-masked">10.3</a>, all pixels that were outside of the polygon are now <code>NA</code> (this is called masking). It's difficult to see, but the raster extent is also slightly reduced according to the extent of <code>borders</code> (this is called cropping):</p>
+<pre><code>plot(r_avg, breaks = "equal", col = hcl.colors(11, "Spectral"), reset = FALSE) plot(st_geometry(borders), add = TRUE)</code></pre>
+<p>Figure 10.3: Raster after cropping and masking</p>
+<p>Zooming in on a small portion of the masked raster demonstrates the masking algorithm: pixels whose <em>centroid</em> does not intersect with the polygon are converted to <code>NA</code> (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:r-avg-masked-zoom">10.4</a>).</p>
+<p>Figure 10.4: A small portion of the raster <code>r_avg</code>, brefore (left) after (right) cropping and masking</p>
+</section>
+<section id="masking-only" class="level3" data-number="15.2.3">
+<h3 data-number="15.2.3" class="anchored" data-anchor-id="masking-only"><span class="header-section-number">15.2.3</span> Masking-only</h3>
+<p>In case we need the output to keep the same extent as the input, we can mask a raster without cropping. Masking-only is done with the same operator (<code>[</code>), using the (non-default) argument <code>crop=FALSE</code>. To demonstrate the difference between masking+cropping (which we just did) and masking only, consider the following example where <code>r_avg</code> is masked <em>and</em> cropped (<code>r_avg1</code>), or just masked (<code>r_avg2</code>), according to the <code>"Negev"</code> administrative area. First we prepare the polygon used for masking and cropping, obtained from a Shapefile named <code>nafot.shp</code>:</p>
+<pre><code>nafot = st_read("nafot.shp") nafot = st_transform(nafot, st_crs(r)) pol = nafot[nafot$name_eng == "Be'er Sheva", ]</code></pre>
+<p>Then we produce the masked+cropped (<code>r_avg1</code>) and masked (<code>r_avg2</code>) rasters:</p>
+<pre><code>r_avg1 = r_avg[pol] r_avg2 = r_avg[pol, crop = FALSE]</code></pre>
+<p>As we can see in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:mask-vs-crop">10.5</a>, masking transforms pixel values to <code>NA</code> (left panel) while cropping reduces raster extent by deleting whole rows and columns (right panel).</p>
+<pre><code>plot(r_avg1, key.pos = NULL, reset = FALSE, breaks = "equal", col = hcl.colors(11, "Spectral"), axes = TRUE, main = "mask+crop (crop=TRUE, default)") plot(st_geometry(pol), add = TRUE) plot(st_as_sfc(st_bbox(r_avg1)), border = "grey", add = TRUE) plot(r_avg2, key.pos = NULL, reset = FALSE, breaks = "equal", col = hcl.colors(11, "Spectral"), axes = TRUE, main = "mask (crop=FALSE)") plot(st_geometry(pol), add = TRUE) plot(st_as_sfc(st_bbox(r_avg2)), border = "grey", add = TRUE)</code></pre>
+<p>Figure 10.5: Cropping and masking (left) vs.&nbsp;masking (right), raster extent is shown in grey</p>
+<p>Note that for plotting the raster extents (grey boxes in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:mask-vs-crop">10.5</a>), the above code section uses a combination of <code>st_bbox</code> and <code>st_as_sfc</code>. The combination returns the bounding box of a <code>stars</code> (or <code>sf</code>) layer as an <code>sfc</code> (geometry) object. For example, the following expression returns a geometry column with a single polygon, which is the bounding box of <code>r_avg1</code>:</p>
+<pre><code>st_as_sfc(st_bbox(r_avg1)) ## Geometry set for 1 feature  ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: 620563.9 ymin: 3262755 xmax: 735425.7 ymax: 3487847 ## Projected CRS: WGS 84 / UTM zone 36N ## POLYGON ((620563.9 3262755, 735425.7 3262755, 7...</code></pre>
+</section>
+</section>
+<section id="vector-layer-raster" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="vector-layer-raster"><span class="header-section-number">15.3</span> Vector layer → raster</h2>
+<section id="the-st_rasterize-function" class="level3" data-number="15.3.1">
+<h3 data-number="15.3.1" class="anchored" data-anchor-id="the-st_rasterize-function"><span class="header-section-number">15.3.1</span> 10.2.1 The <code>st_rasterize</code> function</h3>
+<p>The <code>st_rasterize</code> function converts a vector layer to a raster, given two arguments:</p>
+<ul>
+<li><p><code>sf</code>—The vector layer to convert</p></li>
+<li><p><code>template</code>—A raster "template" (if missing, it can be generated automatically)</p></li>
+</ul>
+<p>The resulting raster retains the original values, from the <code>template</code>, in pixels that do not overlap with the vector layer (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:rasterizing-raster">10.6</a>). For pixels that <em>do</em> overlap with the vector layer, the value of the (first) vector layer attribute is "burned" into the pixels. The default meaning of the term "overlap" in the context of point, line, or polygon geometries, is:</p>
+<ul>
+<li><p>Pixels that a point <em>intersects</em> with</p></li>
+<li><p>Pixels chosen using <a href="https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm">Bresenham's line algorithm</a></p></li>
+<li><p>Pixels whose <em>centroid</em> intersects with the polygon</p></li>
+</ul>
+<p>The additional parameter <code>options="ALL_TOUCHED=TRUE"</code> can be passed to <code>st_rasterize</code> so that all pixels intersecting with the geometry are considered "overlapping" (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:rasterizing-raster">10.6</a>).</p>
+<p>Figure 10.6: Rasterizing points, lines and polygons to raster with <code>st_rasterize</code>, using the default algorithms (top) and <code>options="ALL_TOUCHED=TRUE"</code> (bottom).</p>
+<p>By default, the values are burned sequentially, according to the order of features. Therefore, when there are more than one vector features coinciding with the same pixel, the attribute value of the last feature "wins." Alternatively, we can add up all values of coinciding geometries, using the argument <code>options="MERGE_ALG=ADD"</code> (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#rasterizing-point-counts">10.2.3</a>).</p>
+</section>
+<section id="rasterizing-polygon-attributes" class="level3" data-number="15.3.2">
+<h3 data-number="15.3.2" class="anchored" data-anchor-id="rasterizing-polygon-attributes"><span class="header-section-number">15.3.2</span> Rasterizing polygon attributes</h3>
+<p>For an example of rasterizing a polygon layer, let's convert the <code>nafot</code> vector layer to a raster, using <code>r_avg</code> as the template. The attribute which will be "burned" into the raster is the <code>Id</code> of the administrative area:</p>
+<pre><code>s = st_rasterize(nafot[, "Id"], r_avg)</code></pre>
+<p>The resulting raster <code>s</code> has the same dimensions of <code>r_avg</code> but different values, as shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:rasterized-nafot">10.7</a>. We can see that those areas not covered by the <code>nafot</code> layer retained their original value (average NDVI). All pixels that <em>were</em> covered by <code>nafot</code> got the <code>Id</code> attribute value.</p>
+<pre><code>plot(nafot[, "Id"], pal = function(n) rep(NA, n), main = 'nafot[, "Id"]', border = NA, reset = FALSE, key.pos = NULL, axes = TRUE) plot(nafot[, "Id"], pal = function(n) hcl.colors(n, "Spectral"), key.pos = NULL, add = TRUE) plot(nafot[, "Id"], pal = function(n) rep(NA, n), main = NA, border = NA, reset = FALSE, key.pos = NULL, axes = TRUE) plot(r_avg, breaks = "equal", col = hcl.colors(15, "Spectral"), main = "r_avg", add = TRUE) plot(nafot[, "Id"], pal = function(n) rep(NA, n), main = NA, border = NA, reset = FALSE, key.pos = NULL, axes = TRUE) plot(s, breaks = "equal", col = hcl.colors(15, "Spectral"), main = 'st_rasterize(nafot[, "Id"], r_avg)', add = TRUE)</code></pre>
+<p>Figure 10.7: Rasterizing the <code>Id</code> of the <code>nafot</code> administrative areas layer into the average NDVI raster</p>
+<p>Instead of retaining the original values, typically we want to start with an empty template, so that the only values in the resulting raster are those coming from the vector layer. For example, we can use a copy of the <code>r_avg</code> raster, where all of the pixel values are replaced with <code>NA</code>, as the template:</p>
+<pre><code>template = r_avg template[[1]][] = NA s = st_rasterize(nafot[, "Id"], template)</code></pre>
+<p>The result is shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:rasterized-nafot-empty-template">10.8</a>:</p>
+<pre><code>plot(nafot[, "Id"], pal = function(n) hcl.colors(n, "Spectral"), main = 'nafot[, "Id"]', key.pos = NULL, axes = TRUE) plot(nafot[, "Id"], pal = function(n) rep(NA, n), main = "template", border = NA, reset = FALSE, key.pos = NULL, axes = TRUE) plot(nafot[, "Id"], pal = function(n) rep(NA, n), main = NA, border = NA, reset = FALSE, key.pos = NULL, axes = TRUE) plot(s, breaks = "equal", col = hcl.colors(15, "Spectral"), main = 'st_rasterize(nafot[, "Id"], template)', add = TRUE)</code></pre>
+<p>Figure 10.8: Rasterizing into an empty template</p>
+</section>
+<section id="rasterizing-point-counts" class="level3" data-number="15.3.3">
+<h3 data-number="15.3.3" class="anchored" data-anchor-id="rasterizing-point-counts"><span class="header-section-number">15.3.3</span> Rasterizing point counts</h3>
+<p>Sometimes we want to <em>add up</em> attribute values from overlapping features coinciding with the same pixel, rather that take the last value. This is useful, for instance, when calculating a <strong>point density</strong> raster. For example, let's read the <code>plants.shp</code> and <code>reserve.shp</code> Shapefiles. These Shapefiles contain a point layer of rare plants observations and a polygon with the borders of Negev Mountains Nature Reserve, the largest nature reserve in Israel, respectively:</p>
+<pre><code>plants = st_read("plants.shp") reserve = st_read("reserve.shp")</code></pre>
+<p>We will also reproject both layers to UTM, so that all pixels correspond to equal area size, which is more appropriate for density calculations:</p>
+<pre><code>plants = st_transform(plants, 32636) reserve = st_transform(reserve, 32636)</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:reserve-and-plants">10.9</a> shows both layers—the polygonal layer <code>reserve</code> and the point layer <code>plants</code>:</p>
+<pre><code>plot(st_geometry(reserve)) plot(st_geometry(plants), add = TRUE, col = "red")</code></pre>
+<p>Figure 10.9: Nature reserve and rare plants observations</p>
+<p>How can we calculate a raster expressing the density of <code>plants</code> points across the nature reserve? First, we set up a empty template raster, where all pixels within the area of interest—the nature reserve—are given an initial value of zero. Note that we are hereby using <code>r_avg</code> as template, but, if necessary, we can prepare a new template with resolution of our choice, using <code>st_as_stars</code> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-rasters.html#resampling">9.2.1</a>).</p>
+<pre><code>template = r_avg template[[1]][] = 0 template = template[reserve]</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:point-density-template">10.10</a> shows the template:</p>
+<pre><code>plot(template, text_values = TRUE, col = "lightgrey", reset = FALSE) ## Warning in plot.stars(template, text_values = TRUE, col = "lightgrey", reset ## = FALSE): breaks="quantile" leads to a single class; maybe try breaks="equal" ## instead? plot(st_geometry(reserve), add = TRUE)</code></pre>
+<p>Figure 10.10: Template for calculating point density</p>
+<p>Then, we create a new attrubute named <code>count</code>, with a value of <code>1</code> for each plant observation:</p>
+<pre><code>plants$count = 1</code></pre>
+<p>Finally, we rasterize the <code>"count"</code> attribute into the <code>template</code> raster, with an additional option <code>options="MERGE_ALG=ADD"</code> (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#the-st-rasterize-function">10.2.1</a>). The <code>"MERGE_ALG=ADD"</code> option acts as a <em>flag</em> instructing <code>st_rasterize</code> to add up any overlapping attributes "burned" into the same pixel:</p>
+<pre><code>s = st_rasterize(plants[, "count"], template, options = "MERGE_ALG=ADD")</code></pre>
+<p>The resulting raster values reflect the sum of the <code>count</code> attribute from all overlapping points per pixel, i.e., the number of rare plant observations per pixel (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:plants-density">10.11</a>):</p>
+<pre><code>plot(s, text_values = TRUE, breaks = "equal", col = grey.colors(10, start = 0.6, rev = TRUE), reset = FALSE) plot(st_geometry(reserve), add = TRUE)</code></pre>
+<p>Figure 10.11: Density (observations per pixel) of rare plants in the nature reserve</p>
+<p>The raster coloring is almost uniform, because the distribution is highly skewed. Namely, there are a lot of pixels with zero count, and few pixels with high count (try running <code>hist(s[[1]])</code> to see that). We can use a logarithmic scale to visualize the density pattern more clearly (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:plants-density-log">10.12</a>). Now we can see which parts of the reserve were characterized by higher occurence of rare plants.</p>
+<pre><code>b = c(0, 10^(seq(0, 2.5, 0.5))) plot(s, breaks = b, reset = FALSE, col = hcl.colors(length(b)-1, "Reds", rev = TRUE)) plot(st_geometry(reserve), add = TRUE)</code></pre>
+<p>Figure 10.12: Density (observations per pixel) of rare plants in the nature reserve, with a logarithmic scale</p>
+</section>
+<section id="standardizing-density-units" class="level3" data-number="15.3.4">
+<h3 data-number="15.3.4" class="anchored" data-anchor-id="standardizing-density-units"><span class="header-section-number">15.3.4</span> Standardizing density units</h3>
+<p>In the observation density raster <code>s</code> (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#rasterizing-point-counts">10.2.3</a>), the units of measurement are <em>plants per pixel</em>. Since a pixel happens to have an area of 0.86 km2��2 (see below), raster values are, in fact, counts per 0.86 km2��2.</p>
+<p>How do we know that the area of a pixel is 0.86 km2��2? We can apply the <code>st_area</code> function to calculate pixel area sizes. Recall that, when applied on a vector layer, <code>st_area</code> returns a vectot of <code>units</code> values, with the corresponding areas of all geometries (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#area">8.3.2.2</a>). When <code>st_area</code> is applied on a raster, it returns a raster of area values per pixel:</p>
+<pre><code>a = st_area(s) a ## stars object with 2 dimensions and 1 attribute ## attribute(s): ##    area [m^2]     ##  Min.   :858040   ##  1st Qu.:858040   ##  Median :858040   ##  Mean   :858040   ##  3rd Qu.:858040   ##  Max.   :858040   ## dimension(s): ##   from to  offset    delta                refsys point values x/y ## x    1 44  645574  926.305 WGS 84 / UTM zone 36N FALSE   NULL [x] ## y    1 54 3395217 -926.305 WGS 84 / UTM zone 36N FALSE   NULL [y]</code></pre>
+<p>As usual, the area values are given in CRS units (in this case, m2�2). We can transform the <code>matrix</code> with the entire raster values (<code>a[[1]]</code>) from m2�2 to km2��2 units, using <code>set_units</code> (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#area">8.3.2.2</a>):</p>
+<pre><code>library(units) a[[1]] = set_units(a[[1]], "km^2") a ## stars object with 2 dimensions and 1 attribute ## attribute(s): ##   area [km^2]    ##  Min.   :0.858   ##  1st Qu.:0.858   ##  Median :0.858   ##  Mean   :0.858   ##  3rd Qu.:0.858   ##  Max.   :0.858   ## dimension(s): ##   from to  offset    delta                refsys point values x/y ## x    1 44  645574  926.305 WGS 84 / UTM zone 36N FALSE   NULL [x] ## y    1 54 3395217 -926.305 WGS 84 / UTM zone 36N FALSE   NULL [y]</code></pre>
+<p>Finally, we can examine one of the raster values. It doesn't matter which one, since all pixels have exactly the same area. For example, the following expression gives the top-left corner value from the <code>stars</code> values <code>matrix</code>:</p>
+<pre><code>a[[1]][1,1] ## 0.8580405 [km^2]</code></pre>
+<p>Let's return to the density raster <code>s</code>. It is more convenient to work with counts per standard area unit, such as plants per 1 km2��2. To do that, we can divide the plants count raster <code>s</code>, by pixel area raster <code>a</code>:</p>
+<pre><code>s = s / a names(s) = "density"</code></pre>
+<p>The result is a raster with counts per unit area, in this case plant observations per km2:</p>
+<pre><code>s ## stars object with 2 dimensions and 1 attribute ## attribute(s): ##  density [1/km^2]   ##  Min.   :  0.0000   ##  1st Qu.:  0.0000   ##  Median :  0.0000   ##  Mean   :  0.8035   ##  3rd Qu.:  0.0000   ##  Max.   :269.2181   ##  NA's   :1191       ## dimension(s): ##   from to  offset    delta                refsys point values x/y ## x    1 44  645574  926.305 WGS 84 / UTM zone 36N FALSE   NULL [x] ## y    1 54 3395217 -926.305 WGS 84 / UTM zone 36N FALSE   NULL [y]</code></pre>
+<p>The result is shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:plants-density-log-km2">10.13</a>:</p>
+<pre><code>b = c(0, 10^(seq(0, 2.5, 0.5))) plot(s, breaks = b, reset = FALSE, col = hcl.colors(length(b)-1, "Reds", rev = TRUE)) plot(st_geometry(reserve), add = TRUE)</code></pre>
+<p>Figure 10.13: Density (observations per km2��2) of rare plants in the nature reserve, with a logarithmic scale</p>
+<p>We now move on to the opposite operation, converting a raster <em>to a vector layer</em>. As we will see, there are three variants of this conversion:</p>
+<ul>
+<li><p>Raster to polygons (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-polygons">10.3</a>)</p></li>
+<li><p>Raster to points (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-points">10.4</a>)</p></li>
+<li><p>Raster to contour (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-contour">10.6</a>)</p></li>
+</ul>
+</section>
+</section>
+<section id="raster-polygons" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="raster-polygons"><span class="header-section-number">15.4</span> Raster → Polygons</h2>
+<section id="raster-to-polygons-conversion" class="level3" data-number="15.4.1">
+<h3 data-number="15.4.1" class="anchored" data-anchor-id="raster-to-polygons-conversion"><span class="header-section-number">15.4.1</span> Raster to polygons conversion</h3>
+<p>The <code>st_as_sf</code> function makes the <em>raster to polygons</em> conversion, when using the (default) <code>as_points=FALSE</code> argument. The <code>st_as_sf</code> function ignores pixels that have a <code>NA</code> values in all layers<sup><a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fn35">35</a></sup>. A useful option <code>merge=TRUE</code> <em>dissolves</em> all adjacent polygons that have the same raster value (in the first layer) into a single feature. The dissolve algorithm can be specified with the <code>connect8</code> parameter: 4d, which is the default (<code>connect8=FALSE</code>) or 8d (<code>connect8=TRUE</code>). The attribute table of the polygon layer contains the raster values—with a separate attribute for each layer.</p>
+<p>For example, let's take a small subset of the raster <code>r</code>:</p>
+<pre><code>u = r[, 200:202, 100:102, 1:2]</code></pre>
+<p>We will replace some of the pixel values with <code>NA</code>:</p>
+<pre><code>u[[1]][2,3,] = NA u[[1]][3,2,1] = NA</code></pre>
+<p>and round the values to one digit:</p>
+<pre><code>u = round(u, 1)</code></pre>
+<p>The resulting small raster <code>u</code> is visualized in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:small-raster">10.14</a>. Note that the raster has one pixel with <code>NA</code> in both layers, and another pixel with <code>NA</code> in the first layer only.</p>
+<pre><code>plot(round(u, 2), text_values = TRUE, col = hcl.colors(4, "Spectral"))</code></pre>
+<p>Figure 10.14: Sample raster</p>
+<p>Now, let's try using <code>st_as_sf</code> to transform the small raster <code>u</code> to a polygon layer <code>p</code>:</p>
+<pre><code>p = st_as_sf(u)</code></pre>
+<p>The resulting polygonal layer <code>p</code> has eight polygons, even though the raster <code>u</code> had nine pixels. This is because one of the pixels had <code>NA</code> in all layers, and therefore it was not converted to a polygon:</p>
+<pre><code>p ## Simple feature collection with 8 features and 2 fields ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: 727089 ymin: 3610119 xmax: 729867.9 ymax: 3612898 ## Projected CRS: WGS 84 / UTM zone 36N ##   2000-02-01 2000-03-01                       geometry ## 1        0.7        0.7 POLYGON ((727089 3612898, 7... ## 2        0.7        0.8 POLYGON ((728015.3 3612898,... ## 3        0.6        0.7 POLYGON ((728941.6 3612898,... ## 4        0.8        0.9 POLYGON ((727089 3611972, 7... ## 5        0.7        0.8 POLYGON ((728015.3 3611972,... ## 6         NA        0.7 POLYGON ((728941.6 3611972,... ## 7        0.8        0.8 POLYGON ((727089 3611046, 7... ## 8        0.7        0.8 POLYGON ((728941.6 3611046,...</code></pre>
+<p>The resulting layer <code>p</code>, which has eight features and two attributes, is shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:raster-to-polygons">10.15</a>:</p>
+<pre><code>plot(p)</code></pre>
+<p>Figure 10.15: Polygon layer created from a raster</p>
+<p>Let's try the <code>merge=TRUE</code> option. Since merging is only affected by the first layer, it makes sense to transform each of the layers separately:</p>
+<pre><code>p1 = st_as_sf(u[,,,1], merge = TRUE) p2 = st_as_sf(u[,,,2], merge = TRUE)</code></pre>
+<p>As a result, we have two separate polygonal layers <code>p1</code> and <code>p2</code>:</p>
+<pre><code>p1 ## Simple feature collection with 4 features and 1 field ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: 727089 ymin: 3610119 xmax: 729867.9 ymax: 3612898 ## Projected CRS: WGS 84 / UTM zone 36N ##   NDVI                       geometry ## 1  0.7 POLYGON ((727089 3612898, 7... ## 2  0.6 POLYGON ((728941.6 3612898,... ## 3  0.8 POLYGON ((727089 3611972, 7... ## 4  0.7 POLYGON ((728941.6 3611046,...</code></pre>
+<pre><code>p2 ## Simple feature collection with 6 features and 1 field ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: 727089 ymin: 3610119 xmax: 729867.9 ymax: 3612898 ## Projected CRS: WGS 84 / UTM zone 36N ##   NDVI                       geometry ## 1  0.7 POLYGON ((727089 3612898, 7... ## 2  0.8 POLYGON ((728015.3 3612898,... ## 3  0.7 POLYGON ((728941.6 3612898,... ## 4  0.9 POLYGON ((727089 3611972, 7... ## 5  0.8 POLYGON ((727089 3611046, 7... ## 6  0.8 POLYGON ((728941.6 3611046,...</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:raster-to-pol-merge">10.16</a> displays both <code>p1</code> and <code>p2</code>:</p>
+<pre><code>plot(p1, main = paste0(colnames(p)[1], " (", nrow(p1), ")")) plot(p2, main = paste0(colnames(p)[2], " (", nrow(p2), ")"))</code></pre>
+<p>Figure 10.16: Polygon layer created from a raster</p>
+<blockquote class="blockquote">
+<p>Do you think there will there be a difference if we use <code>connect8=TRUE</code>?</p>
+</blockquote>
+</section>
+<section id="segmentation" class="level3" data-number="15.4.2">
+<h3 data-number="15.4.2" class="anchored" data-anchor-id="segmentation"><span class="header-section-number">15.4.2</span> Segmentation</h3>
+<p>One example of a use case of raster to polygon conversion is the delineation of distinct inter-connected groups of pixels, sharing the same (or a similar) value. This operationis also known as <strong>segmentation</strong>. In it's simplest form—detecting segments with exactly the same value—segmentation can be done using <code>st_as_sf</code> with <code>merge=TRUE</code>.</p>
+<p>For example, we can derive segments of <code>NDVI&gt;0.2</code> in the reclassified NDVI raster <code>l_rec_focal</code> from Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-rasters.html#maximum-filter">9.4.3</a>. First, let's recreate the <code>l_rec_focal</code> raster:</p>
+<pre><code>l = read_stars("landsat_04_10_2000.tif") red = l[,,,3,drop=TRUE] nir = l[,,,4,drop=TRUE] ndvi = (nir - red) / (nir + red) names(ndvi) = "NDVI" l_rec = ndvi l_rec[l_rec &lt; 0.2] = 0 l_rec[l_rec &gt;= 0.2] = 1 get_neighbors = function(m, pos) {   i = (pos[1]-1):(pos[1]+1)   j = (pos[2]-1):(pos[2]+1)   as.vector(t(m[i, j])) } focal2 = function(r, fun, ...) {   template = r   input = t(template[[1]])   output = matrix(NA, nrow = nrow(input), ncol = ncol(input))   for(i in 2:(nrow(input) - 1)) {     for(j in 2:(ncol(input) - 1)) {       v = get_neighbors(input, c(i, j))       output[i, j] = fun(v, ...)     }   }   template[[1]] = t(output)   return(template) } l_rec_focal = focal2(l_rec, max)</code></pre>
+<p>Segments in the <code>l_rec_focal</code> raster represent distinct continuous areas with NDVI&gt;0.2����&gt;0.2. To detect them, we can convert the raster to polygons using <code>st_as_sf</code> with the <code>merge=TRUE</code>:</p>
+<pre><code>pol = st_as_sf(l_rec_focal, merge = TRUE)</code></pre>
+<p>Then, we filter only those segments where raster value was <code>1</code>:</p>
+<pre><code>pol = pol[pol$NDVI == 1, ]</code></pre>
+<p>The result is a polygon layer where each feature represents a single continuous area where NDVI&gt;0.2����&gt;0.2:</p>
+<pre><code>pol ## Simple feature collection with 536 features and 1 field ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: 663975 ymin: 3459405 xmax: 687645 ymax: 3488145 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##    NDVI                       geometry ## 1     1 POLYGON ((675615 3488145, 6... ## 2     1 POLYGON ((676455 3488145, 6... ## 5     1 POLYGON ((681945 3488145, 6... ## 8     1 POLYGON ((684765 3488145, 6... ## 12    1 POLYGON ((687195 3488145, 6... ## 13    1 POLYGON ((686985 3488085, 6... ## 17    1 POLYGON ((686505 3488145, 6... ## 18    1 POLYGON ((665865 3488145, 6... ## 23    1 POLYGON ((685545 3488145, 6... ## 26    1 POLYGON ((686835 3487905, 6...</code></pre>
+<p>Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:clump-result">10.17</a> shows the segments on top of the NDVI raster:</p>
+<pre><code>plot(ndvi, breaks = "equal", col = hcl.colors(11, "Spectral"), reset = FALSE) plot(st_geometry(pol), add = TRUE)</code></pre>
+<p>Figure 10.17: Segments with NDVI&gt;0.2</p>
+<blockquote class="blockquote">
+<p>What is the exact number of segments in <code>pol</code>? If we ran the <code>st_as_sf</code> function on <code>l_rec</code> instead of <code>l_rec_focal</code>, do you think the number of segments would be higher or lower?</p>
+</blockquote>
+</section>
+</section>
+<section id="raster-points" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="raster-points"><span class="header-section-number">15.5</span> Raster → Points</h2>
+<p>The <strong>Raster→Points</strong> transformation is done using function <code>st_as_sf</code> with the <code>as_points=TRUE</code> option. Pixel centers—except for pixels with <code>NA</code> in all layers—become points. Just like in a conversion to polygons (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-polygons">10.3</a>), the attribute table of the resulting point layer contains the raster values.</p>
+<p>For example, here is how we can transform the small raster <code>u</code> to a point layer:</p>
+<pre><code>p = st_as_sf(u, as_points = TRUE)</code></pre>
+<p>Once again (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-polygons">10.3</a>), the resulting point layer <code>p</code> has eight points, even though the raster has nine pixels, because one of the pixels had <code>NA</code> in all layers and therefore was not converted to a point<sup><a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fn36">36</a></sup>:</p>
+<pre><code>p ## Simple feature collection with 8 features and 2 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 727552.1 ymin: 3610583 xmax: 729404.8 ymax: 3612435 ## Projected CRS: WGS 84 / UTM zone 36N ##   2000-02-01 2000-03-01                 geometry ## 1        0.7        0.7 POINT (727552.1 3612435) ## 2        0.7        0.8 POINT (728478.4 3612435) ## 3        0.6        0.7 POINT (729404.8 3612435) ## 4        0.8        0.9 POINT (727552.1 3611509) ## 5        0.7        0.8 POINT (728478.4 3611509) ## 6         NA        0.7 POINT (729404.8 3611509) ## 7        0.8        0.8 POINT (727552.1 3610583) ## 8        0.7        0.8 POINT (729404.8 3610583)</code></pre>
+<p>The point layer <code>p</code> is shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:raster-to-points">10.18</a>:</p>
+<pre><code>plot(p, pch = 16, cex = 3)</code></pre>
+<p>Figure 10.18: Point layer created from a raster</p>
+</section>
+<section id="distance-to-nearest-point" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="distance-to-nearest-point"><span class="header-section-number">15.6</span> Distance to nearest point</h2>
+<p>Another example of a spatial operator involving a raster and a vector layer is the calculation of a raster of distances <strong>to nearest</strong> point. For example, we may be interested in mapping the distances to the nearest meteorological stations in Israel, to evaluate where coverage is too sparse and reliable meteorological data are missing.</p>
+<p>We are already familiar with the <code>st_distance</code> function for calculating distances (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-vector-layers.html#distance">8.3.2.3</a>). However, <code>st_distance</code> expects two vector layers as input, not a vector layer and a raster. Therefore, to calculate a raster of distances from nearest point, we first need to convert the "template" raster to a point later (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-points">10.4</a>). In this example, our template for the distances raster, hereby named <code>grid</code>, is the 926×926926×926 m2�2 raster <code>r_avg</code> (though we could use any other raster template). The <code>NDVI</code> attribute is discarded, since it is irrelevant for the distance calculation:</p>
+<pre><code>grid = st_as_sf(r_avg, as_points = TRUE) grid$NDVI = NULL grid ## Simple feature collection with 32858 features and 0 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 616395.6 ymin: 3262292 xmax: 770162.2 ymax: 3692097 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##                    geometry ## 1  POINT (757193.9 3691171) ## 2  POINT (758120.2 3691171) ## 3  POINT (759046.5 3691171) ## 4  POINT (753488.7 3690245) ## 5    POINT (754415 3690245) ## 6  POINT (755341.3 3690245) ## 7  POINT (756267.6 3690245) ## 8  POINT (757193.9 3690245) ## 9  POINT (758120.2 3690245) ## 10 POINT (759046.5 3690245)</code></pre>
+<p>Let's also import the point layer of meteorological stations (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#creating-point-layer-from-table">7.4</a>):</p>
+<pre><code>rainfall = read.csv("rainfall.csv") rainfall = st_as_sf(rainfall, coords = c("x_utm", "y_utm"), crs = 32636)</code></pre>
+<p>Now we can use <code>st_distance</code> to calculate pairwise distances between every grid point (<code>grid</code>) and meteorological station (<code>rainfall</code>):</p>
+<pre><code>distance = st_distance(grid, rainfall)</code></pre>
+<p>The result is a distance <code>matrix</code> named <code>distance</code>. Its <em>rows</em> correspond to <code>grid</code> points and its <em>columns</em> correspond to <code>rainfall</code> points. This is a very large <code>matrix</code>, due to the large number of <code>grid</code> points:</p>
+<pre><code>dim(distance) ## [1] 32858   169</code></pre>
+<p>In this example, we are interested in the <em>minimal</em> distance, per <code>grid</code> point, among the distances to the 169 meteorological stations. Therefore we apply the <code>min</code> function on the distance matrix <em>rows</em> (Section <a href="https://geobgu.xyz/r-2021/tables-conditionals-and-loops.html#the-apply-function">4.5</a>), which refer to <code>grid</code> points. The result is a numeric vector of minimal distances, which we assign as an attribute in <code>grid</code>:</p>
+<pre><code>grid$distance = apply(distance, 1, min)</code></pre>
+<p>It is also convenient to convert the distances from from m� to km��. Since <code>apply</code> returns <code>numeric</code>, thus "losing" the units of measurement, we first need to convert the distances to <code>units</code> and only then make the conversion:</p>
+<pre><code>grid$distance = set_units(grid$distance, "m") grid$distance = set_units(grid$distance, "km")</code></pre>
+<p>The <code>grid</code> point layer now has a <code>distance</code> attribute, with the distance to nearest meteorological station, in km��:</p>
+<pre><code>grid ## Simple feature collection with 32858 features and 1 field ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 616395.6 ymin: 3262292 xmax: 770162.2 ymax: 3692097 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##                    geometry      distance ## 1  POINT (757193.9 3691171) 15.72760 [km] ## 2  POINT (758120.2 3691171) 16.40858 [km] ## 3  POINT (759046.5 3691171) 17.11260 [km] ## 4  POINT (753488.7 3690245) 12.55666 [km] ## 5    POINT (754415 3690245) 13.14112 [km] ## 6  POINT (755341.3 3690245) 13.76317 [km] ## 7  POINT (756267.6 3690245) 14.41792 [km] ## 8  POINT (757193.9 3690245) 15.10113 [km] ## 9  POINT (758120.2 3690245) 15.80911 [km] ## 10 POINT (759046.5 3690245) 16.53868 [km]</code></pre>
+<p>The result is shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:grid-dist-points">10.19</a>:</p>
+<pre><code>plot(grid)</code></pre>
+<p>Figure 10.19: Distance to nearest meteorological station (point grid)</p>
+<p>To have the results back as a raster, we can rasterize the points (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#vector-layer-to-raster">10.2</a>). We use the same raster which we started with as template—this guarantees that every point corresponds exactly to one pixel:</p>
+<pre><code>distance = st_rasterize(grid[, "distance"], r_avg)</code></pre>
+<p>The final raster with distances to the nearest stations is shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:grid-dist-raster">10.20</a>. The locations of the meteorological stations and contour lines are shown on top of the raster, to emphasize the distance gradient:</p>
+<pre><code>plot(distance, breaks = "equal", col = terrain.colors(10), reset = FALSE) plot(st_geometry(rainfall), add = TRUE, pch = 3, cex = 0.4) contour(distance, add = TRUE)</code></pre>
+<p>Figure 10.20: Distance to nearest meteorological station (raster)</p>
+</section>
+<section id="raster-lines-contours" class="level2" data-number="15.7">
+<h2 data-number="15.7" class="anchored" data-anchor-id="raster-lines-contours"><span class="header-section-number">15.7</span> Raster → Lines (contours)</h2>
+<p>We already saw how a raster can be converted to polygons (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-polygons">10.3</a>) or to points (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#raster-to-points">10.4</a>), which simply results in a layer of cell outlines or centroids, respectively. Another common transformation is to calculate <strong>contour</strong> lines of equal raster values.</p>
+<p>To illustrate contour lines calculation, we will reconstruct the Haifa DEM at 90 m� resolution (Section <a href="https://geobgu.xyz/r-2021/geometric-operations-with-rasters.html#raster-reprojection">9.3</a>):</p>
+<pre><code>dem1 = read_stars("_book/data/srtm_43_06.tif") dem2 = read_stars("_book/data/srtm_44_06.tif") dem = st_mosaic(dem1, dem2) names(dem) = "elevation" dem = dem[, 5687:6287, 2348:2948] dem = st_warp(src = dem, crs = 32636, cellsize = 90)</code></pre>
+<p>Raster contours can be calculated using the <code>st_contour</code> function. The function can accept a <code>breaks</code> argument, which determines the break points where contours are generated. Another parameter named <code>contour_lines</code> determines whether contours are returned as a line layer (<code>TRUE</code>) or polygon layer (<code>FALSE</code>, the default).</p>
+<p>To decide on <code>breaks</code> values we are interested in, it is useful to examine the range of values in the raster:</p>
+<pre><code>range(dem[[1]], na.rm = TRUE) ## [1] -14 541</code></pre>
+<p>According to the above result, we will use breaks from <code>-100</code> to <code>600</code> meters, in steps of <code>50</code> meters:</p>
+<pre><code>b = seq(-100, 600, 50) dem_contour = st_contour(dem, breaks = b, contour_lines = TRUE)</code></pre>
+<p>The result, <code>dem_contour</code>, is a <code>LINESTRING</code> layer with one feature per contour line:</p>
+<pre><code>dem_contour ## Simple feature collection with 612 features and 1 field ## Geometry type: LINESTRING ## Dimension:     XY ## Bounding box:  xmin: 678607.1 ymin: 3602252 xmax: 710107.1 ymax: 3658412 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##    elevation                       geometry ## 1        150 LINESTRING (704500.1 365832... ## 2        150 LINESTRING (704680.1 365832... ## 3        200 LINESTRING (707113.3 365841... ## 4        100 LINESTRING (701332.1 365823... ## 5        350 LINESTRING (708883.5 365841... ## 6        150 LINESTRING (706102.1 365802... ## 7        100 LINESTRING (702198.3 365823... ## 8         50 LINESTRING (700342.1 365746... ## 9        200 LINESTRING (704932.1 365719... ## 10       450 LINESTRING (709117.1 365728...</code></pre>
+<p>The contours are shown in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:contour-lines">10.21</a>:</p>
+<pre><code>plot(dem, breaks = b, col = terrain.colors(length(b)-1), key.pos = 4, reset = FALSE) plot(st_geometry(dem_contour), add = TRUE)</code></pre>
+<p>Figure 10.21: Contour lines</p>
+</section>
+<section id="extracting-raster-values" class="level2" data-number="15.8">
+<h2 data-number="15.8" class="anchored" data-anchor-id="extracting-raster-values"><span class="header-section-number">15.8</span> Extracting raster values</h2>
+<section id="introduction-1" class="level3" data-number="15.8.1">
+<h3 data-number="15.8.1" class="anchored" data-anchor-id="introduction-1"><span class="header-section-number">15.8.1</span> Introduction</h3>
+<p>It is often necessary to "extract" raster values according to overlapping vector features, such as points, lines or polygons (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:raster-extract">10.22</a>). For example, given an NDVI raster, we may be interested to calculate the NDVI value observed in particular <em>point</em> locations, or the average NDVI observed over an administrative area <em>polygon</em>.</p>
+<p>Figure 10.22: Extracting raster values (<a href="http://rpubs.com/etiennebr/visualraster" class="uri">http://rpubs.com/etiennebr/visualraster</a>)</p>
+<p>When extracting values to liner or polygons, it is common to summarize the values that the geometry intersects with, using a function such as <code>mean</code>. That way, the values can "fit" into a new attribute or attributes. Extracting to points is simpler, since each geometry corresponds to one pixel, so there is nothing to summarize.</p>
+<p>Extracting to points can be accompished with the <code>st_extract</code> function, while extracting to lines or to polygons can be accomplished with the <code>aggregate</code> function. In the next few sections, we will see examples of the most common extract scenarios:</p>
+<ul>
+<li><p>From <strong>single-</strong>band raster to <strong>points</strong> (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#extracting-to-points-single-band">10.7.2</a>)</p></li>
+<li><p>From <strong>multi-</strong>band raster to <strong>points</strong> (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#extracting-to-points-multi-band">10.7.3</a>)</p></li>
+<li><p>From <strong>single-</strong>band raster to <strong>polygons</strong> (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#extracting-to-polygons-single-band">10.7.4</a>)</p></li>
+<li><p>From <strong>multi-</strong>band raster to <strong>polygons</strong> (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#extracting-to-polygons-multi-band">10.7.5</a>)</p></li>
+</ul>
+</section>
+<section id="extracting-to-points-single-band" class="level3" data-number="15.8.2">
+<h3 data-number="15.8.2" class="anchored" data-anchor-id="extracting-to-points-single-band"><span class="header-section-number">15.8.2</span> Extracting to points: single-band</h3>
+<section id="ndvi-in-meteorological-stations" class="level4" data-number="15.8.2.1">
+<h4 data-number="15.8.2.1" class="anchored" data-anchor-id="ndvi-in-meteorological-stations"><span class="header-section-number">15.8.2.1</span> NDVI in meteorological stations</h4>
+<p>Raster values can be extracted <em>to points</em> using the <code>st_extract</code> function. The function accepts:</p>
+<ul>
+<li><p><code>x</code>—a <code>stars</code> raster</p></li>
+<li><p><code>pts</code>—a <code>sf</code> point layer</p></li>
+</ul>
+<p>and returns a new <code>sf</code> layer, with an additional attribute containing the values from <code>x</code> from the matching pixel for each point in <code>pts</code>.</p>
+<p>For example, we can determine the average NDVI (<code>r_avg</code>) in the pixel where each meteorological station (<code>rainfall</code>) falls in, as follows:</p>
+<pre><code>x = st_extract(r_avg, rainfall) x ## Simple feature collection with 169 features and 1 field ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 629301.4 ymin: 3270290 xmax: 761589.2 ymax: 3681163 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##         NDVI                 geometry ## 1  0.4357747 POINT (696533.1 3660837) ## 2  0.3544532 POINT (697119.1 3656748) ## 3  0.3196541 POINT (696509.3 3652434) ## 4  0.4238691 POINT (696541.7 3641332) ## 5  0.3745760 POINT (697875.3 3630156) ## 6         NA POINT (687006.2 3633330) ## 7  0.4580601 POINT (689553.7 3626282) ## 8  0.3732974 POINT (694694.5 3624388) ## 9  0.5153764 POINT (686489.5 3619716) ## 10 0.4521039 POINT (683148.4 3616846)</code></pre>
+<p>The extracted values can be attached to the <code>rainfall</code> layer, using assignment:</p>
+<pre><code>rainfall$NDVI = x$NDVI</code></pre>
+<p>As a result, the <code>rainfall</code> layer now has an additional attribuite named <code>NDVI</code>:</p>
+<pre><code>rainfall ## Simple feature collection with 169 features and 13 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 629301.4 ymin: 3270290 xmax: 761589.2 ymax: 3681163 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##       num altitude sep oct nov dec jan feb mar apr may              name ## 1  110050       30 1.2  33  90 117 135 102  61  20 6.7 Kfar Rosh Hanikra ## 2  110351       35 2.3  34  86 121 144 106  62  23 4.5              Saar ## 3  110502       20 2.7  29  89 131 158 109  62  24 3.8             Evron ## 4  111001       10 2.9  32  91 137 152 113  61  21 4.8       Kfar Masrik ## 5  111650       25 1.0  27  78 128 136 108  59  21 4.7     Kfar Hamakabi ## 6  120202        5 1.5  27  80 127 136  95  49  19 2.7        Haifa Port ## 7  120630      450 1.9  36  93 161 166 128  71  21 4.9  Haifa University ## 8  120750       30 1.6  31  91 163 170 146  76  22 4.9             Yagur ## 9  120870      210 1.1  32  93 147 147 109  61  16 4.3        Nir Etzyon ## 10 121051       20 1.8  32  85 147 142 102  56  13 4.5         En Carmel ##                    geometry      NDVI ## 1  POINT (696533.1 3660837) 0.4357747 ## 2  POINT (697119.1 3656748) 0.3544532 ## 3  POINT (696509.3 3652434) 0.3196541 ## 4  POINT (696541.7 3641332) 0.4238691 ## 5  POINT (697875.3 3630156) 0.3745760 ## 6  POINT (687006.2 3633330)        NA ## 7  POINT (689553.7 3626282) 0.4580601 ## 8  POINT (694694.5 3624388) 0.3732974 ## 9  POINT (686489.5 3619716) 0.5153764 ## 10 POINT (683148.4 3616846) 0.4521039</code></pre>
+<p>The attribute values are shown as text labels in Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:rainfall-ndvi">10.23</a>:</p>
+<pre><code>plot(r_avg, breaks = "equal", col = hcl.colors(11, "Spectral"), reset = FALSE) text(st_coordinates(rainfall), as.character(round(rainfall$NDVI, 2)), cex = 0.5)</code></pre>
+<p>Figure 10.23: Raster values extracted to points</p>
+<p>Now that we know the average NDVI for each meteorological station location, we can examine, for instance, the association between NDVI and rainfall in December (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:ndvi-rainfall-dec">10.24</a>):</p>
+<pre><code>plot(rainfall$dec, rainfall$NDVI, xlab = "Rainfall (mm)", ylab = "NDVI")</code></pre>
+<p>Figure 10.24: Average NDVI as function of average rainfall in December</p>
+<blockquote class="blockquote">
+<p>What is the <em>number</em> and <em>proportion</em> of <code>rainfall</code> points that have an <code>NA</code> value in the <code>NDVI</code> attribute? Why did those stations get <code>NA</code>?</p>
+</blockquote>
+</section>
+</section>
+<section id="extracting-to-points-multi-band" class="level3" data-number="15.8.3">
+<h3 data-number="15.8.3" class="anchored" data-anchor-id="extracting-to-points-multi-band"><span class="header-section-number">15.8.3</span> Extracting to points: multi-band</h3>
+<p>As another example, we can extract the NDVI values for different dates from the <em>multi-band</em> raster <code>r</code>. For simplicity, let's create a subset <code>rainfall1</code>, with just three meteorological stations from the <code>rainfall</code> layer:</p>
+<pre><code>sel = c("Horashim", "Beer Sheva", "Yotveta") rainfall1 = rainfall[rainfall$name %in% sel, ] rainfall1 ## Simple feature collection with 3 features and 13 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 671364.1 ymin: 3307819 xmax: 717491.2 ymax: 3648872 ## Projected CRS: WGS 84 / UTM zone 36N ##        num altitude sep oct nov dec jan feb mar apr  may       name ## 77  212168      825 3.4  37 122 202 238 190 114  38 12.2   Horashim ## 141 251690      280 0.5   9  18  38  48  40  29   9  3.6 Beer Sheva ## 168 345005       80 0.4   2   2   6   5   4   5   2  0.4    Yotveta ##                     geometry      NDVI ## 77  POINT (717491.2 3648872) 0.5041712 ## 141 POINT (671364.1 3458877) 0.1699691 ## 168 POINT (700626.3 3307819)        NA</code></pre>
+<p>Now, let's extract the NDVI values from a subset with the first five bands of <code>r</code>, into <code>rainfall1</code>:</p>
+<pre><code>rainfall1 = st_extract(r[,,,1:5], rainfall1)</code></pre>
+<p>This time, since extraction from a multi-band raster took place, the result is a <code>stars</code> object and not an <code>sf</code> object. Moreover, this is a special type of a <code>stars</code> object, with one dimension for the vector geometries (<code>geometry</code>) and another dimension for the raster layers (<code>time</code>):</p>
+<pre><code>rainfall1 ## stars object with 2 dimensions and 1 attribute ## attribute(s): ##      NDVI         ##  Min.   :0.1092   ##  1st Qu.:0.1300   ##  Median :0.1564   ##  Mean   :0.2614   ##  3rd Qu.:0.4442   ##  Max.   :0.5396   ##  NA's   :1        ## dimension(s): ##          from to offset delta                refsys point ## geometry    1  3     NA    NA WGS 84 / UTM zone 36N  TRUE ## time        1  5     NA    NA                  Date    NA ##                                                                          values ## geometry POINT (717491 3648872), POINT (671364 3458877), POINT (700626 3307819) ## time                                                  2000-02-01,...,2000-06-01</code></pre>
+<p>To work with the data, it is often more convenient to transform the <code>stars</code> object to an <code>sf</code> layer. This can be done with <code>st_as_sf</code>:</p>
+<pre><code>rainfall1 = st_as_sf(rainfall1) rainfall1 ## Simple feature collection with 3 features and 5 fields ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 671364.1 ymin: 3307819 xmax: 717491.2 ymax: 3648872 ## Projected CRS: WGS 84 / UTM zone 36N ##   2000-02-01 2000-03-01 2000-04-01 2000-05-01 2000-06-01 ## 1     0.4314     0.4485     0.5396     0.5234     0.4772 ## 2         NA     0.1587     0.1618     0.1541     0.1489 ## 3     0.1440     0.1254     0.1251     0.1122     0.1092 ##                   geometry ## 1 POINT (717491.2 3648872) ## 2 POINT (671364.1 3458877) ## 3 POINT (700626.3 3307819)</code></pre>
+<p>In case we are interested only in the extracted values, not the geometries, the latter can be discarded with <code>st_drop_geometry</code>:</p>
+<pre><code>rainfall1 = st_drop_geometry(rainfall1) rainfall1 ##   2000-02-01 2000-03-01 2000-04-01 2000-05-01 2000-06-01 ## 1     0.4314     0.4485     0.5396     0.5234     0.4772 ## 2         NA     0.1587     0.1618     0.1541     0.1489 ## 3     0.1440     0.1254     0.1251     0.1122     0.1092</code></pre>
+<p>Finally, we can rely on the fact that row and column <em>order</em> matches the vector layer feature and raster layer order, respectively, to assign <em>names</em>. For example, <code>rainfall1</code> rows correspond to the selected station names, therefore we can assign the station names into <code>rownames</code>:</p>
+<pre><code>rownames(rainfall1) = sel rainfall1 ##            2000-02-01 2000-03-01 2000-04-01 2000-05-01 2000-06-01 ## Horashim       0.4314     0.4485     0.5396     0.5234     0.4772 ## Beer Sheva         NA     0.1587     0.1618     0.1541     0.1489 ## Yotveta        0.1440     0.1254     0.1251     0.1122     0.1092</code></pre>
+<blockquote class="blockquote">
+<p>Columns in <code>rainfall1</code> are already named according to image dates. Where did these names come from?</p>
+</blockquote>
+<p>The analogous operation in <strong>ArcGIS</strong> is the "Extract Multi Values to Points" tool (Figures <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:arcgis-extract-multi1">10.25</a>–<a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:arcgis-extract-multi2">10.26</a>).</p>
+<p>Figure 10.25: "Extract Multi Values to Points" tool in ArcGIS</p>
+<p>Figure 10.26: "Extract Multi Values to Points" tool in ArcGIS</p>
+</section>
+<section id="extracting-to-polygons-single-band" class="level3" data-number="15.8.4">
+<h3 data-number="15.8.4" class="anchored" data-anchor-id="extracting-to-polygons-single-band"><span class="header-section-number">15.8.4</span> Extracting to polygons: single-band</h3>
+<p>Extracting raster values to polygons (or to lines) is different from extracting to points. When extracting raster values to polygons (or to lines), each vector feature is potentially associated with <em>more than one</em> pixel value (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:raster-extract">10.22</a>). Moreover, the number of pixels may vary between features. For example, a large polygon may cover many more pixels than a small polygon. Therefore, it is often convenient to <em>summarize</em> the raster values per polygon feauture by applying a function on them and obtaining a single number, such as the average. This is done by <strong>aggregating</strong> the raster based on a vector layer using function <code>aggregate</code><sup><a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fn37">37</a></sup>.</p>
+<p>When summarizing raster values per polygon feature, the <code>aggregate</code> function accepts<sup><a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fn38">38</a></sup>:</p>
+<ul>
+<li><p><code>x</code>—The <code>stars</code> raster to summarize</p></li>
+<li><p><code>by</code>—An <code>sf</code> layer determining areas</p></li>
+<li><p><code>FUN</code>—The function to be applied on each set of extracted pixel values from <code>x</code></p></li>
+</ul>
+<p>For example, we can calculate the average (<code>mean</code>) NDVI value (<code>r_avg</code>) per administrative area (<code>nafot</code>) as follows. Any additional arguments, such as <code>na.rm=TRUE</code>, are passed to the function, in this case so that <code>mean</code> excludes <code>NA</code> values:</p>
+<pre><code>ndvi_nafot = aggregate(r_avg, nafot, mean, na.rm = TRUE)</code></pre>
+<p>The result is, again (Section <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#extracting-to-points-multi-band">10.7.3</a>), a special type of a <code>stars</code> object, with just one dimension for the vector geometries:</p>
+<pre><code>ndvi_nafot ## stars object with 1 dimensions and 1 attribute ## attribute(s): ##      NDVI         ##  Min.   :0.1263   ##  1st Qu.:0.3376   ##  Median :0.3845   ##  Mean   :0.3554   ##  3rd Qu.:0.4001   ##  Max.   :0.4317   ## dimension(s): ##          from to offset delta                refsys point ## geometry    1 15     NA    NA WGS 84 / UTM zone 36N FALSE ##                                                                     values ## geometry POLYGON ((739780.1 3686007,...,...,POLYGON ((674110.3 3549169,...</code></pre>
+<p>It can be converted to the more familiar <code>sf</code> structure using <code>st_as_sf</code>:</p>
+<pre><code>ndvi_nafot = st_as_sf(ndvi_nafot)</code></pre>
+<p>Now we have a polygon layer of the administrative areas, with an <code>NDVI</code> attribute containing the average NDVI value according to the <code>r_avg</code> raster:</p>
+<pre><code>ndvi_nafot ## Simple feature collection with 15 features and 1 field ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: 620662.1 ymin: 3263494 xmax: 770624.4 ymax: 3691834 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##         NDVI                       geometry ## 1  0.4208889 POLYGON ((739780.1 3686007,... ## 2  0.3845475 POLYGON ((672273.8 3518394,... ## 3  0.3093089 POLYGON ((745560 3649860, 7... ## 4  0.3874892 POLYGON ((702283.1 3628046,... ## 5  0.4317472 POLYGON ((702725.9 3630513,... ## 6  0.4051780 POLYGON ((759304.4 3691202,... ## 7  0.3949261 POLYGON ((701391.6 3631170,... ## 8  0.4124200 POLYGON ((706537.1 3602188,... ## 9  0.3937370 POLYGON ((692687.3 3583974,... ## 10 0.3468470 POLYGON ((672841.5 3544808,...</code></pre>
+<p>The result can be visualized as follows (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:nafot-ndvi">10.27</a>):</p>
+<pre><code>plot(ndvi_nafot, pal = function(x) hcl.colors(x, "Spectral"), reset = FALSE, key.pos = 4) text(st_coordinates(st_centroid(ndvi_nafot)), as.character(round(ndvi_nafot$NDVI, 2)))</code></pre>
+<p>Figure 10.27: Average NDVI per "Nafa"</p>
+</section>
+<section id="extracting-to-polygons-multi-band" class="level3" data-number="15.8.5">
+<h3 data-number="15.8.5" class="anchored" data-anchor-id="extracting-to-polygons-multi-band"><span class="header-section-number">15.8.5</span> Extracting to polygons: multi-band</h3>
+<p>Extracting raster values from a multi-band raster works the same way as extracting from a multi-band raster. The difference is that the resulting <code>stars</code> object has two dimensions: one for the geometries and one for the input raster bands.</p>
+<p>For example, the following expression calculates the average <code>r</code> value for each <code>nafot</code> feature over five months starting from <code>2000-02-01</code>, based on the first <em>five</em> layers of <code>r</code>:</p>
+<pre><code>ndvi_nafot = aggregate(r[,,,1:5], nafot, mean, na.rm = TRUE) ndvi_nafot ## stars object with 2 dimensions and 1 attribute ## attribute(s): ##      NDVI         ##  Min.   :0.1083   ##  1st Qu.:0.3148   ##  Median :0.4408   ##  Mean   :0.4023   ##  3rd Qu.:0.4873   ##  Max.   :0.5906   ## dimension(s): ##          from to offset delta                refsys point ## geometry    1 15     NA    NA WGS 84 / UTM zone 36N FALSE ## time        1  5     NA    NA                  Date    NA ##                                                                     values ## geometry POLYGON ((739780.1 3686007,...,...,POLYGON ((674110.3 3549169,... ## time                                             2000-02-01,...,2000-06-01</code></pre>
+<p>When transformed to an <code>sf</code> layer, the values extracted from each raster layer are placed in separate attributes:</p>
+<pre><code>ndvi_nafot = st_as_sf(ndvi_nafot) ndvi_nafot ## Simple feature collection with 15 features and 5 fields ## Geometry type: POLYGON ## Dimension:     XY ## Bounding box:  xmin: 620662.1 ymin: 3263494 xmax: 770624.4 ymax: 3691834 ## Projected CRS: WGS 84 / UTM zone 36N ## First 10 features: ##    2000-02-01 2000-03-01 2000-04-01 2000-05-01 2000-06-01 ## 1   0.5061847  0.5270644  0.5319248  0.4432705  0.3478298 ## 2   0.4692342  0.4604232  0.4568367  0.3757161  0.3096993 ## 3   0.5395486  0.5398781  0.4491296  0.3011687  0.2440450 ## 4   0.5616802  0.5826193  0.5475469  0.3978501  0.3062216 ## 5   0.4718739  0.4840480  0.4993016  0.4304506  0.3796581 ## 6   0.5518223  0.5851435  0.5905808  0.4905159  0.2675451 ## 7   0.4593590  0.4520991  0.4388301  0.3730517  0.3468060 ## 8   0.5061774  0.5087029  0.4809899  0.3971890  0.3509476 ## 9   0.5104205  0.4970106  0.4763348  0.3797437  0.3421975 ## 10  0.4709000  0.4675206  0.4407848  0.3536589  0.2844259 ##                          geometry ## 1  POLYGON ((739780.1 3686007,... ## 2  POLYGON ((672273.8 3518394,... ## 3  POLYGON ((745560 3649860, 7... ## 4  POLYGON ((702283.1 3628046,... ## 5  POLYGON ((702725.9 3630513,... ## 6  POLYGON ((759304.4 3691202,... ## 7  POLYGON ((701391.6 3631170,... ## 8  POLYGON ((706537.1 3602188,... ## 9  POLYGON ((692687.3 3583974,... ## 10 POLYGON ((672841.5 3544808,...</code></pre>
+<p>The result reflects the average NDVI, for the first five months in the MODIS NDVI series, for each "Nafa" (Figure <a href="https://geobgu.xyz/r-2021/combining-rasters-and-vector-layers.html#fig:nafot-ndvi-multi">10.28</a>):</p>
+<pre><code>plot(ndvi_nafot, pal = function(x) hcl.colors(x, "Spectral"))</code></pre>
+<p>Figure 10.28: NDVI per "Nafa" for five months</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./ch9.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch11.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

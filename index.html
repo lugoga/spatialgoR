@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Masumbuko Semba">
+<meta name="author" content="Nyamisi Peter">
+<meta name="author" content="Benjamini Mpinga">
+<meta name="dcterms.date" content="2025-05-05">
+
+<title>Geospatial Technology and Spatial Analysis in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch0.html" rel="next">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a>
+  <ul class="collapse">
+  <li><a href="#welcome" id="toc-welcome" class="nav-link" data-scroll-target="#welcome">Welcome</a></li>
+  <li><a href="#what-is-r" id="toc-what-is-r" class="nav-link" data-scroll-target="#what-is-r">What is R?</a></li>
+  <li><a href="#r-and-analysis-of-spatial-data" id="toc-r-and-analysis-of-spatial-data" class="nav-link" data-scroll-target="#r-and-analysis-of-spatial-data">R and analysis of spatial data</a>
+  <ul class="collapse">
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#input-and-output-of-spatial-data" id="toc-input-and-output-of-spatial-data" class="nav-link" data-scroll-target="#input-and-output-of-spatial-data">Input and output of spatial data</a></li>
+  <li><a href="#geosphere-geometric-calculations-on-longitudelatitude" id="toc-geosphere-geometric-calculations-on-longitudelatitude" class="nav-link" data-scroll-target="#geosphere-geometric-calculations-on-longitudelatitude"><code>geosphere</code>: Geometric calculations on longitude/latitude</a></li>
+  <li><a href="#gstat-geostatistical-modelling" id="toc-gstat-geostatistical-modelling" class="nav-link" data-scroll-target="#gstat-geostatistical-modelling"><code>gstat</code>: Geostatistical Modelling</a></li>
+  <li><a href="#spdep-spatial-dependence-modelling" id="toc-spdep-spatial-dependence-modelling" class="nav-link" data-scroll-target="#spdep-spatial-dependence-modelling"><code>spdep</code>: Spatial dependence modelling</a></li>
+  <li><a href="#spatstat-spatial-point-pattern-analysis" id="toc-spatstat-spatial-point-pattern-analysis" class="nav-link" data-scroll-target="#spatstat-spatial-point-pattern-analysis"><code>spatstat</code>: Spatial point pattern analysis</a></li>
+  <li><a href="#osmdata-access-to-openstreetmap-data" id="toc-osmdata-access-to-openstreetmap-data" class="nav-link" data-scroll-target="#osmdata-access-to-openstreetmap-data"><code>osmdata</code>: Access to OpenStreetMap data</a></li>
+  <li><a href="#ggplot2-visualization" id="toc-ggplot2-visualization" class="nav-link" data-scroll-target="#ggplot2-visualization"><code>ggplot2</code>: Visualization</a></li>
+  <li><a href="#leaflet-mapview-web-mapping" id="toc-leaflet-mapview-web-mapping" class="nav-link" data-scroll-target="#leaflet-mapview-web-mapping"><code>leaflet</code>, <code>mapview</code>: Web mapping</a></li>
+  </ul></li>
+  <li><a href="#other-materials" id="toc-other-materials" class="nav-link" data-scroll-target="#other-materials">Other materials</a>
+  <ul class="collapse">
+  <li><a href="#books" id="toc-books" class="nav-link" data-scroll-target="#books">Books</a></li>
+  <li><a href="#papers" id="toc-papers" class="nav-link" data-scroll-target="#papers">Papers</a></li>
+  <li><a href="#courses-and-tutorials" id="toc-courses-and-tutorials" class="nav-link" data-scroll-target="#courses-and-tutorials">Courses and tutorials</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Geospatial Technology and Spatial Analysis in R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Authors</div>
+    <div class="quarto-title-meta-contents">
+             <p>Masumbuko Semba </p>
+             <p>Nyamisi Peter </p>
+             <p>Benjamini Mpinga </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 5, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="preface" class="level1 unnumbered">
+<h1 class="unnumbered">Preface</h1>
+<section id="welcome" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="welcome">Welcome</h2>
+<p>Welcome to the world of spatial data and analysis in R! In today’s data-driven era, the importance of spatial information cannot be overstated. From urban planning and environmental management to transportation logistics and public health, the ability to understand and analyze spatial data has become essential for making informed decisions and solving complex problems.</p>
+<p>This book serves as your comprehensive guide to harnessing the power of R for working with spatial data. Whether you are a student, researcher, data scientist, or professional in a related field, this resource will equip you with the knowledge and skills to effectively manipulate, visualize, analyze, and model spatial data using R.</p>
+<p>R, a widely used programming language for statistical computing and graphics, offers a rich set of packages and tools specifically tailored for spatial data analysis. With its extensive capabilities, R provides a versatile and efficient environment for working with diverse spatial datasets, ranging from point patterns and geospatial polygons to raster data and satellite imagery.</p>
+<p>In this book, we will start by introducing the fundamentals of spatial data and its representation in R. You will learn about spatial objects, coordinate reference systems, and the various data structures used to handle spatial information efficiently. We will explore techniques for importing, exporting, and manipulating spatial data, ensuring that you have a solid foundation for subsequent analysis.</p>
+<p>The core of this book revolves around spatial analysis techniques in R. We will delve into essential topics such as spatial data visualization, spatial statistics, spatial interpolation, spatial regression, and geostatistics. Through step-by-step tutorials, code examples, and real-world applications, you will gain a deep understanding of how to apply these techniques to uncover patterns, explore relationships, and derive meaningful insights from spatial data.</p>
+<p>Additionally, we will explore advanced topics such as spatial data modeling, spatial clustering, and spatial optimization, which will enable you to tackle complex spatial problems and make informed decisions. Throughout the book, we will emphasize the importance of sound statistical principles and best practices for spatial data analysis.</p>
+<p>Each chapter is carefully crafted to provide a balance between theoretical concepts, practical demonstrations, and hands-on exercises. The code snippets and reproducible examples provided will help you to grasp the concepts effectively and apply them to your own spatial analysis tasks. We encourage you to actively engage with the material, experiment with the code, and explore additional resources to deepen your understanding.</p>
+<p>Finally, we would like to express our sincere appreciation to the open-source community, which has contributed immensely to the development of R and its spatial packages. We are grateful to the countless individuals who have shared their knowledge, expertise, and code, making spatial data analysis in R accessible and empowering users around the world.</p>
+<p>We hope that this book will serve as your valuable companion in your journey through the fascinating realm of spatial data and analysis in R. By the end, we aim to equip you with the skills and confidence to unlock the hidden insights in spatial data and contribute to the advancement of knowledge in your respective domains.</p>
+<p>Let’s embark on this exciting adventure together and explore the vast possibilities of spatial data analysis in R!</p>
+<p>Happy spatial coding!</p>
+<p>Masumbuko SEMBA</p>
+</section>
+<section id="what-is-r" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="what-is-r">What is R?</h2>
+<p><strong>R</strong> is a programming language and environment, originally developed for statistical computing and graphics. As of October 2020, there are ~16,000 R <strong>packages</strong> in the official repository <a href="https://cran.r-project.org/web/packages/">CRAN</a><sup><a href="https://geobgu.xyz/r-2021/index.html#fn2">2</a></sup>.</p>
+<p>Notable advantages of R are that it is a full-featured programming language, yet customized for working with data, relatively simple and has a huge collection of over 100,000 functions from various areas of interest.</p>
+<p>R's popularity has been steadily increasing in recent years (Figures <a href="https://geobgu.xyz/r-2021/index.html#fig:r-stackoverflow-trend">0.1</a>–<a href="https://geobgu.xyz/r-2021/index.html#fig:r-proportion-papers">0.3</a>).</p>
+<p>Figure 0.1: Stack Overflow Trend for the 'r' question tag (<a href="https://insights.stackoverflow.com/trends?tags=r" class="uri">https://insights.stackoverflow.com/trends?tags=r</a>)</p>
+<p>Figure 0.2: IEEE Language Rankings 2019 (<a href="https://spectrum.ieee.org/computing/software/the-top-programming-languages-2019" class="uri">https://spectrum.ieee.org/computing/software/the-top-programming-languages-2019</a>)</p>
+<p>Figure 0.3: Proportion of research papers citing R (<a href="https://www.nature.com/news/programming-tools-adventures-with-r-1.16609" class="uri">https://www.nature.com/news/programming-tools-adventures-with-r-1.16609</a>)</p>
+<p>A brief overview of the capabilities and packages for several domains of R use, are available in the <a href="https://cran.r-project.org/web/views/">"CRAN Task Views"</a> (Figure <a href="https://geobgu.xyz/r-2021/index.html#fig:task-views">0.4</a>).</p>
+<p>Figure 0.4: CRAN Task Views (<a href="http://www.maths.lancs.ac.uk/~rowlings/R/TaskViews/" class="uri">http://www.maths.lancs.ac.uk/~rowlings/R/TaskViews/</a>)</p>
+</section>
+<section id="r-and-analysis-of-spatial-data" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="r-and-analysis-of-spatial-data">R and analysis of spatial data</h2>
+<section id="introduction" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="introduction">Introduction</h3>
+<p>Over time, there was an increasing number of contributed packages for handling and analyzing spatial data in R. Today, spatial analysis is a major functionality in R. As of October 2020, there are at least 185 <em>packages</em><sup><a href="https://geobgu.xyz/r-2021/index.html#fn3">3</a></sup> specifically addressing spatial analysis in R.</p>
+<p>Figure 0.5: Books on Spatial Data Analysis with R</p>
+<p>Some important events in the history of spatial analysis support in R are summarized in Table <a href="https://geobgu.xyz/r-2021/index.html#tab:r-history">0.1</a>.</p>
+<table class="table">
+<tbody>
+<tr class="odd">
+<td></td>
+<td>Table 0.1: Significant events in the history of R-spatial</td>
+</tr>
+<tr class="even">
+<td><strong>Year</strong></td>
+<td><strong>Event</strong></td>
+</tr>
+<tr class="odd">
+<td>pre-2003</td>
+<td>Variable and incomplete approaches (<code>MASS</code>, <code>spatstat</code>, <code>maptools</code>, <code>geoR</code>, <code>splancs</code>, <code>gstat</code>, …)</td>
+</tr>
+<tr class="even">
+<td>2003</td>
+<td>Consensus that a package defining standard data structures should be useful; <code>rgdal</code> released on CRAN</td>
+</tr>
+<tr class="odd">
+<td>2005</td>
+<td><code>sp</code> released on CRAN; <code>sp</code> support in <code>rgdal</code> (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#the-sp-package">7.1.3</a></td>
+</tr>
+<tr class="even">
+<td>2008</td>
+<td><em>Applied Spatial Data Analysis with R</em>, 1<sup>st</sup> ed.</td>
+</tr>
+<tr class="odd">
+<td>2010</td>
+<td><code>raster</code> released on CRAN (Section <a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#raster-package">5.3.4</a>)</td>
+</tr>
+<tr class="even">
+<td>2011</td>
+<td><code>rgeos</code> released on CRAN</td>
+</tr>
+<tr class="odd">
+<td>2013</td>
+<td><em>Applied Spatial Data Analysis with R</em>, 2<sup>nd</sup> ed.</td>
+</tr>
+<tr class="even">
+<td>2016</td>
+<td><code>sf</code> released on CRAN (Section <a href="https://geobgu.xyz/r-2021/vector-layers.html#the-sf-package">7.1.4</a>)</td>
+</tr>
+<tr class="odd">
+<td>2018</td>
+<td><code>stars</code> released on CRAN (Section <a href="https://geobgu.xyz/r-2021/matrices-and-rasters.html#the-stars-package">5.3.5</a>)</td>
+</tr>
+<tr class="even">
+<td>2019</td>
+<td><em>Geocomputation with R</em> (<a href="https://geocompr.robinlovelace.net/" class="uri">https://geocompr.robinlovelace.net/</a>)</td>
+</tr>
+<tr class="odd">
+<td>2021(?)</td>
+<td><em>Spatial Data Science</em> (<a href="https://www.r-spatial.org/book/" class="uri">https://www.r-spatial.org/book/</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>The question that arises here is: can R be used as a Geographic Information System (GIS), or as a comprehensive toolbox for doing spatial analysis? The answer is definitely <em>yes</em>. Moreover, R has some important advantages over traditional approaches to GIS, i.e., software with graphical user interfaces such as ArcGIS or QGIS.</p>
+<p><em>General</em> advantages of Command Line Interface (CLI) software include:</p>
+<ul>
+<li><p><strong>Automation</strong>—Doing otherwise unfeasible repetitive tasks</p></li>
+<li><p><strong>Reproducibility</strong>—Precise control of instructions to the computer</p></li>
+</ul>
+<p>Moreover, <em>specific</em> strengths of R as a GIS are:</p>
+<ul>
+<li><p>R capabilities in data <strong>processing</strong> and <strong>visualization</strong>, combined with dedicated <strong>packages</strong> for spatial data</p></li>
+<li><p>A <strong>single environment</strong> encompassing all analysis aspects—acquiring data, computation, statistics, visualization, Web, etc.</p></li>
+</ul>
+<p>Nevertheless, there are situations when <em>other</em> tools are needed:</p>
+<ul>
+<li><p><strong>Interactive</strong> editing or georeferencing (but see <a href="https://cran.r-project.org/package=mapedit"><code>mapedit</code></a> package)</p></li>
+<li><p>Unique GIS <strong>algorithms</strong> (3D analysis, label placement, splitting lines at intersections)</p></li>
+<li><p>Data that cannot fit in <strong>RAM</strong> (but R can connect to spatial databases<sup><a href="https://geobgu.xyz/r-2021/index.html#fn4">4</a></sup> and other softwere for working with big data)</p></li>
+</ul>
+<p>The following sections (<a href="https://geobgu.xyz/r-2021/index.html#input-and-output-of-spatial-data">0.3.2</a>–<a href="https://geobgu.xyz/r-2021/index.html#leaflet-mapview-web-mapping">0.3.11</a>) highlight some of the capabilities of spatial data analysis packages in R, through short examples. We are going to elaborate on most of these packages later on in the book, and many of those examples will become clear.</p>
+</section>
+<section id="input-and-output-of-spatial-data" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="input-and-output-of-spatial-data">Input and output of spatial data</h3>
+<p>Reading spatial layers from a file into an R data structure, or writing the R data structure into a file, are handled by external libraries:</p>
+<ul>
+<li><p><a href="https://gdal.org/"><strong>GDAL/OGR</strong></a> is used for reading/writing vector and raster files, with <code>sf</code> and <code>stars</code></p></li>
+<li><p><a href="https://proj.org/"><strong>PROJ</strong></a> is used for handling Coordinate Reference Systems (CRS), in both <code>sf</code> and <code>stars</code></p></li>
+<li><p>Working with specialized formats, e.g., <strong>NetCDF</strong> with <code>ncdf4</code></p></li>
+</ul>
+<p>Package <code>sf</code> combined with <code>RPostgreSQL</code> can be used to read from, and write to, a <strong>PostGIS</strong> spatial database:</p>
+<pre><code>library(sf) library(RPostgreSQL) con = dbConnect(   PostgreSQL(),   dbname = "gisdb",   host = "159.89.13.241",   port = 5432,   user = "geobgu",   password = "*******" ) dat = st_read(con, query = "SELECT name_lat, geometry FROM plants LIMIT 5;")</code></pre>
+<pre><code>dat ## Simple feature collection with 5 features and 1 field ## Geometry type: POINT ## Dimension:     XY ## Bounding box:  xmin: 35.1397 ymin: 31.44711 xmax: 35.67976 ymax: 32.77013 ## Geodetic CRS:  WGS 84 ##         name_lat                  geometry ## 1    Iris haynei POINT (35.67976 32.77013) ## 2    Iris haynei   POINT (35.654 32.74137) ## 3 Iris atrofusca POINT (35.19337 31.44711) ## 4 Iris atrofusca POINT (35.18914 31.51475) ## 5  Iris vartanii  POINT (35.1397 31.47415)</code></pre>
+<p>###<code>sf</code>: Processing Vector Layers {.unnumbered}</p>
+<p><a href="http://trac.osgeo.org/geos/"><strong>GEOS</strong></a> is used for geometric operations on <strong>vector layers</strong> with <code>sf</code>:</p>
+<ul>
+<li><p><strong>Numeric operators</strong>—Area, Length, Distance…</p></li>
+<li><p><strong>Logical operators</strong>—Contains, Within, Within distance, Crosses, Overlaps, Equals, Intersects, Disjoint, Touches…</p></li>
+<li><p><strong>Geometry generating operators</strong>—Centroid, Buffer, Intersection, Union, Difference, Convex-Hull, Simplification…</p></li>
+</ul>
+<p>Figure 0.6: Buffer function</p>
+<p>###<code>stars</code>: Processing Rasters {.unnumbered}</p>
+<p>Geometric operations on <em>rasters</em> can be done with package <code>stars</code>:</p>
+<ul>
+<li><p><strong>Accessing cell values</strong>—As matrix / array, Extracting to points / lines / polygons</p></li>
+<li><p><strong>Raster algebra</strong>—Arithmetic (<code>+</code>, <code>-</code>, …), Math (<code>sqrt</code>, <code>log10</code>, …), logical (<code>!</code>, <code>==</code>, <code>&gt;</code>, …), summary (<code>mean</code>, <code>max</code>, …), Masking</p></li>
+<li><p><strong>Changing resolution and extent</strong>—Cropping, Mosaic, Resampling, Reprojection</p></li>
+<li><p><strong>Transformations</strong>—Raster &lt;-&gt; Points / Contour lines / Polygons</p></li>
+</ul>
+</section>
+<section id="geosphere-geometric-calculations-on-longitudelatitude" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="geosphere-geometric-calculations-on-longitudelatitude"><code>geosphere</code>: Geometric calculations on longitude/latitude</h3>
+<p>Package <code>geosphere</code> implements <em>spherical</em> geometry functions for distance- and direction-related calculations on geographic coordinates (lon-lat).</p>
+<p>Figure 0.7: Points on Great Circle</p>
+<p>Figure 0.8: Visualizing Facebook Friends with <code>geosphere</code> (<a href="http://paulbutler.org/archives/visualizing-facebook-friends/" class="uri">http://paulbutler.org/archives/visualizing-facebook-friends/</a>)</p>
+</section>
+<section id="gstat-geostatistical-modelling" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="gstat-geostatistical-modelling"><code>gstat</code>: Geostatistical Modelling</h3>
+<p>As mentioned above, R was initially developed for statistical computing (Section <a href="https://geobgu.xyz/r-2021/index.html#what-is-r">0.2</a>). Accordingly, there is an extensive set of R packages for <em>spatial statistics</em>. For example, package <code>gstat</code> provides a comprehensive set of functions for univariate and multivariate geostatistics, mainly for the purpose of spatial <em>interpolation</em>:</p>
+<ul>
+<li><p>Variogram modelling</p></li>
+<li><p>Ordinary and universal point or block (co)kriging</p></li>
+<li><p>Cross-validation</p></li>
+</ul>
+<p>Figure 0.9: Predicted Zinc concentration, using Ordinary Kriging</p>
+<p>We are going to learn about the <code>gstat</code> package in Chapter <a href="https://geobgu.xyz/r-2021/spatial-interpolation-of-point-data.html#spatial-interpolation-of-point-data">12</a>. An introduction to the package can also be found in Chapter 8 of <em>Applied Spatial Data Analysis with R</em> (<a href="https://geobgu.xyz/r-2021/references.html#ref-bivand2013">Bivand, Pebesma, and Gomez-Rubio 2013</a>).</p>
+</section>
+<section id="spdep-spatial-dependence-modelling" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="spdep-spatial-dependence-modelling"><code>spdep</code>: Spatial dependence modelling</h3>
+<p>Modelling with spatial weights:</p>
+<ul>
+<li><p>Building neighbor lists and spatial weights</p></li>
+<li><p>Tests for spatial autocorrelation for areal data (e.g., Moran's I)</p></li>
+<li><p>Spatial regression models (e.g., SAR, CAR)</p></li>
+</ul>
+<p>Figure 0.10: Neighbours list based on regions with contiguous boundaries</p>
+<p>The <code>spdep</code> package is beyond the scope of this book. An introduction to the package can be found in Chapter 9 of <em>Applied Spatial Data Analysis with R</em> (<a href="https://geobgu.xyz/r-2021/references.html#ref-bivand2013">Bivand, Pebesma, and Gomez-Rubio 2013</a>).</p>
+</section>
+<section id="spatstat-spatial-point-pattern-analysis" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="spatstat-spatial-point-pattern-analysis"><code>spatstat</code>: Spatial point pattern analysis</h3>
+<p>Package <code>spatstat</code> provides a comprehensive collection of techniques for statistical analysis of spatial point patterns, such as:</p>
+<ul>
+<li><p>Kernel density estimation</p></li>
+<li><p>Detection of clustering using Ripley's K-function</p></li>
+<li><p>Spatial logistic regression</p></li>
+</ul>
+<p>Figure 0.11: Distance map for the Biological Cells point pattern dataset</p>
+<p>The book <em>Spatial point patterns: methodology and applications with R</em> (<a href="https://geobgu.xyz/r-2021/references.html#ref-baddeley2015">Baddeley, Rubak, and Turner 2015</a>) provides a thorough introduction to the subject of point pattern analysis using the <code>spatstat</code> package. A more brief introduction can also be found in Chapter 7 of <em>Applied Spatial Data Analysis with R</em> (<a href="https://geobgu.xyz/r-2021/references.html#ref-bivand2013">Bivand, Pebesma, and Gomez-Rubio 2013</a>).</p>
+</section>
+<section id="osmdata-access-to-openstreetmap-data" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="osmdata-access-to-openstreetmap-data"><code>osmdata</code>: Access to OpenStreetMap data</h3>
+<p>Package <code>osmdata</code> gives access to <strong>OpenStreetMap (OSM)</strong> data—the most extensive open-source map database in the worls—using the <strong>Overpass API</strong><sup><a href="https://geobgu.xyz/r-2021/index.html#fn5">5</a></sup>.</p>
+<pre><code>library(sf) library(osmdata) q = opq(bbox = "Beer-Sheva, Israel") q = add_osm_feature(q, key = "highway") dat = osmdata_sf(q) lines = dat$osm_lines pol = dat$osm_polygons pol = st_cast(pol, "MULTILINESTRING") pol = st_cast(pol, "LINESTRING") lines = rbind(lines, pol) lines = lines[, "highway"] lines = st_transform(lines, 32636) plot(lines, key.pos = 4, key.width = lcm(4), main = "")</code></pre>
+<p>Figure 0.12: Beer-Sheva road types map, using data downloaded from OpenStreetMap (OSM)</p>
+</section>
+<section id="ggplot2-visualization" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="ggplot2-visualization"><code>ggplot2</code>: Visualization</h3>
+<p>The <code>ggplot2</code> package is one of the most popular packages in R. It provides advanced visualization methods through a well-designed and consistent syntax. The package supports visualization of both vector layers<sup><a href="https://geobgu.xyz/r-2021/index.html#fn6">6</a></sup> and rasters<sup><a href="https://geobgu.xyz/r-2021/index.html#fn7">7</a></sup>.</p>
+<p>The <code>ggplot2</code> package is highly customizable and capable of producing publication-quality figures and maps as well as original and innovative designs (Figure <a href="https://geobgu.xyz/r-2021/index.html#fig:london-cycle-hire">0.13</a>). One of its strengths is in easy preparation of "small-multiple"—or facet, in the terminology of <code>ggplot2</code>—figures (Figure <a href="https://geobgu.xyz/r-2021/index.html#fig:ggplot2-facets">0.14</a>).</p>
+<p>Figure 0.13: London cycle hire journeys with <code>ggplot2</code> (<a href="http://spatial.ly/2012/02/great-maps-ggplot2/" class="uri">http://spatial.ly/2012/02/great-maps-ggplot2/</a>)</p>
+<p>Figure 0.14: Crime density by day with <code>ggplot2</code></p>
+<p>The <code>ggplot2</code> package is beyond the scope of this book. A good place to start is the book <em>ggplot2: Elegant Graphics for Data Analysis</em>, by package author (<a href="https://geobgu.xyz/r-2021/references.html#ref-wickham2016">Wickham 2016</a>). The book is available online<sup><a href="https://geobgu.xyz/r-2021/index.html#fn8">8</a></sup>.</p>
+</section>
+<section id="leaflet-mapview-web-mapping" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="leaflet-mapview-web-mapping"><code>leaflet</code>, <code>mapview</code>: Web mapping</h3>
+<p>Packages <code>leaflet</code> and <code>mapview</code> provide methods to produce <strong>interactive maps</strong> using the <a href="http://leafletjs.com/">Leaflet JavaScript library</a>.</p>
+<p>Package <a href="https://rstudio.github.io/leaflet/"><code>leaflet</code></a> gives more low-level control. Package <a href="https://r-spatial.github.io/mapview/"><code>mapview</code></a> is a wrapper around <code>leaflet</code>, automating addition of useful features:</p>
+<ul>
+<li><p>Commonly used basemaps</p></li>
+<li><p>Color scales and legends</p></li>
+<li><p>Labels</p></li>
+<li><p>Popups</p></li>
+</ul>
+<p>Function <code>mapview</code> produces an interactive map given a spatial object. The <code>zcol</code> parameter is used to specify the <em>attribute</em> used for symbology:</p>
+<pre><code>library(sf) library(mapview) states = st_read("USA_2_GADM_fips.shp") mapview(states, zcol = "NAME_1")</code></pre>
+<p>Figure 0.15: Intractive map made with <code>mapview</code></p>
+</section>
+</section>
+<section id="other-materials" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="other-materials">Other materials</h2>
+<p>This section lists some other resources that are relevant for working with spatial data in R.</p>
+<section id="books" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="books">Books</h3>
+<ul>
+<li><p><em>Model-based Geostatistics</em> (<a href="https://geobgu.xyz/r-2021/references.html#ref-diggle2007">Diggle and Ribeiro 2007</a>)</p></li>
+<li><p><a href="http://spatial-analyst.net/book/system/files/Hengl_2009_GEOSTATe2c1w.pdf"><em>A Practical Guide to Geostatistical Mapping</em></a> (<a href="https://geobgu.xyz/r-2021/references.html#ref-hengl2009">Hengl 2009</a>)</p></li>
+<li><p><em>Spatial Data Analysis in Ecology and Agriculture using R</em> (1<sup>st</sup> ed.&nbsp;2012, 2<sup>nd</sup> ed.&nbsp;2018) (<a href="https://geobgu.xyz/r-2021/references.html#ref-plant2018spatial">Plant 2018</a>)</p></li>
+<li><p><em>Learning R for Geospatial Analysis</em> (<a href="https://geobgu.xyz/r-2021/references.html#ref-dorman2014">Dorman 2014</a>)</p></li>
+<li><p><em>Applied Spatial Data Analysis with R</em> (1<sup>st</sup> ed.&nbsp;2008, 2<sup>nd</sup> ed.&nbsp;2013) (<a href="https://geobgu.xyz/r-2021/references.html#ref-bivand2013">Bivand, Pebesma, and Gomez-Rubio 2013</a>)</p></li>
+<li><p><em>Hierarchical Modeling and Analysis for Spatial Data</em> (1<sup>st</sup> ed.&nbsp;2003, 2<sup>nd</sup> ed.&nbsp;2014) (<a href="https://geobgu.xyz/r-2021/references.html#ref-banerjee2014">Banerjee, Carlin, and Gelfand 2014</a>)</p></li>
+<li><p><a href="https://bookdown.org/lexcomber/brunsdoncomber2e/"><em>An Introduction to R for Spatial Analysis and Mapping</em></a> (1<sup>st</sup> ed.&nbsp;2015, 2<sup>nd</sup> ed.&nbsp;2018) (<a href="https://geobgu.xyz/r-2021/references.html#ref-brunsdon2015">Brunsdon and Comber 2015</a>)</p></li>
+<li><p><em>Spatial Point Patterns: Methodology and Applications with R</em> (2015) (<a href="https://geobgu.xyz/r-2021/references.html#ref-baddeley2015">Baddeley, Rubak, and Turner 2015</a>)</p></li>
+<li><p><em>Displaying Time Series, Spatial, and Space-Time Data with R</em> (1<sup>st</sup> ed.&nbsp;2014, 2<sup>nd</sup> ed.&nbsp;2018) (<a href="https://geobgu.xyz/r-2021/references.html#ref-lamigueiro2014">Lamigueiro 2014</a>)</p></li>
+<li><p><a href="https://soilmapper.org/"><em>Predictive Soil Mapping with R</em></a> (<a href="https://geobgu.xyz/r-2021/references.html#ref-hengl2019">Hengl and MacMillan 2019</a>)</p></li>
+<li><p><a href="https://geocompr.robinlovelace.net/"><em>Geocomputation with R</em></a> (<a href="https://geobgu.xyz/r-2021/references.html#ref-lovelace2019">Lovelace, Nowosad, and Muenchow 2019</a>)</p></li>
+<li><p><a href="https://www.r-spatial.org/book/"><em>Spatial Data Science</em></a> (2021?)</p></li>
+</ul>
+</section>
+<section id="papers" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="papers">Papers</h3>
+<ul>
+<li><p>Pebesma, E., Bivand, R. S. (2005). <em>Classes and Methods for Spatial Data: the sp Package</em>. R news, 5(2), 9-13. [<a href="https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf">PDF</a>]</p></li>
+<li><p>Pebesma, E. (2018). <em>Simple Features for R: Standardized Support for Spatial Vector Data</em>. The R Journal, 10(1):439-446. [<a href="https://journal.r-project.org/archive/2018/RJ-2018-009/RJ-2018-009.pdf">PDF</a>]</p></li>
+</ul>
+</section>
+<section id="courses-and-tutorials" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="courses-and-tutorials">Courses and tutorials</h3>
+<section id="courses" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="courses">Courses</h4>
+<ul>
+<li><p><a href="https://pjbartlein.github.io/GeogDataAnalysis/index.html">GEOG 4/595: Geographic Data Analysis</a></p></li>
+<li><p><a href="https://rstudio-pubs-static.s3.amazonaws.com/460816_f7e4d237e0334e9887323686041bd762.html">CP6521 Advanced GIS</a></p></li>
+<li><p><a href="https://mgimond.github.io/Spatial/index.html">ES214 Introduction to GIS and Spatial Analysis</a></p></li>
+<li><p><a href="http://geog.uoregon.edu/bartlein/courses/geog490/index.html">GEOG 4/590: R for Earth-System Science</a></p></li>
+<li><p><a href="https://pjbartlein.github.io/GeogDataAnalysis/">GEOG 4/595: Geographic Data Analysis</a></p></li>
+<li><p><a href="http://rspatial.org/">Spatial Data Science with R (Robert J. Hijmans)</a></p></li>
+<li><p><a href="http://132.72.155.230:3838/r/">Introduction to Spatial Data Programming with R (this course)</a></p></li>
+<li><p><a href="https://github.com/DOSull/GISC-422">GISC 422 Spatial Analysis and Modelling</a></p></li>
+<li><p><a href="https://andrewmaclachlan.github.io/CASA0005repo/index.html">CASA0005 Geographic Information Systems and Science</a></p></li>
+<li><p>Another list <a href="https://geocompr.github.io/guestbook/">here</a></p></li>
+</ul>
+</section>
+<section id="tutorials" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="tutorials">Tutorials</h4>
+<ul>
+<li><p><a href="https://zia207.github.io/geospatial-data-science.github.io/index.html">Geospatial Data Science with R</a></p></li>
+<li><p><a href="https://datacarpentry.org/lessons/#geospatial-curriculum">Data Carpentry Workshops</a></p></li>
+<li><p><a href="http://www.nickeubank.com/gis-in-r/">GIS in R (Nick Eubank)</a></p></li>
+<li><p><a href="https://www.neonscience.org/resources/data-tutorials">NEON Data Tutorials</a></p></li>
+<li><p><a href="https://spatialanalysis.github.io/">Learn Spatial Analysis (University of Chicago)</a></p></li>
+<li><p><a href="https://geoscripting-wur.github.io/">WUR Geoscripting</a></p></li>
+<li><p><a href="https://ryanpeek.org/mapping-in-R-workshop/index.html">Mapping in R</a></p></li>
+<li><p><a href="https://gdsl-ul.github.io/san/">Spatial Analysis notes</a></p></li>
+<li><p><a href="https://urbanspatial.github.io/classifying_satellite_imagery_in_R/">Classifying Satellite Imagery in R</a></p></li>
+<li><p><a href="https://mhweber.github.io/AWRA_2020_R_Spatial/">Fundamentals of Spatial Analysis in R</a></p></li>
+<li><p><a href="https://edzer.github.io/OGH20/">Handling and Analyzing Vector and Raster Data Cubes with R</a></p></li>
+<li><p><a href="https://pmarchand1.github.io/atelier_rgeo/rgeo_workshop.html">Introduction to geospatial data analysis in R</a></p></li>
+</ul>
+</section>
+<section id="presentations" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="presentations">Presentations</h4>
+<ul>
+<li><p><a href="https://edzer.github.io/UseR2017/">UseR! 2017: Tutorial "Spatial Data in R: New Directions"</a></p></li>
+<li><p><a href="https://edzer.github.io/UseR2019/part1.html">UseR! 2019: Spatial workshop part I</a></p></li>
+<li><p><a href="https://edzer.github.io/UseR2019/part2.html">UseR! 2019: Spatial workshop part II</a></p></li>
+<li><p><a href="https://github.com/rsbivand/whyR20_files">Why-R 2020: Applied Spatial Data Analysis with R: retrospect and prospect</a></p></li>
+</ul>
+</section>
+<section id="official-materials" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="official-materials">Official materials</h4>
+<ul>
+<li><p><a href="https://cran.r-project.org/web/packages/sf/index.html"><code>sf</code> Vignettes</a></p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/stars/index.html"><code>stars</code> Vignettes</a></p></li>
+</ul>
+
+
+</section>
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch0.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

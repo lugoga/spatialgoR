@@ -1,0 +1,47 @@
+ .chapter-number::before {
+  content: "Chapter: ";
+}
+ 
+ h1 {
+  text-align: center; color: #8B4513;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+}
+
+ h2 {
+  text-align: left; color: #800080;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+}
+
+ h3 {
+  text-align: left; color: #006699;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+}
+
+ body {
+  text-align: left; 
+  text-align-last: left; 
+  color: #707070; 
+  font-size: 18px; 
+  line-height: 21.6px;
+  font-family: "Myriad Pro", Arial, sans-serif;
+}
+
+ol {
+    /* Ordered List Styles */
+    list-style-type: decimal; /* Use numbers for ordered list items */
+    margin-left: 20px; /* Adjust the left margin */
+  }
+
+  ul {
+    /* Unordered List Styles */
+    list-style-type: disc; /* Use bullets for unordered list items */
+    margin-left: 20px; /* Adjust the left margin */
+  }
+
+  /* Optional: Styling for list items */
+  li {
+    margin-bottom: 5px; /* Adjust the vertical spacing between list items */
+  }

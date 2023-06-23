@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.319">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Geospatial Technology and Spatial Analysis in R - 10&nbsp; Raster Manipulation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./ch6_processing.html" rel="next">
+<link href="./ch5_raster.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script><link rel="stylesheet" href="style.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ch6.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Geospatial Technology and Spatial Analysis in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch0.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Geospatial Technology in R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction <br> The R environment</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Vectors</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time and Date</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch3Edition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Data types and data frame</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Data frame Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch41.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Simple Features</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Matrices</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch5_raster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch6_processing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Geometric operations with vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Geometric operations with rasters</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Combining rasters and vector layers</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Processing spatio-temporal data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Spatial interpolation of point data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ch13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">High Frequency Data</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#glimpse-of-raster" id="toc-glimpse-of-raster" class="nav-link active" data-scroll-target="#glimpse-of-raster"><span class="header-section-number">10.1</span> glimpse of raster</a></li>
+  <li>
+<a href="#sec-terra" id="toc-sec-terra" class="nav-link" data-scroll-target="#sec-terra"><span class="header-section-number">10.2</span> terra package</a>
+  <ul class="collapse">
+<li><a href="#data-structure-in-terra" id="toc-data-structure-in-terra" class="nav-link" data-scroll-target="#data-structure-in-terra"><span class="header-section-number">10.2.1</span> Data structure in terra</a></li>
+  <li><a href="#spatraster" id="toc-spatraster" class="nav-link" data-scroll-target="#spatraster"><span class="header-section-number">10.2.2</span> spatRaster</a></li>
+  <li><a href="#spatvector" id="toc-spatvector" class="nav-link" data-scroll-target="#spatvector"><span class="header-section-number">10.2.3</span> spatVector</a></li>
+  <li><a href="#creating-spatraster" id="toc-creating-spatraster" class="nav-link" data-scroll-target="#creating-spatraster"><span class="header-section-number">10.2.4</span> Creating spatRaster</a></li>
+  <li><a href="#reading-sparaster-file" id="toc-reading-sparaster-file" class="nav-link" data-scroll-target="#reading-sparaster-file"><span class="header-section-number">10.2.5</span> Reading spaRaster file</a></li>
+  <li><a href="#visualize-raster" id="toc-visualize-raster" class="nav-link" data-scroll-target="#visualize-raster"><span class="header-section-number">10.2.6</span> Visualize raster</a></li>
+  <li><a href="#stacked-spatraster" id="toc-stacked-spatraster" class="nav-link" data-scroll-target="#stacked-spatraster"><span class="header-section-number">10.2.7</span> stacked SpatRaster</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#sec-tidyterra" id="toc-sec-tidyterra" class="nav-link" data-scroll-target="#sec-tidyterra"><span class="header-section-number">10.3</span> tidyterra package</a>
+  <ul class="collapse">
+<li><a href="#rename" id="toc-rename" class="nav-link" data-scroll-target="#rename"><span class="header-section-number">10.3.1</span> rename</a></li>
+  <li><a href="#filter" id="toc-filter" class="nav-link" data-scroll-target="#filter"><span class="header-section-number">10.3.2</span> filter</a></li>
+  <li><a href="#mutate" id="toc-mutate" class="nav-link" data-scroll-target="#mutate"><span class="header-section-number">10.3.3</span> mutate</a></li>
+  <li><a href="#transmute" id="toc-transmute" class="nav-link" data-scroll-target="#transmute"><span class="header-section-number">10.3.4</span> transmute</a></li>
+  <li><a href="#select" id="toc-select" class="nav-link" data-scroll-target="#select"><span class="header-section-number">10.3.5</span> select</a></li>
+  <li><a href="#pull" id="toc-pull" class="nav-link" data-scroll-target="#pull"><span class="header-section-number">10.3.6</span> pull</a></li>
+  <li><a href="#visualize" id="toc-visualize" class="nav-link" data-scroll-target="#visualize"><span class="header-section-number">10.3.7</span> Visualize</a></li>
+  </ul>
+</li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">10.4</span> References</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span id="sec-raster-manipulation" class="quarto-section-identifier"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Raster Manipulation</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>In this chapter, our main objectives revolve around efficient data manipulation and analysis of raster data. We aim to equip ourselves with the necessary skills to achieve these goals through the utilization of two key R packages: <code>terra</code> <a href="#sec-terra">section&nbsp;<span>10.2</span></a> and <code>tidyterra</code> <a href="#sec-tidyterra">section&nbsp;<span>10.3</span></a>.</p>
+<!-- Firstly, we will delve into the process of extracting subsets from raster data. This involves learning techniques to isolate specific regions or areas of interest within a raster dataset, allowing us to focus our analysis on relevant portions. -->
+<!-- Next, we will explore the manipulation of raster dimension properties. This encompasses setting and modifying attributes related to the dimensions of the raster, such as resolution, extent, and coordinate reference system. Understanding and controlling these properties are crucial for accurate analysis and integration with other spatial datasets. -->
+<!-- Lastly, we will dive into raster algebra, a powerful tool for generating new rasters based on mathematical operations involving one or more existing rasters. This approach enables us to perform complex calculations, such as combining multiple layers or applying mathematical transformations, to derive valuable insights from the data. -->
+<section id="glimpse-of-raster" class="level2" data-number="10.1"><h2 data-number="10.1" class="anchored" data-anchor-id="glimpse-of-raster">
+<span class="header-section-number">10.1</span> glimpse of raster</h2>
+<p>in <a href="ch5_raster.html"><span>Chapter&nbsp;9</span></a>, we were intoduced with raster dataset. In this chapter we expand that introduction much deeper. To begin, a raster is a fundamental spatial data structure used to represent and store geographic information. It divides a region into a grid of rectangular cells, also known as pixels. Each cell within the raster can hold one or more values, allowing for the storage of various types of information, such as elevation, temperature, land cover, or satellite imagery.</p>
+<p>This grid-like structure of a raster distinguishes it from vector data, which represents geographic features using points, lines, and polygons. While vector data focuses on discrete spatial entities, rasters provide a continuous representation of data across the entire extent of the region.</p>
+<p>The raster data structure is commonly employed in various fields, including remote sensing, environmental modeling, terrain analysis, and geographic information systems (GIS). It offers a flexible and efficient means of storing and analyzing spatial data, facilitating tasks such as spatial interpolation, overlay analysis, and spatial statistics.</p>
+</section><section id="sec-terra" class="level2" data-number="10.2"><h2 data-number="10.2" class="anchored" data-anchor-id="sec-terra">
+<span class="header-section-number">10.2</span> terra package</h2>
+<p>The <code>terra</code> package is a powerful tool in R that offers a comprehensive suite of functions for handling raster data. It provides a wide range of capabilities, including creating, reading, manipulating, and writing raster data. These functions allow users to efficiently work with raster datasets and perform various operations on them.</p>
+<p>One of the notable strengths of the <code>terra</code> package is its collection of general raster data manipulation functions. These functions serve as building blocks and can be combined to develop more specialized functions tailored to specific analysis tasks. For instance, users can leverage functions to read a subset of raster values from a file or convert cell numbers to coordinates and vice versa, enabling them to extract relevant information and perform coordinate-based operations.</p>
+<p>Additionally, the <code>terra</code> package implements raster algebra, enabling users to perform mathematical operations on raster data. This capability is particularly useful when working with multiple overlapping rasters or when applying mathematical transformations to derive new raster layers.</p>
+<p>By encompassing such a comprehensive set of functions for raster data manipulation, the <code>terra</code> package empowers users to efficiently work with raster datasets, perform complex operations, and integrate spatial analysis seamlessly into their R workflow.</p>
+<section id="data-structure-in-terra" class="level3" data-number="10.2.1"><h3 data-number="10.2.1" class="anchored" data-anchor-id="data-structure-in-terra">
+<span class="header-section-number">10.2.1</span> Data structure in terra</h3>
+<p>The <code>terra</code> package is built upon several key classes, with <code>SpatRaster</code> and <code>SpatVector</code> being the most significant ones. These classes serve as the foundation for representing and manipulating spatial raster and vector data, respectively.</p>
+</section><section id="spatraster" class="level3" data-number="10.2.2"><h3 data-number="10.2.2" class="anchored" data-anchor-id="spatraster">
+<span class="header-section-number">10.2.2</span> spatRaster</h3>
+<p>A <code>SpatRaster</code> is a data structure used to represent multi-layer raster data. It contains essential parameters that describe the raster, including the number of columns and rows, the spatial extent (bounding box) that defines its coverage, and the coordinate reference system (map projection) used to define its spatial coordinates.</p>
+<p>Apart from these fundamental parameters, a <code>SpatRaster</code> object can also store information about the file(s) associated with the raster cell values. This allows for the possibility of storing the cell values either in memory or in external files. By supporting both options, <code>SpatRaster</code> provides flexibility in handling raster data, enabling efficient memory management for large datasets.</p>
+<p>When the raster cell values are stored in files, the <code>SpatRaster</code> object can hold metadata related to the file(s), such as file paths, data formats, compression methods, and other properties. This information facilitates efficient access and manipulation of raster data from external sources.</p>
+<p>In summary, a <code>SpatRaster</code> represents multi-layer raster data and contains essential parameters to describe its dimensions, spatial extent, and coordinate reference system. It also allows for the storage of raster cell values either in memory or in external files, enabling efficient handling of raster data and supporting various data management scenarios.</p>
+<p>These classes, <code>SpatRaster</code> and <code>SpatVector</code>, are fundamental to the <code>terra</code> package and serve as the primary means of representing and manipulating spatial raster and vector data, respectively. They provide a consistent and efficient framework for handling diverse spatial analysis tasks within the R environment.</p>
+</section><section id="spatvector" class="level3" data-number="10.2.3"><h3 data-number="10.2.3" class="anchored" data-anchor-id="spatvector">
+<span class="header-section-number">10.2.3</span> spatVector</h3>
+<p>A <code>SpatVector</code> in the <code>terra</code> package represents vector data, which encompasses geometries such as points, lines, or polygons, along with their associated tabular attributes.</p>
+<p>The <code>SpatVector</code> class provides a versatile structure for storing and analyzing vector data within the <code>terra</code> package. It can handle different types of geometries, allowing you to work with point data (e.g., locations of sampling sites), line data (e.g., roads, rivers), or polygon data (e.g., land parcels, administrative boundaries).</p>
+<p>In addition to geometric information, <code>SpatVector</code> objects also store attribute data associated with the vector features. This tabular information could include attributes such as names, population counts, categories, or any other relevant information pertaining to the features.</p>
+<p>By combining both geometric and attribute data, <code>SpatVector</code> objects enable you to perform various operations and analyses on vector data. You can perform spatial queries, spatial joins, attribute filtering, and calculations based on the geometries and their attributes.</p>
+</section><section id="creating-spatraster" class="level3" data-number="10.2.4"><h3 data-number="10.2.4" class="anchored" data-anchor-id="creating-spatraster">
+<span class="header-section-number">10.2.4</span> Creating spatRaster</h3>
+<p>To generate a <code>SpatRaster</code> from scratch using the <code>rast()</code> function in the <code>terra</code> package is a simple task. The default settings create a global raster data structure with a longitude/latitude coordinate reference system (CRS) and 1 by 1 degree cells. However, you have the option to modify these settings by providing additional arguments to the function or changing the parameters after creating the object. First, make sure the terra package is installed and loaded in your R environment:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">require</span>(terra)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">require</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>To create a <code>SpatRaster</code> from scratch with custom settings, you can specify arguments such as <code>xmin</code>, <code>nrow</code>, <code>ncol</code>, and <code>crs</code> when calling the <code>rast()</code> function. For example:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>my.rast <span class="ot">&lt;-</span> <span class="fu">rast</span>(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="at">xmin =</span> <span class="sc">-</span><span class="dv">180</span>, <span class="at">ymin =</span> <span class="sc">-</span><span class="dv">90</span>, <span class="at">xmax =</span> <span class="dv">180</span>, <span class="at">ymax =</span> <span class="dv">90</span>, </span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">nrow =</span> <span class="dv">180</span>, </span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">ncol =</span> <span class="dv">360</span>, </span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">crs =</span> <span class="st">"+proj=longlat +datum=WGS84"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>This example creates a <code>SpatRaster</code> object covering the entire globe with a resolution of 1 by 1 degree and a WGS84 (longitude/latitude) CRS.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>my.rast</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 180, 360, 1  (nrow, ncol, nlyr)
+resolution  : 1, 1  (x, y)
+extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +datum=WGS84 +no_defs </code></pre>
+</div>
+</div>
+<p>To transform a <code>SpatRaster</code> object to a different CRS (projection), you can use the <code>crs()</code> function. It allows you to reproject the <code>SpatRaster</code> to a new CRS while preserving the underlying cell values. For example:</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>my.rast.proj <span class="ot">=</span> my.rast</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">crs</span>(my.rast.proj) <span class="ot">&lt;-</span> <span class="st">"+proj=utm +zone=37 +datum=WGS84"</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a>my.rast.proj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 180, 360, 1  (nrow, ncol, nlyr)
+resolution  : 1, 1  (x, y)
+extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=utm +zone=37 +datum=WGS84 +units=m +no_defs </code></pre>
+</div>
+</div>
+<p>This will transform the <code>SpatRaster</code> object <code>r</code> to a new CRS specified by the Universal Transverse Mercator (UTM) projection with zone 37.</p>
+<p>In the example provided above, the <code>my.rast</code> object represents a skeleton or framework of a SpatRaster. It contains information about the number of rows and columns, as well as the geographic location of the raster. However, at this stage, there are no actual cell values associated with the my.rast object.</p>
+<p>let’s first use <code>ncell</code> function to compute total number of cells in the <code>my.rast</code> raster.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>my.rast <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">ncell</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] 64800</code></pre>
+</div>
+</div>
+<p>Then generate the random values of sea surface temprature equivalent to the number of cell in the my.rast spatRaster object</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>my.values <span class="ot">=</span> <span class="fu">rnorm</span>(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="at">n =</span> my.rast <span class="sc">|&gt;</span> <span class="fu">ncell</span>(), </span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">mean =</span> <span class="dv">25</span>, </span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">sd =</span> <span class="fl">1.8</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Then fill the sst values we just generated into the cells of the spatRaster object as highlighed in the code;</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>my.rast.sst <span class="ot">=</span> my.rast</span>
+<span id="cb10-2"><a href="#cb10-2"></a>my.rast.sst[] <span class="ot">=</span> my.values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>In a nutshell, the The code <code>my.rast.sst = my.rast; my.rast.sst[] = my.values; my.rast.sst</code> creates a new <code>SpatRaster</code> object named <code>my.rast.sst</code> by assigning the <code>my.rast</code> object to it. Then, it assigns the values stored in the <code>my.values</code> variable to the cell values of the <code>my.rast.sst</code> object using the empty square brackets (<code>[]</code>) notation.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>my.rast.sst</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 180, 360, 1  (nrow, ncol, nlyr)
+resolution  : 1, 1  (x, y)
+extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +datum=WGS84 +no_defs 
+source(s)   : memory
+name        :    lyr.1 
+min value   : 17.89994 
+max value   : 32.50958 </code></pre>
+</div>
+</div>
+<p>Finally, the code retrieves and returns the <code>my.rast.sst</code> object. This sequence of operations ensures that the <code>my.rast.sst</code> object has the same spatial properties as <code>my.rast</code>, but with the cell values replaced by the values in <code>my.values</code>.</p>
+</section><section id="reading-sparaster-file" class="level3" data-number="10.2.5"><h3 data-number="10.2.5" class="anchored" data-anchor-id="reading-sparaster-file">
+<span class="header-section-number">10.2.5</span> Reading spaRaster file</h3>
+<p>While creating a SpatRaster object from scratch using the <code>rast()</code> function is useful, in many cases, you will need to import raster data from your working directory or external sources. To accomplish this, you can utilize the rast() function with appropriate arguments to read and import raster data. The function allows you to specify the file path or name of the raster file you want to import.</p>
+<p>By providing the necessary information, such as the file format, location, and other relevant details, the rast() function will load the raster data into a SpatRaster object. This enables you to access and manipulate the imported raster data within your R environment for further analysis, visualization, or any other required tasks. Importing raster objects using the rast() function provides a convenient way to incorporate existing raster data into your workflow.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>bathy <span class="ot">=</span> <span class="fu">rast</span>(<span class="st">"data/wioregio-7753.asc"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a>bathy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 3181, 2641, 1  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 25.99167, 70.00834, -40.00833, 13.00834  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source      : wioregio-7753.asc 
+name        : wioregio-7753 </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>bathy  <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">class</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>[1] "SpatRaster"
+attr(,"package")
+[1] "terra"</code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>crop_extent <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">ext</span>(<span class="dv">30</span>,<span class="dv">65</span>,<span class="sc">-</span><span class="dv">30</span>,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>bath.wio <span class="ot">=</span> bathy <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>  terra<span class="sc">::</span><span class="fu">crop</span>(crop_extent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>bath.wio</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 2400, 2100, 1  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 29.99167, 64.99167, -30.00833, 9.991677  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source(s)   : memory
+name        : wioregio-7753 
+min value   :         -6756 
+max value   :          5677 </code></pre>
+</div>
+</div>
+</section><section id="visualize-raster" class="level3" data-number="10.2.6"><h3 data-number="10.2.6" class="anchored" data-anchor-id="visualize-raster">
+<span class="header-section-number">10.2.6</span> Visualize raster</h3>
+<p>To visualize a raster with terra, you can use the<code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> function, which creates a map of the values of a SpatRaster or SpatVector object.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>bath.wio <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2"></a>  terra<span class="sc">::</span><span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="fig-bath-base" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch6_files/figure-html/fig-bath-base-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;10.1<strong>.</strong> Bathymetry and altitude in the WIO region plotted with terra tools</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="stacked-spatraster" class="level3" data-number="10.2.7"><h3 data-number="10.2.7" class="anchored" data-anchor-id="stacked-spatraster">
+<span class="header-section-number">10.2.7</span> stacked SpatRaster</h3>
+<p>One important issue in terra is the ability to stack multiple rasters into a single seamless raster object. This is useful when working with multiple rasters that have the same spatial extent, resolution, and coordinate reference system (CRS). We will come to learn how to stack raster objects in terra using the <code><a href="https://rdrr.io/r/utils/stack.html">stack()</a></code> function or <code>c</code>. In this section, I will compute indices using a <code>terrain()</code> to illustrate the concept of stacked spatRaster.</p>
+<p>Lets, compute these indeces, which derive eight indices stacked into a single raster object.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>ocean <span class="ot">=</span> bath.wio</span>
+<span id="cb22-2"><a href="#cb22-2"></a>ocean[ocean <span class="sc">&gt;=</span> <span class="dv">0</span>] <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a></span>
+<span id="cb22-4"><a href="#cb22-4"></a>terrain.indices <span class="ot">=</span> ocean <span class="sc">%&gt;%</span> </span>
+<span id="cb22-5"><a href="#cb22-5"></a>  terra<span class="sc">::</span><span class="fu">terrain</span>(</span>
+<span id="cb22-6"><a href="#cb22-6"></a>    <span class="fu">c</span>(<span class="st">'slope'</span>, <span class="st">'aspect'</span>, <span class="st">'TPI'</span>, <span class="st">'TRI'</span>, <span class="st">'TRIriley'</span>, <span class="st">'TRIrmsd'</span>, <span class="st">'roughness'</span>, <span class="st">'flowdir'</span>)</span>
+<span id="cb22-7"><a href="#cb22-7"></a>    )</span>
+<span id="cb22-8"><a href="#cb22-8"></a></span>
+<span id="cb22-9"><a href="#cb22-9"></a>stacked <span class="ot">=</span> <span class="fu">c</span>(ocean,terrain.indices)</span>
+<span id="cb22-10"><a href="#cb22-10"></a>stacked</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 2400, 2100, 9  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 29.99167, 64.99167, -30.00833, 9.991677  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source(s)   : memory
+names       : wiore~-7753,    slope, aspect,      TPI,  TRI, TRIriley, ... 
+min values  :       -6756,  0.00000,      0, -1200.00,    0,    0.000, ... 
+max values  :          -1, 34.89659,    360,   932.25, 1200, 3773.468, ... </code></pre>
+</div>
+</div>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>stacked <span class="sc">%&gt;%</span> </span>
+<span id="cb24-2"><a href="#cb24-2"></a>  terra<span class="sc">::</span><span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<p><img src="ch6_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section></section><section id="sec-tidyterra" class="level2" data-number="10.3"><h2 data-number="10.3" class="anchored" data-anchor-id="sec-tidyterra">
+<span class="header-section-number">10.3</span> tidyterra package</h2>
+<p>In <a href="#sec-terra"><span>Section&nbsp;10.2</span></a>, we learn how to create a raster from scratch and also how to read raster files stored in either our working directories or from online with terra package. In this section we expand our understanding of manipulating raster data with a <em>tidyterra</em> package.</p>
+<p>The <em>tidyterra</em> package adds common methods from the <em>tidyverse</em> for SpatRaster and SpatVector objects created with the <em>terra</em> package. It enhances the data manipulation and analysis capabilities of <code>SpatRaster</code> and <code>SpatVector</code> objects, allowing for a seamless integration of spatial data into the tidyverse workflow.</p>
+<p>With <code>tidyterra</code>, you can leverage the power of popular tidyverse packages like <code>dplyr</code>, <code>tidyr</code>, and <code>ggplot2</code> for working with <code>SpatRaster</code> and <code>SpatVector</code> objects. It provides a set of methods and functions that align with the tidyverse philosophy, allowing for consistent and intuitive data manipulation.</p>
+<p>Furthermore, <code>tidyterra</code> includes specialized functions such as <code>as_tibble()</code> to convert <code>SpatRaster</code> and <code>SpatVector</code> objects into tidy tibbles, enabling smooth integration with other tidyverse functions and pipelines. This integration makes it easier to perform data wrangling, aggregation, and analysis on spatial datasets.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="fu">require</span>(terra)</span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="fu">require</span>(tidyterra)</span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="fu">require</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>You can use <code>dplyr</code> functions like, <code>rename()</code>, <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code>, <code>mutate()</code>, and <code>select()</code> to filter, transform, and select specific subsets of your spatial data. The <code>gather()</code> and <code>spread()</code> functions from <code>tidyr</code> can be employed for reshaping your data into a tidy format.</p>
+<section id="rename" class="level3" data-number="10.3.1"><h3 data-number="10.3.1" class="anchored" data-anchor-id="rename">
+<span class="header-section-number">10.3.1</span> rename</h3>
+<p>One of the functions available in <em>tidyterra</em> is the <code>rename()</code> function, which is a wrapper around the <code>rename</code>()<code>function in the *dplyr* package.</code>rename()<code>function in tidyterra allows to easily modify layer names in a in spatRaster object. By using</code>rename()`, we can provide new names for specific layer, which can be helpful for improving the clarity, consistency, and readability of the raster data.</p>
+<p>Moreover, when working with raster data from different sources or combine more than one raster object to create a stack spatRaster object, the <code>rename()</code> function enables us to harmonize raster layer names. By aligning the names of corresponding layer across rasterstack, we can ensure consistency and compatibility, making it easier to combine, compare, and analyze the data.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>bath.depth <span class="ot">=</span> bath.wio <span class="sc">%&gt;%</span> </span>
+<span id="cb26-2"><a href="#cb26-2"></a>  tidyterra<span class="sc">::</span><span class="fu">rename</span>(<span class="at">depth =</span> <span class="dv">1</span>)</span>
+<span id="cb26-3"><a href="#cb26-3"></a></span>
+<span id="cb26-4"><a href="#cb26-4"></a>bath.depth</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 2400, 2100, 1  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 29.99167, 64.99167, -30.00833, 9.991677  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source(s)   : memory
+name        : depth 
+min value   : -6756 
+max value   :  5677 </code></pre>
+</div>
+</div>
+</section><section id="filter" class="level3" data-number="10.3.2"><h3 data-number="10.3.2" class="anchored" data-anchor-id="filter">
+<span class="header-section-number">10.3.2</span> filter</h3>
+<p>The <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> function in the tidyterra package is a powerful tool for raster data manipulation and subsetting. It allows us to extract specific values from a raster object on certain conditions or criteria. Using <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code>, we can define logical expressions that evaluate values in raster object. Values that meet the specified criteria are retained, while those that do not meet the conditions are removed from the resulting subset.</p>
+<p>The <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> function is flexible and supports a wide range of conditions, including comparisons (<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>), logical operators (<code>&amp;</code>, <code>|</code>), and other functions like <code><a href="https://rdrr.io/r/base/NA.html">is.na()</a></code> or <code><a href="https://rdrr.io/r/base/startsWith.html">startsWith()</a></code>. This versatility enables us to filter data based on various criteria, such as specific values, ranges, patterns, or combinations of multiple conditions.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>ocean <span class="ot">=</span> bath.depth <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2"></a>  tidyterra<span class="sc">::</span><span class="fu">filter</span>(depth <span class="sc">&lt;=</span> <span class="dv">0</span>)</span>
+<span id="cb28-3"><a href="#cb28-3"></a></span>
+<span id="cb28-4"><a href="#cb28-4"></a>ocean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 2400, 2100, 1  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 29.99167, 64.99167, -30.00833, 9.991677  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source(s)   : memory
+name        : depth 
+min value   : -6756 
+max value   :     0 </code></pre>
+</div>
+</div>
+</section><section id="mutate" class="level3" data-number="10.3.3"><h3 data-number="10.3.3" class="anchored" data-anchor-id="mutate">
+<span class="header-section-number">10.3.3</span> mutate</h3>
+<p>The <code>mutate()</code> function in the tidyterra package is a powerful tool for creating new raster object or modifying existing values within a raster. It allows us to add calculated raster or transform existing raster based on specific operations or functions.</p>
+<p>Using <code>mutate()</code>, we can define new raster by specifying a name for the new raster and providing an expression that calculates its values. This expression can involve mathematical operations, logical operations, or functions that operate on individual values or entire raster.</p>
+<p><code>mutate()</code> facilitates the creation of derived raster. It allows us to perform calculations, transformations, or modifications on the raster, enabling us to derive new insights or prepare the raster for further analysis.</p>
+<p>The <code>mutate()</code> function operates on the principle of non-destructive modification, meaning that it creates a new layer of raster object with the modified values while preserving the original raster. This allows us to create a stacked raster and supports a more organized raster manipulation workflow.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>ocean.depth <span class="ot">=</span> ocean <span class="sc">%&gt;%</span> </span>
+<span id="cb30-2"><a href="#cb30-2"></a>  tidyterra<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">bathy_m =</span> depth <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb30-3"><a href="#cb30-3"></a></span>
+<span id="cb30-4"><a href="#cb30-4"></a>ocean.depth</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 2400, 2100, 2  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 29.99167, 64.99167, -30.00833, 9.991677  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source(s)   : memory
+names       : depth, bathy_m 
+min values  : -6756,       0 
+max values  :     0,    6756 </code></pre>
+</div>
+</div>
+</section><section id="transmute" class="level3" data-number="10.3.4"><h3 data-number="10.3.4" class="anchored" data-anchor-id="transmute">
+<span class="header-section-number">10.3.4</span> transmute</h3>
+<p>Unlike mutate function, which add a raster in the existing spatraster object, a transmutate create a new raster object that is not stacked in the oriign fiel instead. Let’s say artisanal fisheries operates in shallow areas below 200 and we ought to dermacate this area.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>bath_class <span class="ot">=</span> ocean <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2"></a>  tidyterra<span class="sc">::</span><span class="fu">transmute</span>(</span>
+<span id="cb32-3"><a href="#cb32-3"></a>    <span class="at">bath.class =</span> <span class="fu">if_else</span>(depth  <span class="sc">&lt;</span> <span class="sc">-</span><span class="dv">200</span>, <span class="st">"Shallow"</span>, <span class="st">"Deep"</span>)</span>
+<span id="cb32-4"><a href="#cb32-4"></a>    )</span>
+<span id="cb32-5"><a href="#cb32-5"></a></span>
+<span id="cb32-6"><a href="#cb32-6"></a>bath_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 2400, 2100, 1  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 29.99167, 64.99167, -30.00833, 9.991677  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source(s)   : memory
+categories  : label 
+name        : bath.class 
+min value   :       Deep 
+max value   :    Shallow </code></pre>
+</div>
+</div>
+</section><section id="select" class="level3" data-number="10.3.5"><h3 data-number="10.3.5" class="anchored" data-anchor-id="select">
+<span class="header-section-number">10.3.5</span> select</h3>
+<p>The <code>select()</code> function in tidyterra allow us to choose and rearrange layer(s) from stacked spatRaster object. It provides a flexible way to subset and reorder raster, making it easier to work with specific subsets of data or to reorganize the structure of the raster.</p>
+<p>Using <code>select()</code>, we can specify which raster layer to include or exclude from the spatraster object based on their names or other conditions. <code>select()</code> also provides the ability to rename raster layer while selecting them, enabling us to give more meaningful or concise names to raster.</p>
+<p>The <code>select()</code> function can be used in conjunction with other tidyterra functions, such as <code>mutate()</code>, <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code>, and <code>arrange()</code>, to perform data manipulation tasks on SpatRaster and SpatVector objects</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>ocean.depth  <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2"></a>  tidyterra<span class="sc">::</span><span class="fu">select</span>(depth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+dimensions  : 2400, 2100, 1  (nrow, ncol, nlyr)
+resolution  : 0.01666667, 0.01666667  (x, y)
+extent      : 29.99167, 64.99167, -30.00833, 9.991677  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 
+source(s)   : memory
+name        : depth 
+min value   : -6756 
+max value   :     0 </code></pre>
+</div>
+</div>
+</section><section id="pull" class="level3" data-number="10.3.6"><h3 data-number="10.3.6" class="anchored" data-anchor-id="pull">
+<span class="header-section-number">10.3.6</span> pull</h3>
+<p>One of the functions available in <em>tidyterra</em> is the <code>pull()</code> function, which is a wrapper around the <code>pull()</code> function in the <em>dplyr</em> package, The <code>pull()</code> function in the <em>dplyr</em> package is a useful tool for extracting a values from a raster object as vector. It allows us to easily access and work with a specific raster object of a spatraster.</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>values.pull <span class="ot">=</span> ocean.depth <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2"></a>  tidyterra<span class="sc">::</span><span class="fu">select</span>(bathy_m ) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-3"><a href="#cb36-3"></a>  tidyterra<span class="sc">::</span><span class="fu">pull</span>()</span>
+<span id="cb36-4"><a href="#cb36-4"></a></span>
+<span id="cb36-5"><a href="#cb36-5"></a>values.pull[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code> [1] NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA NA</code></pre>
+</div>
+</div>
+</section><section id="visualize" class="level3" data-number="10.3.7"><h3 data-number="10.3.7" class="anchored" data-anchor-id="visualize">
+<span class="header-section-number">10.3.7</span> Visualize</h3>
+<p>In addition to data manipulation, <code>tidyterra</code> also provides <code>geom_spat*()</code> functions for plotting <code>SpatRaster</code> and <code>SpatVector</code> objects using <code>ggplot2</code>. This allows for the creation of visually appealing and informative plots, leveraging the flexibility and customization options offered by <code>ggplot2</code>. For example, the bathymetry and elevation map shown in <a href="#fig-bath">Figure&nbsp;<span>10.2</span></a> is created with tidyterra geom tools highlighted in chunk below;</p>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a>  tidyterra<span class="sc">::</span><span class="fu">geom_spatraster</span>(<span class="at">data =</span> bath.wio)<span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a>  tidyterra<span class="sc">::</span><span class="fu">scale_fill_hypso_tint_c</span>(</span>
+<span id="cb38-4"><a href="#cb38-4"></a>    <span class="at">palette =</span> <span class="st">"gmt_globe"</span>,</span>
+<span id="cb38-5"><a href="#cb38-5"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_number</span>(),</span>
+<span id="cb38-6"><a href="#cb38-6"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">6000</span>, <span class="dv">6000</span>,<span class="dv">3000</span>), </span>
+<span id="cb38-7"><a href="#cb38-7"></a>    <span class="co"># limits = c(-6000, 6500),</span></span>
+<span id="cb38-8"><a href="#cb38-8"></a>    <span class="at">guide =</span> <span class="fu">guide_colorbar</span>(</span>
+<span id="cb38-9"><a href="#cb38-9"></a>      <span class="at">direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb38-10"><a href="#cb38-10"></a>      <span class="at">title =</span> <span class="st">"Bathymetry &amp; altitude (meters)"</span>,</span>
+<span id="cb38-11"><a href="#cb38-11"></a>      <span class="at">title.position =</span> <span class="st">"top"</span>,</span>
+<span id="cb38-12"><a href="#cb38-12"></a>      <span class="at">barwidth =</span> <span class="dv">12</span>, <span class="at">barheight =</span> <span class="fl">0.8</span></span>
+<span id="cb38-13"><a href="#cb38-13"></a>    ))<span class="sc">+</span></span>
+<span id="cb38-14"><a href="#cb38-14"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb38-15"><a href="#cb38-15"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb38-16"><a href="#cb38-16"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div id="fig-bath" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure"><p><img src="ch6_files/figure-html/fig-bath-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption"><strong>FIGURE</strong>&nbsp;10.2<strong>.</strong> Bathymetry and altitude in the WIO region plotted with tidyterra tools</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section id="references" class="level2" data-number="10.4"><h2 data-number="10.4" class="anchored" data-anchor-id="references">
+<span class="header-section-number">10.4</span> References</h2>
+<div class="cell">
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>enso <span class="ot">=</span> wior<span class="sc">::</span><span class="fu">enso</span>(<span class="at">begin_date =</span> <span class="st">"2015-01-01"</span>, <span class="at">end_date =</span> <span class="st">"2023-04-30"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./ch5_raster.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Raster</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./ch6_processing.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Handling Rasters</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
